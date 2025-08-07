@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { BarChart3, FileDown, Calendar, TrendingUp, Users, DollarSign } from "lucide-react";
+import { NavBar } from './NavBar';
 
 interface AnalyticsData {
   totalAds: number;
@@ -38,8 +39,10 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-background">
+      <NavBar />
+      <div className="bg-gradient-to-br from-primary/5 to-accent/5 p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Admin Dashboard
@@ -187,6 +190,7 @@ const AdminDashboard = () => {
               </Button>
             </CardContent>
           </Card>
+        </div>
         </div>
       </div>
     </div>
