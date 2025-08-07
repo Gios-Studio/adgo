@@ -4,8 +4,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
-import { Monitor, Upload, BarChart3, Settings, Play, Pause, TrendingUp, Users, Eye, Clock, Calendar, DollarSign } from 'lucide-react';
-import adgoLogo from '@/assets/adgo-logo.png';
+import { Monitor, Upload, BarChart3, Settings, Play, Pause, TrendingUp, Users, Eye, Clock, Calendar, DollarSign, Target, Search, FileText, Shield, TestTube } from 'lucide-react';
+import RoleManager from './RoleManager';
+import ReportGenerator from './ReportGenerator';
+import ConsumerTrends from './ConsumerTrends';
+import CompetitorAnalysis from './CompetitorAnalysis';
+import AudienceManager from './AudienceManager';
+import ABTestManager from './ABTestManager';
 
 // Demo data
 const campaignData = [
@@ -39,7 +44,9 @@ const DemoPreview = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <img src={adgoLogo} alt="AdGo Logo" className="h-8 w-auto" />
+              <div className="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">AG</span>
+              </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 AdGo Platform Demo
               </h1>
@@ -53,22 +60,46 @@ const DemoPreview = () => {
 
       <div className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="campaigns" className="flex items-center space-x-2">
-              <Settings className="w-4 h-4" />
-              <span>Campaigns</span>
+          <TabsList className="grid w-full grid-cols-9 mb-6">
+            <TabsTrigger value="campaigns" className="flex items-center space-x-1">
+              <Settings className="w-3 h-3" />
+              <span className="hidden sm:inline">Campaigns</span>
             </TabsTrigger>
-            <TabsTrigger value="upload" className="flex items-center space-x-2">
-              <Upload className="w-4 h-4" />
-              <span>Upload</span>
+            <TabsTrigger value="upload" className="flex items-center space-x-1">
+              <Upload className="w-3 h-3" />
+              <span className="hidden sm:inline">Upload</span>
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center space-x-2">
-              <BarChart3 className="w-4 h-4" />
-              <span>Analytics</span>
+            <TabsTrigger value="analytics" className="flex items-center space-x-1">
+              <BarChart3 className="w-3 h-3" />
+              <span className="hidden sm:inline">Analytics</span>
             </TabsTrigger>
-            <TabsTrigger value="display" className="flex items-center space-x-2">
-              <Monitor className="w-4 h-4" />
-              <span>Display</span>
+            <TabsTrigger value="display" className="flex items-center space-x-1">
+              <Monitor className="w-3 h-3" />
+              <span className="hidden sm:inline">Display</span>
+            </TabsTrigger>
+            <TabsTrigger value="roles" className="flex items-center space-x-1">
+              <Shield className="w-3 h-3" />
+              <span className="hidden sm:inline">Roles</span>
+            </TabsTrigger>
+            <TabsTrigger value="reports" className="flex items-center space-x-1">
+              <FileText className="w-3 h-3" />
+              <span className="hidden sm:inline">Reports</span>
+            </TabsTrigger>
+            <TabsTrigger value="trends" className="flex items-center space-x-1">
+              <TrendingUp className="w-3 h-3" />
+              <span className="hidden sm:inline">Trends</span>
+            </TabsTrigger>
+            <TabsTrigger value="competitors" className="flex items-center space-x-1">
+              <Search className="w-3 h-3" />
+              <span className="hidden sm:inline">Competitors</span>
+            </TabsTrigger>
+            <TabsTrigger value="audience" className="flex items-center space-x-1">
+              <Target className="w-3 h-3" />
+              <span className="hidden sm:inline">Audience</span>
+            </TabsTrigger>
+            <TabsTrigger value="abtest" className="flex items-center space-x-1">
+              <TestTube className="w-3 h-3" />
+              <span className="hidden sm:inline">A/B Tests</span>
             </TabsTrigger>
           </TabsList>
 
@@ -321,6 +352,36 @@ const DemoPreview = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Role Management Demo */}
+          <TabsContent value="roles">
+            <RoleManager />
+          </TabsContent>
+
+          {/* Report Generator Demo */}
+          <TabsContent value="reports">
+            <ReportGenerator />
+          </TabsContent>
+
+          {/* Consumer Trends Demo */}
+          <TabsContent value="trends">
+            <ConsumerTrends />
+          </TabsContent>
+
+          {/* Competitor Analysis Demo */}
+          <TabsContent value="competitors">
+            <CompetitorAnalysis />
+          </TabsContent>
+
+          {/* Audience Manager Demo */}
+          <TabsContent value="audience">
+            <AudienceManager />
+          </TabsContent>
+
+          {/* A/B Test Manager Demo */}
+          <TabsContent value="abtest">
+            <ABTestManager />
           </TabsContent>
         </Tabs>
       </div>
