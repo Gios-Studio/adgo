@@ -9,6 +9,7 @@ import { AuthForm } from "./components/AuthForm";
 import ClientDashboard from "./components/ClientDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import AdDisplayScreen from "./components/AdDisplayScreen";
+import DemoPreview from "./components/DemoPreview";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -48,6 +49,7 @@ const AppRoutes = () => {
         } 
       />
       <Route path="/ad-display" element={<AdDisplayScreen />} />
+      <Route path="/demo" element={<DemoPreview />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>

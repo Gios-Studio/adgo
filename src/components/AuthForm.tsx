@@ -176,6 +176,23 @@ export const AuthForm = () => {
               </Button>
             </form>
 
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              <Button
+                onClick={() => navigate("/demo")}
+                variant="secondary"
+                className="h-12 text-base font-medium bg-gradient-to-r from-accent to-accent hover:shadow-md transition-all duration-300"
+              >
+                View Demo
+              </Button>
+              <Button
+                onClick={() => navigate("/ad-display")}
+                variant="outline"
+                className="h-12 text-base font-medium border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-all duration-300"
+              >
+                Ad Display
+              </Button>
+            </div>
+
             <div className="text-center">
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
