@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, X, Volume2, VolumeX } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Play, X, Volume2, VolumeX, ArrowLeft, MapPin, Clock, DollarSign } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Ad {
   id: string;
@@ -12,11 +14,12 @@ interface Ad {
 }
 
 const AdDisplayScreen = () => {
+  const navigate = useNavigate();
   const [currentAds, setCurrentAds] = useState<Ad[]>([
     {
       id: '1',
       type: 'video',
-      content: 'Background Video Advertisement',
+      content: 'AdGo Premium Advertisement',
       duration: 30,
       position: 'background'
     },
@@ -65,83 +68,192 @@ const AdDisplayScreen = () => {
   const notificationAd = currentAds.find(ad => ad.position === 'notification');
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Background Video Ad Placeholder */}
-      {backgroundAd && (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/10 to-primary/20">
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center text-white space-y-4">
-              <div className="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center mx-auto backdrop-blur-sm">
-                <Play className="w-16 h-16 ml-2" />
-              </div>
-              <h2 className="text-3xl font-bold">{backgroundAd.content}</h2>
-              <p className="text-white/80">Premium advertisement space</p>
-            </div>
-          </div>
-          
-          {/* Video Controls */}
-          <div className="absolute bottom-4 right-4 flex gap-2">
-            <button
-              onClick={() => setMuted(!muted)}
-              className="w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+        <div className="container flex h-16 items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/')}
             >
-              {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Ride-hailing App UI Overlay */}
-      <div className="relative z-10 p-6">
-        {/* Status Bar */}
-        <div className="flex justify-between items-center text-white mb-8">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
-            <span className="text-sm">Online</span>
-          </div>
-          <div className="text-sm font-medium">
-            {currentTime.toLocaleTimeString()}
-          </div>
-        </div>
-
-        {/* Banner Ad */}
-        {bannerAd && (
-          <Card className="mb-6 bg-gradient-to-r from-accent/90 to-orange-500/90 border-0 text-white shadow-lg">
-            <div className="p-4 text-center">
-              <p className="font-medium">{bannerAd.content}</p>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div className="flex items-center space-x-2">
+              <img 
+                src="/lovable-uploads/80d624a8-a3ff-4e94-a942-65dc5933071d.png" 
+                alt="AdGo Icon" 
+                className="h-12 w-auto" 
+              />
+              <div>
+                <h1 className="text-xl font-bold">AdGo Display</h1>
+                <p className="text-sm text-muted-foreground">Live Ad Preview</p>
+              </div>
             </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse" />
+              Live
+            </Badge>
+            <span className="text-sm text-muted-foreground">
+              {currentTime.toLocaleTimeString()}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Background Video Ad */}
+        {backgroundAd && (
+          <Card className="overflow-hidden">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Background Advertisement
+                <Badge>Active</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="relative bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-lg p-8 min-h-[300px] flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg" />
+                <div className="relative text-center space-y-4">
+                  <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center mx-auto backdrop-blur-sm">
+                    <Play className="w-12 h-12 ml-1 text-primary" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-foreground">{backgroundAd.content}</h2>
+                  <p className="text-muted-foreground">Premium advertisement space</p>
+                </div>
+                
+                {/* Video Controls */}
+                <div className="absolute bottom-4 right-4 flex gap-2">
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={() => setMuted(!muted)}
+                  >
+                    {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
           </Card>
         )}
 
-        {/* Main App Content */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-          <h1 className="text-2xl font-bold text-white mb-4">RideApp Dashboard</h1>
-          
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <Card className="bg-white/20 border-white/30 text-white">
-              <div className="p-4 text-center">
-                <h3 className="font-semibold">Current Rides</h3>
-                <p className="text-2xl font-bold">12</p>
-              </div>
-            </Card>
-            <Card className="bg-white/20 border-white/30 text-white">
-              <div className="p-4 text-center">
-                <h3 className="font-semibold">Today's Earnings</h3>
-                <p className="text-2xl font-bold">$284</p>
-              </div>
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Main App Simulation */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Banner Ad */}
+            {bannerAd && (
+              <Card className="bg-gradient-to-r from-accent to-primary border-0 text-white">
+                <CardContent className="p-4 text-center">
+                  <p className="font-medium">{bannerAd.content}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Ride App Simulation */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <MapPin className="w-5 h-5 text-primary" />
+                  <span>RideApp Dashboard</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <h3 className="font-semibold text-muted-foreground">Current Rides</h3>
+                      <p className="text-2xl font-bold text-primary">12</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4 text-center">
+                      <h3 className="font-semibold text-muted-foreground">Today's Earnings</h3>
+                      <p className="text-2xl font-bold text-primary">$284</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="font-semibold">Active Rides</h3>
+                  {[
+                    { location: 'Downtown Mall', time: '5 min', amount: '$12' },
+                    { location: 'Airport Transfer', time: '15 min', amount: '$45' },
+                    { location: 'City Center Drop', time: '8 min', amount: '$18' }
+                  ].map((ride, index) => (
+                    <Card key={index} className="border">
+                      <CardContent className="p-3">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center space-x-3">
+                            <MapPin className="w-4 h-4 text-muted-foreground" />
+                            <span className="font-medium">{ride.location}</span>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+                              <Clock className="w-3 h-3" />
+                              <span>{ride.time}</span>
+                            </div>
+                            <div className="flex items-center space-x-1 text-sm font-medium">
+                              <DollarSign className="w-3 h-3" />
+                              <span>{ride.amount}</span>
+                            </div>
+                            <Badge className="bg-green-100 text-green-800">Active</Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
             </Card>
           </div>
 
-          <div className="space-y-3">
-            {['Pickup at Downtown Mall', 'Airport Transfer', 'City Center Drop'].map((ride, index) => (
-              <div key={index} className="bg-white/20 rounded-lg p-3 border border-white/30">
-                <div className="flex justify-between items-center">
-                  <span className="text-white font-medium">{ride}</span>
-                  <Badge className="bg-green-500/80 text-white">Active</Badge>
+          {/* Ad Analytics Sidebar */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Ad Performance</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Active Ads</span>
+                    <span className="font-medium">{currentAds.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Total Views</span>
+                    <span className="font-medium">1,247</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Revenue</span>
+                    <span className="font-medium text-primary">$45.60</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">CTR</span>
+                    <span className="font-medium">3.2%</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Ad Queue</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {currentAds.map((ad) => (
+                  <div key={ad.id} className="p-3 border rounded-lg space-y-2">
+                    <div className="flex justify-between items-center">
+                      <Badge variant="outline">{ad.position}</Badge>
+                      <span className="text-xs text-muted-foreground">{ad.duration}s</span>
+                    </div>
+                    <p className="text-sm">{ad.content}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
@@ -149,34 +261,25 @@ const AdDisplayScreen = () => {
       {/* Floating Notification Ad */}
       {notificationAd && showNotification && (
         <div className="fixed bottom-6 right-6 z-20 animate-in slide-in-from-right duration-500">
-          <Card className="bg-gradient-to-r from-primary/95 to-primary-glow/95 border-0 text-white shadow-2xl max-w-sm">
-            <div className="p-4 pr-12 relative">
-              <button
+          <Card className="bg-gradient-to-r from-primary to-primary-glow border-0 text-white shadow-lg max-w-sm">
+            <CardContent className="p-4 pr-12 relative">
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowNotification(false)}
-                className="absolute top-2 right-2 w-6 h-6 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+                className="absolute top-2 right-2 w-6 h-6 text-white hover:bg-white/20"
               >
                 <X className="w-4 h-4" />
-              </button>
+              </Button>
               <p className="font-medium">{notificationAd.content}</p>
               <div className="mt-2 flex items-center gap-2">
                 <div className="w-2 h-2 bg-white/60 rounded-full animate-pulse" />
                 <span className="text-xs text-white/80">Advertisement</span>
               </div>
-            </div>
+            </CardContent>
           </Card>
         </div>
       )}
-
-      {/* Ad Analytics Info */}
-      <div className="fixed top-4 left-4 z-20">
-        <Card className="bg-black/50 border-white/20 text-white backdrop-blur-sm">
-          <div className="p-3 text-xs space-y-1">
-            <div>Active Ads: {currentAds.length}</div>
-            <div>Views: 1,247</div>
-            <div>Revenue: $45.60</div>
-          </div>
-        </Card>
-      </div>
     </div>
   );
 };

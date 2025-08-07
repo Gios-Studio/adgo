@@ -70,12 +70,12 @@ export const AuthForm = () => {
   return (
     <div className="min-h-screen bg-login-bg flex">
       {/* Left Half - Logo and Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary via-primary to-primary-glow p-12 flex-col justify-center items-center text-primary-foreground">
+      <div className="hidden lg:flex lg:w-1/2 bg-login-bg p-12 flex-col justify-center items-center text-primary">
         <div className="max-w-md text-center space-y-6">
           <img 
             src="/lovable-uploads/2d18fdff-72d6-4b0b-bf30-16afdf09e95c.png" 
             alt="Adgo Logo" 
-            className="h-24 w-auto mx-auto mb-8"
+            className="h-38 w-auto mx-auto mb-8"
           />
           <h1 className="text-4xl font-bold">Welcome to Adgo</h1>
           <p className="text-xl opacity-90">
@@ -83,15 +83,15 @@ export const AuthForm = () => {
           </p>
           <div className="space-y-4 text-left">
             <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
               <span>Real-time analytics and insights</span>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
               <span>Campaign scheduling and management</span>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
               <span>Budget optimization tools</span>
             </div>
           </div>
@@ -99,14 +99,14 @@ export const AuthForm = () => {
       </div>
 
       {/* Right Half - Auth Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 bg-gradient-to-br from-primary via-primary to-primary-glow flex items-center justify-center p-8">
         <Card className="w-full max-w-md shadow-elegant border-0 bg-card/95 backdrop-blur">
           <CardHeader className="text-center space-y-2">
             <div className="lg:hidden mb-4">
               <img 
                 src={adgoLogo} 
                 alt="AdGo Logo" 
-                className="h-16 w-auto mx-auto"
+                className="h-26 w-auto mx-auto"
               />
             </div>
             <CardTitle className="text-2xl font-bold">

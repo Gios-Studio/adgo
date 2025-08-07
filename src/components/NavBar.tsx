@@ -18,7 +18,7 @@ export const NavBar = () => {
     <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-2">
-          <img src={adgoLogo} alt="AdGo" className="h-8 w-auto" />
+          <img src={adgoLogo} alt="AdGo" className="h-12 w-auto" />
           <span className="font-bold text-xl">AdGo</span>
         </div>
         <div className="flex items-center space-x-4">

@@ -21,27 +21,27 @@ const Home = () => {
 
   const features = [
     {
-      icon: <Target className="h-12 w-12 text-primary" />,
+      icon: <Target className="h-19 w-19 text-primary" />,
       title: "Data-Driven Strategies",
       description: "We don't just help you manage campaigns, we craft data-driven strategies that turn clicks into customers and make your brand stand out in the digital jungle."
     },
     {
-      icon: <BarChart3 className="h-12 w-12 text-primary" />,
+      icon: <BarChart3 className="h-19 w-19 text-primary" />,
       title: "Advanced Analytics",
       description: "Comprehensive insights and reporting to optimize your ad performance and maximize ROI across all channels."
     },
     {
-      icon: <Zap className="h-12 w-12 text-primary" />,
+      icon: <Zap className="h-19 w-19 text-primary" />,
       title: "Content That Converts",
       description: "Create compelling ad content that drives engagement and converts prospects into loyal customers."
     },
     {
-      icon: <Users className="h-12 w-12 text-primary" />,
+      icon: <Users className="h-19 w-19 text-primary" />,
       title: "Audience Targeting",
       description: "Precise audience segmentation and targeting to reach the right people at the right time with the right message."
     },
     {
-      icon: <TrendingUp className="h-12 w-12 text-primary" />,
+      icon: <TrendingUp className="h-19 w-19 text-primary" />,
       title: "Performance Optimization",
       description: "Continuous A/B testing and optimization to ensure your campaigns perform at their peak potential."
     }
