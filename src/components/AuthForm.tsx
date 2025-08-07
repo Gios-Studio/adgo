@@ -68,16 +68,16 @@ export const AuthForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex">
+    <div className="min-h-screen bg-login-bg flex">
       {/* Left Half - Logo and Branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary via-primary to-primary-glow p-12 flex-col justify-center items-center text-primary-foreground">
         <div className="max-w-md text-center space-y-6">
           <img 
-            src={adgoLogo} 
-            alt="AdGo Logo" 
+            src="/lovable-uploads/2d18fdff-72d6-4b0b-bf30-16afdf09e95c.png" 
+            alt="Adgo Logo" 
             className="h-24 w-auto mx-auto mb-8"
           />
-          <h1 className="text-4xl font-bold">Welcome to AdGo</h1>
+          <h1 className="text-4xl font-bold">Welcome to Adgo</h1>
           <p className="text-xl opacity-90">
             The modern platform for managing your advertising campaigns with precision and ease.
           </p>

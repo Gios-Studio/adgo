@@ -5,11 +5,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Home from "./pages/Home";
+import Waitlist from "./pages/Waitlist";
 import { AuthForm } from "./components/AuthForm";
 import ClientDashboard from "./components/ClientDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import AdDisplayScreen from "./components/AdDisplayScreen";
 import DemoPreview from "./components/DemoPreview";
+import PaymentProcessor from "./components/PaymentProcessor";
+import CampaignCalendar from "./components/CampaignCalendar";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -28,10 +32,13 @@ const AppRoutes = () => {
 
   return (
     <Routes>
+      <Route path="/home" element={<Home />} />
+      <Route path="/waitlist" element={<Waitlist />} />
       <Route 
         path="/" 
-        element={user ? <Navigate to="/client-dashboard" replace /> : <AuthForm />} 
+        element={user ? <Navigate to="/client-dashboard" replace /> : <Home />} 
       />
+      <Route path="/login" element={<AuthForm />} />
       <Route 
         path="/client-dashboard" 
         element={
@@ -50,6 +57,8 @@ const AppRoutes = () => {
       />
       <Route path="/ad-display" element={<AdDisplayScreen />} />
       <Route path="/demo" element={<DemoPreview />} />
+      <Route path="/payment" element={<PaymentProcessor />} />
+      <Route path="/calendar" element={<CampaignCalendar />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
