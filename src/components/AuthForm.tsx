@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import adgoLogo from '@/assets/adgo-logo.png';
+// Deprecated: import adgoLogo from '@/assets/adgo-logo.png';
 
 export const AuthForm = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -73,7 +73,7 @@ export const AuthForm = () => {
       <div className="hidden lg:flex lg:w-1/2 bg-login-bg p-12 flex-col justify-center items-center text-primary">
         <div className="max-w-md text-center space-y-6">
           <img 
-            src="/lovable-uploads/2d18fdff-72d6-4b0b-bf30-16afdf09e95c.png" 
+            src="/lovable-uploads/2832d142-026e-456c-88e4-dbacf37c22e7.png" 
             alt="Adgo Logo" 
             className="h-38 w-auto mx-auto mb-8"
           />
@@ -104,7 +104,7 @@ export const AuthForm = () => {
           <CardHeader className="text-center space-y-2">
             <div className="lg:hidden mb-4">
               <img 
-                src={adgoLogo} 
+                src="/lovable-uploads/2832d142-026e-456c-88e4-dbacf37c22e7.png" 
                 alt="AdGo Logo" 
                 className="h-26 w-auto mx-auto"
               />

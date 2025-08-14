@@ -54,7 +54,7 @@ const Home = () => {
         <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
           <div className="flex items-center space-x-4">
             <img 
-              src="/lovable-uploads/2d18fdff-72d6-4b0b-bf30-16afdf09e95c.png" 
+              src="/lovable-uploads/2832d142-026e-456c-88e4-dbacf37c22e7.png" 
               alt="Adgo Logo" 
               className="h-8 w-auto"
             />
@@ -219,7 +219,7 @@ const Home = () => {
         <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex items-center space-x-4">
             <img 
-              src="/lovable-uploads/2d18fdff-72d6-4b0b-bf30-16afdf09e95c.png" 
+              src="/lovable-uploads/2832d142-026e-456c-88e4-dbacf37c22e7.png" 
               alt="Adgo Logo" 
               className="h-6 w-auto"
             />

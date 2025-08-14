@@ -23,7 +23,7 @@ const Waitlist = () => {
       <div className="w-full max-w-4xl">
         <div className="text-center mb-12">
           <img 
-            src="/lovable-uploads/2d18fdff-72d6-4b0b-bf30-16afdf09e95c.png" 
+            src="/lovable-uploads/2832d142-026e-456c-88e4-dbacf37c22e7.png" 
             alt="Adgo Logo" 
             className="h-16 w-auto mx-auto mb-8"
           />

@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import adgoLogo from '@/assets/adgo-logo.png';
+// Logo now referenced from /lovable-uploads to use latest upload
 
 export const NavBar = () => {
   const { user, signOut } = useAuth();
@@ -18,7 +18,7 @@ export const NavBar = () => {
     <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-2">
-          <img src={adgoLogo} alt="AdGo" className="h-12 w-auto" />
+          <img src="/lovable-uploads/2832d142-026e-456c-88e4-dbacf37c22e7.png" alt="AdGo logo" className="h-12 w-auto" />
           <span className="font-bold text-xl">AdGo</span>
         </div>
         <div className="flex items-center space-x-4">

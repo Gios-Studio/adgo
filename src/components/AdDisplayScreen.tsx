@@ -82,7 +82,7 @@ const AdDisplayScreen = () => {
             </Button>
             <div className="flex items-center space-x-2">
               <img 
-                src="/lovable-uploads/80d624a8-a3ff-4e94-a942-65dc5933071d.png" 
+                src="/lovable-uploads/432b313b-850e-401d-9c55-a5e592080ec0.png" 
                 alt="AdGo Icon" 
                 className="h-12 w-auto" 
               />
