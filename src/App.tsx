@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import Waitlist from "./pages/Waitlist";
+import Landing from "./pages/Landing";
 import { AuthForm } from "./components/AuthForm";
 import ClientDashboard from "./components/ClientDashboard";
 import AdminDashboard from "./components/AdminDashboard";
@@ -36,7 +37,7 @@ const AppRoutes = () => {
       <Route path="/waitlist" element={<Waitlist />} />
       <Route 
         path="/" 
-        element={user ? <Navigate to="/client-dashboard" replace /> : <Home />} 
+        element={user ? <Navigate to="/client-dashboard" replace /> : <Landing />} 
       />
       <Route path="/login" element={<AuthForm />} />
       <Route 
