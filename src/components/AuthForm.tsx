@@ -88,7 +88,7 @@ const AuthForm = () => {
               alt="AdGo Logo" 
               className="h-12 w-auto mr-3"
             />
-            <span className="text-2xl font-bold">AdGo</span>
+            
           </div>
           <h1 className="text-4xl font-bold mb-6">
             Welcome to the Future of
