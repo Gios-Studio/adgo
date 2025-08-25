@@ -78,14 +78,25 @@ const ClientDashboard = () => {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST301' || error.message.includes('permission denied')) {
+          toast({
+            title: "Setting up your account",
+            description: "Please wait while we prepare your dashboard...",
+          });
+          // Refresh after a moment to allow user setup to complete
+          setTimeout(() => window.location.reload(), 2000);
+          return;
+        }
+        throw error;
+      }
       setAds(data || []);
     } catch (error) {
       console.error('Error fetching ads:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to load ads',
-        variant: 'destructive',
+        title: "Error",
+        description: "Failed to load ads. Please try refreshing the page.",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -101,7 +112,13 @@ const ClientDashboard = () => {
         .select('id, name')
         .eq('status', 'active');
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST301' || error.message.includes('permission denied')) {
+          // User setup still in progress, campaigns will load after ads setup completes
+          return;
+        }
+        throw error;
+      }
       setCampaigns(data || []);
     } catch (error) {
       console.error('Error fetching campaigns:', error);
