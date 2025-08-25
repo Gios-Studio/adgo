@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import Waitlist from "./pages/Waitlist";
 import Landing from "./pages/Landing";
 import AuthForm from "./components/AuthForm";
-import ClientDashboard from "./components/ClientDashboard";
+import AdvertiserDashboard from "./components/AdvertiserDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import AdDisplayScreen from "./components/AdDisplayScreen";
 import DemoPreview from "./components/DemoPreview";
@@ -44,7 +44,7 @@ const AppRoutes = () => {
         path="/client-dashboard" 
         element={
           <ProtectedRoute>
-            <ClientDashboard />
+            <AdvertiserDashboard />
           </ProtectedRoute>
         } 
       />
