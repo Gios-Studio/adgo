@@ -40,6 +40,7 @@ const AppRoutes = () => {
         element={user ? <Navigate to="/client-dashboard" replace /> : <Landing />} 
       />
       <Route path="/login" element={<AuthForm />} />
+      <Route path="/auth" element={<AuthForm />} />
       <Route 
         path="/client-dashboard" 
         element={
