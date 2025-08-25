@@ -8,7 +8,7 @@ import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import Waitlist from "./pages/Waitlist";
 import Landing from "./pages/Landing";
-import { AuthForm } from "./components/AuthForm";
+import AuthForm from "./components/AuthForm";
 import ClientDashboard from "./components/ClientDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import AdDisplayScreen from "./components/AdDisplayScreen";
