@@ -10,135 +10,43 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.12 (cd3cf9e)"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
-      ad_analytics: {
-        Row: {
-          ad_id: string
-          clicks: number
-          conversions: number
-          cost: number
-          created_at: string
-          date: string
-          id: string
-          impressions: number
-          organization_id: string
-          revenue: number
-          updated_at: string
-        }
-        Insert: {
-          ad_id: string
-          clicks?: number
-          conversions?: number
-          cost?: number
-          created_at?: string
-          date?: string
-          id?: string
-          impressions?: number
-          organization_id: string
-          revenue?: number
-          updated_at?: string
-        }
-        Update: {
-          ad_id?: string
-          clicks?: number
-          conversions?: number
-          cost?: number
-          created_at?: string
-          date?: string
-          id?: string
-          impressions?: number
-          organization_id?: string
-          revenue?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ad_analytics_ad_id_fkey"
-            columns: ["ad_id"]
-            isOneToOne: false
-            referencedRelation: "ads"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       ads: {
         Row: {
-          budget_daily: number | null
-          budget_total: number | null
+          age_max: number | null
+          age_min: number | null
           campaign_id: string | null
-          clicks_target: number | null
-          conversion_target: number | null
-          created_at: string
-          created_by: string
-          description: string | null
-          end_date: string | null
+          city: string | null
+          created_at: string | null
+          gender: string | null
           id: string
-          image_url: string | null
-          impressions_target: number | null
-          is_active: boolean
-          metadata: Json | null
-          organization_id: string
-          priority: number | null
-          start_date: string | null
-          status: string
-          tags: string[] | null
-          target_audience: Json | null
-          title: string
-          updated_at: string
-          video_url: string | null
+          language: string | null
+          media_url: string | null
         }
         Insert: {
-          budget_daily?: number | null
-          budget_total?: number | null
+          age_max?: number | null
+          age_min?: number | null
           campaign_id?: string | null
-          clicks_target?: number | null
-          conversion_target?: number | null
-          created_at?: string
-          created_by: string
-          description?: string | null
-          end_date?: string | null
+          city?: string | null
+          created_at?: string | null
+          gender?: string | null
           id?: string
-          image_url?: string | null
-          impressions_target?: number | null
-          is_active?: boolean
-          metadata?: Json | null
-          organization_id: string
-          priority?: number | null
-          start_date?: string | null
-          status?: string
-          tags?: string[] | null
-          target_audience?: Json | null
-          title: string
-          updated_at?: string
-          video_url?: string | null
+          language?: string | null
+          media_url?: string | null
         }
         Update: {
-          budget_daily?: number | null
-          budget_total?: number | null
+          age_max?: number | null
+          age_min?: number | null
           campaign_id?: string | null
-          clicks_target?: number | null
-          conversion_target?: number | null
-          created_at?: string
-          created_by?: string
-          description?: string | null
-          end_date?: string | null
+          city?: string | null
+          created_at?: string | null
+          gender?: string | null
           id?: string
-          image_url?: string | null
-          impressions_target?: number | null
-          is_active?: boolean
-          metadata?: Json | null
-          organization_id?: string
-          priority?: number | null
-          start_date?: string | null
-          status?: string
-          tags?: string[] | null
-          target_audience?: Json | null
-          title?: string
-          updated_at?: string
-          video_url?: string | null
+          language?: string | null
+          media_url?: string | null
         }
         Relationships: [
           {
@@ -148,339 +56,193 @@ export type Database = {
             referencedRelation: "campaigns"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "ads_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
         ]
       }
       campaigns: {
         Row: {
-          budget_daily: number | null
-          budget_total: number | null
-          created_at: string
-          created_by: string
-          description: string | null
+          budget: number | null
+          created_at: string | null
           end_date: string | null
           id: string
-          is_active: boolean
           name: string
-          organization_id: string
+          org_id: string | null
           start_date: string | null
-          status: string
-          target_audience: Json | null
-          updated_at: string
         }
         Insert: {
-          budget_daily?: number | null
-          budget_total?: number | null
-          created_at?: string
-          created_by: string
-          description?: string | null
+          budget?: number | null
+          created_at?: string | null
           end_date?: string | null
           id?: string
-          is_active?: boolean
           name: string
-          organization_id: string
+          org_id?: string | null
           start_date?: string | null
-          status?: string
-          target_audience?: Json | null
-          updated_at?: string
         }
         Update: {
-          budget_daily?: number | null
-          budget_total?: number | null
-          created_at?: string
-          created_by?: string
-          description?: string | null
+          budget?: number | null
+          created_at?: string | null
           end_date?: string | null
           id?: string
-          is_active?: boolean
           name?: string
-          organization_id?: string
+          org_id?: string | null
           start_date?: string | null
-          status?: string
-          target_audience?: Json | null
-          updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      organizations: {
+      org_invitations: {
         Row: {
-          address: string | null
-          created_at: string
-          email: string | null
+          created_at: string | null
+          email: string
+          expires_at: string | null
           id: string
-          is_active: boolean
-          logo_url: string | null
-          name: string
-          phone: string | null
-          slug: string
-          subscription_plan: string | null
-          updated_at: string
-          website: string | null
+          invited_by: string | null
+          org_id: string
+          role: Database["public"]["Enums"]["role_type"]
         }
         Insert: {
-          address?: string | null
-          created_at?: string
-          email?: string | null
+          created_at?: string | null
+          email: string
+          expires_at?: string | null
           id?: string
-          is_active?: boolean
-          logo_url?: string | null
-          name: string
-          phone?: string | null
-          slug: string
-          subscription_plan?: string | null
-          updated_at?: string
-          website?: string | null
+          invited_by?: string | null
+          org_id: string
+          role?: Database["public"]["Enums"]["role_type"]
         }
         Update: {
-          address?: string | null
-          created_at?: string
-          email?: string | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string | null
           id?: string
-          is_active?: boolean
-          logo_url?: string | null
-          name?: string
-          phone?: string | null
-          slug?: string
-          subscription_plan?: string | null
-          updated_at?: string
-          website?: string | null
+          invited_by?: string | null
+          org_id?: string
+          role?: Database["public"]["Enums"]["role_type"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "org_invitations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      payments: {
+      org_memberships: {
         Row: {
-          ad_id: string | null
-          amount: number
-          created_at: string
-          currency: string
-          description: string | null
-          id: string
-          metadata: Json | null
-          organization_id: string
-          payment_method: string
-          payment_provider: string | null
-          payment_status: string
-          processed_at: string | null
-          transaction_id: string | null
-          updated_at: string
+          added_at: string
+          org_id: string
+          role: Database["public"]["Enums"]["role_type"]
           user_id: string
         }
         Insert: {
-          ad_id?: string | null
-          amount: number
-          created_at?: string
-          currency?: string
-          description?: string | null
-          id?: string
-          metadata?: Json | null
-          organization_id: string
-          payment_method: string
-          payment_provider?: string | null
-          payment_status?: string
-          processed_at?: string | null
-          transaction_id?: string | null
-          updated_at?: string
+          added_at?: string
+          org_id: string
+          role?: Database["public"]["Enums"]["role_type"]
           user_id: string
         }
         Update: {
-          ad_id?: string | null
-          amount?: number
-          created_at?: string
-          currency?: string
-          description?: string | null
-          id?: string
-          metadata?: Json | null
-          organization_id?: string
-          payment_method?: string
-          payment_provider?: string | null
-          payment_status?: string
-          processed_at?: string | null
-          transaction_id?: string | null
-          updated_at?: string
+          added_at?: string
+          org_id?: string
+          role?: Database["public"]["Enums"]["role_type"]
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "payments_ad_id_fkey"
-            columns: ["ad_id"]
+            foreignKeyName: "org_memberships_org_id_fkey"
+            columns: ["org_id"]
             isOneToOne: false
-            referencedRelation: "ads"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payments_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
+            referencedRelation: "orgs"
             referencedColumns: ["id"]
           },
         ]
+      }
+      orgs: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
-          avatar_url: string | null
-          bio: string | null
-          created_at: string
-          display_name: string | null
-          first_name: string | null
+          created_at: string | null
+          full_name: string | null
           id: string
-          is_active: boolean
-          job_title: string | null
-          last_name: string | null
-          organization_id: string | null
-          phone: string | null
-          updated_at: string
-          user_id: string
+          role: string | null
         }
         Insert: {
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string
-          display_name?: string | null
-          first_name?: string | null
-          id?: string
-          is_active?: boolean
-          job_title?: string | null
-          last_name?: string | null
-          organization_id?: string | null
-          phone?: string | null
-          updated_at?: string
-          user_id: string
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          role?: string | null
         }
         Update: {
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string
-          display_name?: string | null
-          first_name?: string | null
+          created_at?: string | null
+          full_name?: string | null
           id?: string
-          is_active?: boolean
-          job_title?: string | null
-          last_name?: string | null
-          organization_id?: string | null
-          phone?: string | null
-          updated_at?: string
-          user_id?: string
+          role?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      reports: {
+      report_subscriptions: {
         Row: {
-          ad_id: string | null
-          created_at: string
-          data: Json
-          date_range_end: string
-          date_range_start: string
-          description: string | null
-          file_url: string | null
-          generated_by: string
+          active: boolean | null
+          campaign_id: string | null
+          created_at: string | null
+          frequency: string | null
           id: string
-          is_public: boolean | null
-          organization_id: string
-          report_type: string
-          title: string
-          updated_at: string
+          org_id: string | null
+          recipients: string[] | null
         }
         Insert: {
-          ad_id?: string | null
-          created_at?: string
-          data: Json
-          date_range_end: string
-          date_range_start: string
-          description?: string | null
-          file_url?: string | null
-          generated_by: string
+          active?: boolean | null
+          campaign_id?: string | null
+          created_at?: string | null
+          frequency?: string | null
           id?: string
-          is_public?: boolean | null
-          organization_id: string
-          report_type: string
-          title: string
-          updated_at?: string
+          org_id?: string | null
+          recipients?: string[] | null
         }
         Update: {
-          ad_id?: string | null
-          created_at?: string
-          data?: Json
-          date_range_end?: string
-          date_range_start?: string
-          description?: string | null
-          file_url?: string | null
-          generated_by?: string
+          active?: boolean | null
+          campaign_id?: string | null
+          created_at?: string | null
+          frequency?: string | null
           id?: string
-          is_public?: boolean | null
-          organization_id?: string
-          report_type?: string
-          title?: string
-          updated_at?: string
+          org_id?: string | null
+          recipients?: string[] | null
         }
         Relationships: [
           {
-            foreignKeyName: "reports_ad_id_fkey"
-            columns: ["ad_id"]
+            foreignKeyName: "report_subscriptions_campaign_id_fkey"
+            columns: ["campaign_id"]
             isOneToOne: false
-            referencedRelation: "ads"
+            referencedRelation: "campaigns"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "reports_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: "report_subscriptions_org_id_fkey"
+            columns: ["org_id"]
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          granted_at: string
-          granted_by: string | null
-          id: string
-          is_active: boolean
-          organization_id: string | null
-          role: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          granted_at?: string
-          granted_by?: string | null
-          id?: string
-          is_active?: boolean
-          organization_id?: string | null
-          role: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          granted_at?: string
-          granted_by?: string | null
-          id?: string
-          is_active?: boolean
-          organization_id?: string | null
-          role?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_roles_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
+            referencedRelation: "orgs"
             referencedColumns: ["id"]
           },
         ]
@@ -490,13 +252,51 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_user_role: {
-        Args: { org_id?: string }
-        Returns: string
+      accept_org_invite: {
+        Args: { p_token: string }
+        Returns: undefined
+      }
+      add_current_user_to_org: {
+        Args: {
+          p_org_id: string
+          p_role?: Database["public"]["Enums"]["role_type"]
+        }
+        Returns: undefined
+      }
+      campaign_is_visible_to_me: {
+        Args: { p_campaign_id: string }
+        Returns: boolean
+      }
+      create_org_invite: {
+        Args: {
+          p_email: string
+          p_org_id: string
+          p_role?: Database["public"]["Enums"]["role_type"]
+        }
+        Returns: {
+          created_at: string | null
+          email: string
+          expires_at: string | null
+          id: string
+          invited_by: string | null
+          org_id: string
+          role: Database["public"]["Enums"]["role_type"]
+        }
+      }
+      has_org_role: {
+        Args: {
+          p_org_id: string
+          roles: Database["public"]["Enums"]["role_type"][]
+        }
+        Returns: boolean
+      }
+      is_org_member: {
+        Args: { p_org_id: string }
+        Returns: boolean
       }
     }
     Enums: {
-      [_ in never]: never
+      role_type: "owner" | "admin" | "manager" | "analyst" | "viewer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -623,6 +423,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      role_type: ["owner", "admin", "manager", "analyst", "viewer"],
+    },
   },
 } as const
