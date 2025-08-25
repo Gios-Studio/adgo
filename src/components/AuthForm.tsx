@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import RoleSelection from "./RoleSelection";
+
 import { Eye, EyeOff, Mail, Lock, Chrome } from "lucide-react";
 
 const AuthForm = () => {
@@ -15,7 +15,7 @@ const AuthForm = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showRoleSelection, setShowRoleSelection] = useState(false);
+  
   const { signIn, signUp, signInWithGoogle } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const AuthForm = () => {
           title: "Success!",
           description: isSignUp ? "Account created successfully!" : "Signed in successfully!",
         });
-        setShowRoleSelection(true);
+        // User will be redirected automatically by the auth state change
       }
     } catch (error) {
       toast({
@@ -67,14 +67,11 @@ const AuthForm = () => {
         title: "Success!",
         description: "Signed in with Google successfully!",
       });
-      setShowRoleSelection(true);
+      // User will be redirected automatically by the auth state change
     }
     setLoading(false);
   };
 
-  if (showRoleSelection) {
-    return <RoleSelection onRoleSelect={() => setShowRoleSelection(false)} />;
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex">
