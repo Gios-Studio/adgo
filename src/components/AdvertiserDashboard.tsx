@@ -267,6 +267,7 @@ const AdvertiserDashboard = () => {
               Schedule Campaign
             </Button>
             <Button 
+              onClick={() => navigate('/ad-upload')}
               className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -586,6 +587,7 @@ const AdvertiserDashboard = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button 
+                  onClick={() => navigate('/ad-upload')}
                   className="w-full justify-start bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg"
                 >
                   <Plus className="h-4 w-4 mr-2" />

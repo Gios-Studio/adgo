@@ -12,7 +12,7 @@ import AuthForm from "./components/AuthForm";
 import AdvertiserDashboard from "./components/AdvertiserDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import AdDisplayScreen from "./components/AdDisplayScreen";
-import DemoPreview from "./components/DemoPreview";
+import AdUploadFlow from "./components/AdUploadFlow";
 import PaymentProcessor from "./components/PaymentProcessor";
 import CampaignCalendar from "./components/CampaignCalendar";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
@@ -57,7 +57,7 @@ const AppRoutes = () => {
         } 
       />
       <Route path="/ad-display" element={<AdDisplayScreen />} />
-      <Route path="/demo" element={<DemoPreview />} />
+      <Route path="/ad-upload" element={<ProtectedRoute><AdUploadFlow /></ProtectedRoute>} />
       <Route path="/payment" element={<PaymentProcessor />} />
       <Route path="/calendar" element={<CampaignCalendar />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
