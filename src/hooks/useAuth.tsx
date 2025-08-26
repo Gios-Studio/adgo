@@ -45,8 +45,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
               // Check if user has a profile
               const { data: profile } = await supabase
                 .from('profiles')
-                .select('id, organization_id')
-                .eq('user_id', session.user.id)
+                .select('id')
+                .eq('id', session.user.id)
                 .single();
               
               // If no profile, the trigger should have created one, wait a moment and try again
