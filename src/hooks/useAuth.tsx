@@ -38,27 +38,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // If user just signed in, ensure they have a profile and role
+        // User authentication is complete
         if (event === 'SIGNED_IN' && session?.user) {
-          setTimeout(async () => {
-            try {
-              // Check if user has a profile
-              const { data: profile } = await supabase
-                .from('profiles')
-                .select('id')
-                .eq('id', session.user.id)
-                .single();
-              
-              // If no profile, the trigger should have created one, wait a moment and try again
-              if (!profile) {
-                setTimeout(() => {
-                  window.location.reload();
-                }, 1000);
-              }
-            } catch (error) {
-              console.error('Error checking user profile:', error);
-            }
-          }, 500);
+          console.log('User signed in successfully');
         }
         
         setLoading(false);
