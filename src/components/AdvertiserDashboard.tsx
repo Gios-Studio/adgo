@@ -259,7 +259,7 @@ const AdvertiserDashboard = () => {
           
           <div className="flex gap-3 mt-4 sm:mt-0">
             <Button 
-              onClick={() => navigate('/campaign-calendar')}
+              onClick={() => navigate('/calendar')}
               variant="outline"
               className="border-primary/20 hover:bg-primary/5"
             >
