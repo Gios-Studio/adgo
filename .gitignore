@@ -22,3 +22,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# ── Node & OS
+node_modules/
+.DS_Store
+
+# ── Env & backups
+.env
+.env.*
+!.env.example
+supabase/.temp/
+
+# ── Local outputs
+*.log
+
+# ── Supabase artifacts
+supabase/migrations/_archived/
+supabase/sql/
