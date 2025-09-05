@@ -48,143 +48,115 @@ const Header = () => {
         </div>
 
         {/* Mobile menu button */}
-        <div className="md:hidden flex items-center gap-4">
-          {/* Theme toggle for mobile */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleTheme}
-            className="h-8 w-8 p-0"
-          >
-            {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleMobileMenu}
-            className="h-8 w-8 p-0"
-          >
-            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </Button>
-        </div>
+        <button
+          className="md:hidden p-3 rounded-2xl text-muted-foreground hover:text-foreground"
+          onClick={toggleMobileMenu}
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
 
         {/* Desktop navigation */}
-        <nav className="hidden md:block">
-          <ToggleGroup
-            type="single"
-            value={activePage}
-            onValueChange={(value) => value && setActivePage(value)}
-            className="gap-1"
-          >
-            <ToggleGroupItem
-              value="features"
-              variant="outline"
-              onClick={handleNavClick('features')}
-              className={cn(
-                "px-4 py-2 text-sm font-medium transition-colors rounded-lg",
-                activePage === 'features'
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}
-            >
-              <CircleDot className="h-4 w-4 mr-2" />
-              Features
-            </ToggleGroupItem>
-            
-            <ToggleGroupItem
-              value="testimonials"
-              variant="outline"
-              onClick={handleNavClick('testimonials')}
-              className={cn(
-                "px-4 py-2 text-sm font-medium transition-colors rounded-lg",
-                activePage === 'testimonials'
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}
-            >
-              <LayoutDashboard className="h-4 w-4 mr-2" />
-              Testimonials
-            </ToggleGroupItem>
-            
-            <ToggleGroupItem
-              value="pricing"
-              variant="outline"
-              onClick={handleNavClick('pricing')}
-              className={cn(
-                "px-4 py-2 text-sm font-medium transition-colors rounded-lg",
-                activePage === 'pricing'
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}
-            >
-              <DollarSign className="h-4 w-4 mr-2" />
-              Pricing
-            </ToggleGroupItem>
-          </ToggleGroup>
+        <nav className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
+          <div className="rounded-full px-1 py-1 backdrop-blur-md bg-background/80 border border-border shadow-lg">
+            <ToggleGroup type="single" value={activePage} onValueChange={(value) => value && setActivePage(value)}>
+              <ToggleGroupItem
+                value="features"
+                className={cn(
+                  "px-4 py-2 rounded-full transition-colors relative",
+                  activePage === 'features' ? 'text-accent-foreground bg-accent' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                )}
+                onClick={handleNavClick('features')}
+              >
+                <CircleDot size={16} className="inline-block mr-1.5" /> Features
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="dashboard"
+                className={cn(
+                  "px-4 py-2 rounded-full transition-colors relative",
+                  activePage === 'dashboard' ? 'text-accent-foreground bg-accent' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                )}
+                onClick={handleNavClick('dashboard')}
+              >
+                <LayoutDashboard size={16} className="inline-block mr-1.5" /> Dashboard
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="pricing"
+                className={cn(
+                  "px-4 py-2 rounded-full transition-colors relative",
+                  activePage === 'pricing' ? 'text-accent-foreground bg-accent' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                )}
+                onClick={handleNavClick('pricing')}
+              >
+                <DollarSign size={16} className="inline-block mr-1.5" /> Pricing
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
         </nav>
 
-        {/* Desktop actions */}
-        <div className="hidden md:flex items-center gap-4">
-          {/* Theme toggle */}
-          <div className="flex items-center gap-2">
-            <Sun className="h-4 w-4 text-muted-foreground" />
-            <Switch
-              checked={isDarkMode}
-              onCheckedChange={toggleTheme}
-              className="scale-75"
-            />
-            <Moon className="h-4 w-4 text-muted-foreground" />
-          </div>
-          
-          <Button variant="outline" size="sm">
-            Log in
-          </Button>
-          <Button size="sm">
-            Get started
-          </Button>
-        </div>
-
-        {/* Mobile menu */}
+        {/* Mobile navigation */}
         {mobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-card border border-border rounded-lg mt-2 p-4 shadow-lg md:hidden">
-            <nav className="flex flex-col gap-2 mb-4">
-              <Button
-                variant={activePage === 'features' ? 'default' : 'ghost'}
+          <div className="md:hidden absolute top-20 left-4 right-4 bg-background/95 backdrop-blur-md py-4 px-6 border border-border rounded-2xl shadow-lg z-50">
+            <div className="flex flex-col gap-4">
+              <a
+                href="#features"
+                className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                  activePage === 'features' ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
                 onClick={handleNavClick('features')}
-                className="justify-start"
               >
-                <CircleDot className="h-4 w-4 mr-2" />
-                Features
-              </Button>
-              <Button
-                variant={activePage === 'testimonials' ? 'default' : 'ghost'}
-                onClick={handleNavClick('testimonials')}
-                className="justify-start"
+                <CircleDot size={16} className="inline-block mr-1.5" /> Features
+              </a>
+              <a
+                href="#dashboard"
+                className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                  activePage === 'dashboard' ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+                onClick={handleNavClick('dashboard')}
               >
-                <LayoutDashboard className="h-4 w-4 mr-2" />
-                Testimonials
-              </Button>
-              <Button
-                variant={activePage === 'pricing' ? 'default' : 'ghost'}
+                <LayoutDashboard size={16} className="inline-block mr-1.5" /> Dashboard
+              </a>
+              <a
+                href="#pricing"
+                className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                  activePage === 'pricing' ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
                 onClick={handleNavClick('pricing')}
-                className="justify-start"
               >
-                <DollarSign className="h-4 w-4 mr-2" />
-                Pricing
-              </Button>
-            </nav>
-            
-            <div className="flex flex-col gap-2 pt-2 border-t border-border">
-              <Button variant="outline" size="sm">
-                Log in
-              </Button>
-              <Button size="sm">
-                Get started
-              </Button>
+                <DollarSign size={16} className="inline-block mr-1.5" /> Pricing
+              </a>
+
+              {/* Add theme toggle for mobile */}
+              <div className="flex items-center justify-between px-3 py-2">
+                <span className="text-sm text-muted-foreground">Theme</span>
+                <div className="flex items-center gap-2">
+                  <Moon size={16} className={`${isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <Switch
+                    checked={!isDarkMode}
+                    onCheckedChange={toggleTheme}
+                    className="data-[state=checked]:bg-primary"
+                  />
+                  <Sun size={16} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
+                </div>
+              </div>
             </div>
           </div>
         )}
+
+        <div className="hidden md:flex items-center gap-4">
+          {/* Theme toggle for desktop */}
+          <div className="flex items-center gap-2 rounded-full px-3 py-2">
+            <Moon size={18} className={`${isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
+            <Switch
+              checked={!isDarkMode}
+              onCheckedChange={toggleTheme}
+              className="data-[state=checked]:bg-primary"
+            />
+            <Sun size={18} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
+          </div>
+          <div className="rounded-2xl">
+            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-muted">Log in</Button>
+          </div>
+        </div>
       </header>
     </div>
   );
