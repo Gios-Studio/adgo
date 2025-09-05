@@ -1,73 +1,55 @@
-# Welcome to your Lovable project
 
-## Project info
+# AdGo BE Pack v1 (Supabase)
 
-**URL**: https://lovable.dev/projects/8937e31a-a4e5-41d4-aad3-bd8c94720c57
+## What you get
+- SQL (`adgo_be.sql`): events ingest tables, HMAC secret store, idempotency table, materialized views, pg_cron jobs, pacing function.
+- Edge functions:
+  - `impression/` and `click/`: HMAC + Idempotency ingest.
+  - `process-creative/`: validate + checksum + approve/reject creative.
+  - `pacing-check/`: RPC to DB `can_serve` for pre-serve guard.
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/8937e31a-a4e5-41d4-aad3-bd8c94720c57) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## One-time setup
+1. Run SQL: open Supabase → SQL Editor → run `adgo_be.sql`.
+2. In **Project Settings → API**, note `SUPABASE_URL` and **Service Role** key.
+3. Create edge function env vars for each function:
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+4. Insert an org secret:
+```sql
+insert into adgo.org_secrets (org_id, hmac_secret)
+values ('<your-org-uuid>', '<random 64-char hex>');
 ```
 
-**Edit a file directly in GitHub**
+## Deploy functions
+```bash
+supabase functions deploy impression --no-verify-jwt
+supabase functions deploy click --no-verify-jwt
+supabase functions deploy process-creative --no-verify-jwt
+supabase functions deploy pacing-check --no-verify-jwt
+```
+(We use `--no-verify-jwt` because we authenticate via HMAC/org secret for ingest and server role for pacing.)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Call examples
 
-**Use GitHub Codespaces**
+### Impression
+```bash
+BODY='{"campaign_id":"<uuid>","creative_id":"<uuid>","device_id":"abc123"}'
+SIG=$(node -e "const c=require('crypto');const key=Buffer.from(process.argv[1],'hex');const b=Buffer.from(process.argv[2]);console.log(c.createHmac('sha256',key).update(b).digest('hex'));"
+  <hex_secret> "$BODY")
+curl -s -X POST "https://<project>.functions.supabase.co/impression"   -H "Content-Type: application/json"   -H "X-AdGo-Org: <org_uuid>"   -H "X-AdGo-Signature: $SIG"   -H "Idempotency-Key: $(uuidgen)"   -d "$BODY"
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Process Creative
+```bash
+curl -s -X POST "https://<project>.functions.supabase.co/process-creative"   -H "Content-Type: application/json"   -d '{"org_id":"<org>","campaign_id":"<camp>","creative_id":"<cr>","bucket":"creatives","path":"<filePath>"}'
+```
 
-## What technologies are used for this project?
+### Pacing Check
+```bash
+curl -s "https://<project>.functions.supabase.co/pacing-check?campaign_id=<uuid>"
+```
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/8937e31a-a4e5-41d4-aad3-bd8c94720c57) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Notes
+- Aggregations refresh **hourly** + **daily** via pg_cron; change schedules if needed.
+- Dedupe keys auto-clean after 24h.
+- `process-creative` intentionally keeps dimension/duration null to keep it lightweight. We can add image/video probes later.

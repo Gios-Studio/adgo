@@ -1,124 +1,134 @@
+// src/App.tsx
 import { useEffect } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
+// <<agent:imports>>
 
-// PAGES / COMPONENTS
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import Home from "./pages/Home";
-import Waitlist from "./pages/Waitlist";
-import Landing from "./pages/Landing";
-import AuthForm from "./components/AuthForm";
-import AdvertiserDashboard from "./components/AdvertiserDashboard";
-import AdminDashboard from "./components/AdminDashboard";
-import AdDisplayScreen from "./components/AdDisplayScreen";
-import AdUploadFlow from "./components/AdUploadFlow";
-import PaymentProcessor from "./components/PaymentProcessor";
-import CampaignCalendar from "./components/CampaignCalendar";
+import { AuthProvider } from "@/hooks/useAuth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { RequireAnon } from "@/components/RequireAnon";
+import AuthForm from "@/components/AuthForm";
 
-import { AuthProvider } from "./hooks/useAuth";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import Home from "@/pages/Home";
+import Dashboard from "@/pages/Dashboard";
+import MyAds from "@/pages/MyAds";
+import CampaignCalendar from "@/pages/CampaignCalendar";
+import Wallet from "@/pages/Wallet";
+import Analytics from "@/pages/Analytics";
 
-// ✅ Supabase client (make sure this file exists)
-import { supabase } from "./lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient";
 
-const queryClient = new QueryClient();
-
-function RootLayout({ children }: { children: React.ReactNode }) {
-  // 🔎 Supabase smoke test: checks SDK wiring & envs are readable
+export default function App() {
+  // Optional smoke test so you can see session on load
   useEffect(() => {
     (async () => {
-      try {
-        // quick no-op auth call
-        const { data, error } = await supabase.auth.getSession();
-        console.log("Supabase smoke test → getSession()", { data, error });
-
-        // optional: log env presence (don’t log secrets)
-        console.log("ENV present?", {
-          hasUrl: !!import.meta.env.VITE_SUPABASE_URL,
-          hasAnonKey: !!import.meta.env.VITE_SUPABASE_ANON_KEY,
-        });
-      } catch (e) {
-        console.error("Supabase smoke test error:", e);
-      }
+      const { data } = await supabase?.auth.getSession();
+      console.log("Supabase smoke test → getSession()", data);
     })();
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          {children}
-          <Toaster />
-          <Sonner />
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <div className="min-h-screen flex flex-col">
+          <TopNav />
+          <main className="flex-1">
+            <Routes>
+              {/* Public landing */}
+              <Route path="/" element={<Home />} />
+
+              {/* Auth page (keeps signed-in users out) */}
+              <Route
+                path="/auth"
+                element={
+                  <RequireAnon>
+                    <AuthForm />
+                  </RequireAnon>
+                }
+              />
+
+              {/* Post-login core */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-ads"
+                element={
+                  <ProtectedRoute>
+                    <MyAds />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/calendar"
+                element={
+                  <ProtectedRoute>
+                    <CampaignCalendar />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/wallet"
+                element={
+                  <ProtectedRoute>
+                    <Wallet />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/analytics"
+                element={
+                  <ProtectedRoute>
+                    <Analytics />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Agent will inject extra protected routes here if needed */}
+              {/* <<agent:routes>> */}
+
+              {/* Fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+        </div>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
-export default function App() {
+/**
+ * Minimal top nav so you can click around after login.
+ * Remove or style as you like.
+ */
+function TopNav() {
   return (
-    <RootLayout>
-      <BrowserRouter>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Landing />} />
-          <Route path="/index" element={<Index />} />
-          <Route path="/auth" element={<AuthForm />} />
-          <Route path="/waitlist" element={<Waitlist />} />
-          <Route path="/display" element={<AdDisplayScreen />} />
-
-          {/* Protected routes */}
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
+    <nav className="border-b p-3 flex items-center gap-3">
+      <Link to="/" className="font-semibold">AdGo</Link>
+      <Link to="/dashboard">Dashboard</Link>
+      <Link to="/my-ads">My Ads</Link>
+      <Link to="/calendar">Calendar</Link>
+      <Link to="/wallet">Wallet</Link>
+      <Link to="/analytics">Analytics</Link>
+      <div className="ml-auto">
+        <button
+          className="border rounded px-3 py-1.5"
+          onClick={async () => {
+            try {
+              await supabase?.auth.signOut();
+            } finally {
+              // Hard redirect clears any stale state
+              location.href = "/";
             }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <AdvertiserDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/upload"
-            element={
-              <ProtectedRoute>
-                <AdUploadFlow />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/calendar"
-            element={
-              <ProtectedRoute>
-                <CampaignCalendar />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Redirects & 404 */}
-          <Route path="/app" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </RootLayout>
+          }}
+        >
+          Sign out
+        </button>
+      </div>
+    </nav>
   );
 }

@@ -30,6 +30,8 @@ node_modules/
 .env
 .env.*
 !.env.example
+.env.local
+supabase/.env
 supabase/.temp/
 
 # ── Local outputs

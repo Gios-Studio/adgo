@@ -1,25 +1,19 @@
-import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { ReactNode, useEffect, useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
-interface ProtectedRouteProps {
-  children: ReactNode;
-}
+export function ProtectedRoute({ children }: { children: ReactNode }) {
+  const { loading, session } = useAuth();
+  const location = useLocation();
+  const [ready, setReady] = useState(false);
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user, loading } = useAuth();
+  // defer one tick so we never redirect during the same paint
+  useEffect(() => { if (!loading) setReady(true); }, [loading]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+  if (!ready) return null; // or spinner
+  if (!session) {
+    const next = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/auth?next=${next}`} replace />;
   }
-
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
-
   return <>{children}</>;
-};
+}
