@@ -220,9 +220,9 @@ const AdUploadFlow = () => {
   );
 
   const renderStep1 = () => (
-    <Card className="border-0 shadow-xl">
+    <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="text-2xl text-center bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        <CardTitle className="text-2xl text-center text-foreground tracking-tighter">
           Upload Your Creative Assets
         </CardTitle>
         <p className="text-center text-muted-foreground">
@@ -235,29 +235,29 @@ const AdUploadFlow = () => {
           {...getRootProps()}
           className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-300 ${
             isDragActive 
-              ? 'border-primary bg-primary/5' 
-              : 'border-border hover:border-primary/50 hover:bg-primary/5'
+              ? 'border-cosmic-accent bg-cosmic-accent/5' 
+              : 'border-border hover:border-cosmic-accent/50 hover:bg-cosmic-accent/5'
           }`}
         >
           <input {...getInputProps()} />
           
-          <div className="space-y-4">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-              <Upload className="h-8 w-8 text-white" />
-            </div>
-            
-            {isDragActive ? (
-              <p className="text-lg font-medium text-primary">Drop your files here...</p>
-            ) : (
-              <div>
-                <p className="text-lg font-medium mb-2">
-                  Drag & drop your files here, or click to browse
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Supports: JPG, PNG, GIF, MP4, MOV (max 50MB)
-                </p>
+            <div className="space-y-4">
+              <div className="mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+                <Upload className="h-8 w-8 text-cosmic-accent" />
               </div>
-            )}
+            
+              {isDragActive ? (
+                <p className="text-lg font-medium text-cosmic-accent">Drop your files here...</p>
+              ) : (
+                <div>
+                  <p className="text-lg font-medium mb-2 text-foreground">
+                    Drag & drop your files here, or click to browse
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Supports: JPG, PNG, GIF, MP4, MOV (max 50MB)
+                  </p>
+                </div>
+              )}
           </div>
         </div>
 
@@ -273,9 +273,9 @@ const AdUploadFlow = () => {
         )}
 
         {/* Uploaded Files Preview */}
-        {uploadedFiles.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="font-semibold text-primary">Uploaded Files</h3>
+          {uploadedFiles.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="font-semibold text-foreground">Uploaded Files</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {uploadedFiles.map((file, index) => (
                 <div key={index} className="relative group">
@@ -286,11 +286,11 @@ const AdUploadFlow = () => {
                         alt={file.file.name}
                         className="w-full h-full object-cover"
                       />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
-                        <Video className="h-8 w-8 text-primary" />
-                      </div>
-                    )}
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-muted">
+                          <Video className="h-8 w-8 text-cosmic-accent" />
+                        </div>
+                      )}
                   </div>
                   
                   <Button
@@ -315,7 +315,7 @@ const AdUploadFlow = () => {
           <Button 
             onClick={nextStep}
             disabled={uploadedFiles.length === 0}
-            className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg"
+            className="bg-cosmic-accent hover:bg-cosmic-accent/90 text-white"
           >
             Continue <ArrowRight className="ml-2 h-4 w-4" />
           </Button>

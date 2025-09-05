@@ -319,21 +319,25 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-moss-50 to-moss-100 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <RefreshCw className="h-8 w-8 animate-spin text-moss-600 mx-auto" />
-          <p className="text-moss-700">Loading dashboard data...</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="cosmic-grid opacity-20 absolute inset-0"></div>
+        <div className="text-center space-y-4 relative z-10">
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
+            <RefreshCw className="h-8 w-8 animate-spin text-cosmic-accent" />
+          </div>
+          <p className="text-foreground">Loading dashboard data...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-moss-50 to-moss-100">
+    <div className="min-h-screen bg-background">
+      <div className="cosmic-grid opacity-20 absolute inset-0"></div>
       <NavBar />
       
       {/* Header */}
-      <div className="border-b border-moss-200 bg-white/80 backdrop-blur-sm">
+      <div className="border-b border-border bg-card/95 backdrop-blur-sm relative z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -341,14 +345,14 @@ const AdminDashboard = () => {
                 variant="ghost" 
                 size="sm" 
                 onClick={() => navigate('/client-dashboard')}
-                className="text-moss-700 hover:text-moss-800"
+                className="text-foreground hover:text-cosmic-accent"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Dashboard
               </Button>
               <div>
-                <h1 className="text-3xl font-bold text-moss-900">Admin Control Center</h1>
-                <p className="text-moss-600">Manage ads, organizations, and platform analytics</p>
+                <h1 className="text-3xl font-bold text-foreground tracking-tighter">Admin Control Center</h1>
+                <p className="text-muted-foreground">Manage ads, organizations, and platform analytics</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -356,12 +360,12 @@ const AdminDashboard = () => {
                 onClick={() => loadDashboardData()}
                 variant="outline"
                 size="sm"
-                className="border-moss-300 text-moss-700 hover:bg-moss-50"
+                className="border-border text-foreground hover:bg-muted/50"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
-              <Badge variant="outline" className="text-moss-700 border-moss-300">
+              <Badge variant="outline" className="text-cosmic-accent border-cosmic-accent/30">
                 <Shield className="h-3 w-3 mr-1" />
                 Admin Access
               </Badge>
@@ -370,106 +374,118 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6 space-y-6">
+      <div className="max-w-7xl mx-auto p-6 space-y-6 relative z-10">
         {/* Analytics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg">
+          <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-blue-100">Total Ads</CardTitle>
-                <BarChart3 className="w-5 h-5 text-blue-200" />
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Ads</CardTitle>
+                <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-cosmic-accent" />
+                </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{analytics.totalAds}</div>
-              <p className="text-blue-100 text-sm">
+              <div className="text-3xl font-bold text-foreground">{analytics.totalAds}</div>
+              <p className="text-muted-foreground text-sm">
                 {analytics.pendingApprovals > 0 && `${analytics.pendingApprovals} pending approval`}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white border-0 shadow-lg">
+          <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-green-100">Active Ads</CardTitle>
-                <TrendingUp className="w-5 h-5 text-green-200" />
+                <CardTitle className="text-sm font-medium text-muted-foreground">Active Ads</CardTitle>
+                <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-cosmic-accent" />
+                </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{analytics.activeAds}</div>
-              <p className="text-green-100 text-sm">Currently running</p>
+              <div className="text-3xl font-bold text-foreground">{analytics.activeAds}</div>
+              <p className="text-muted-foreground text-sm">Currently running</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg">
+          <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-purple-100">Total Impressions</CardTitle>
-                <Users className="w-5 h-5 text-purple-200" />
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Impressions</CardTitle>
+                <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                  <Users className="w-5 h-5 text-cosmic-accent" />
+                </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{analytics.impressions.toLocaleString()}</div>
-              <p className="text-purple-100 text-sm">{analytics.conversions} conversions</p>
+              <div className="text-3xl font-bold text-foreground">{analytics.impressions.toLocaleString()}</div>
+              <p className="text-muted-foreground text-sm">{analytics.conversions} conversions</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-lg">
+          <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-orange-100">Total Revenue</CardTitle>
-                <DollarSign className="w-5 h-5 text-orange-200" />
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
+                <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 text-cosmic-accent" />
+                </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">${analytics.revenue.toLocaleString()}</div>
-              <p className="text-orange-100 text-sm">{analytics.clients} organizations</p>
+              <div className="text-3xl font-bold text-foreground">${analytics.revenue.toLocaleString()}</div>
+              <p className="text-muted-foreground text-sm">{analytics.clients} organizations</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3 max-w-md">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="ads">Ad Management</TabsTrigger>
-            <TabsTrigger value="organizations">Organizations</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 max-w-md bg-muted/50 backdrop-blur-sm">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-card data-[state=active]:text-foreground">Overview</TabsTrigger>
+            <TabsTrigger value="ads" className="data-[state=active]:bg-card data-[state=active]:text-foreground">Ad Management</TabsTrigger>
+            <TabsTrigger value="organizations" className="data-[state=active]:bg-card data-[state=active]:text-foreground">Organizations</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
             {/* Quick Actions */}
             <div className="grid md:grid-cols-2 gap-6">
-              <Card className="border-moss-200 bg-white/80 backdrop-blur-sm">
+              <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-moss-900">
-                    <FileDown className="w-5 h-5" />
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                      <FileDown className="w-4 h-4 text-cosmic-accent" />
+                    </div>
                     Generate Reports
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-moss-600">Create detailed revenue and performance reports</p>
+                  <p className="text-muted-foreground">Create detailed revenue and performance reports</p>
                   <Button
                     onClick={generateReport}
-                    className="w-full bg-moss-600 hover:bg-moss-700"
+                    className="w-full bg-cosmic-accent hover:bg-cosmic-accent/90 text-white"
                   >
                     Generate Revenue Report
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-moss-200 bg-white/80 backdrop-blur-sm">
+              <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-moss-900">
-                    <Calendar className="w-5 h-5" />
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                      <Calendar className="w-4 h-4 text-cosmic-accent" />
+                    </div>
                     Schedule Reports
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-moss-600">Set up automated weekly and monthly reports</p>
+                  <p className="text-muted-foreground">Set up automated weekly and monthly reports</p>
                   <Button
                     onClick={scheduleReport}
                     variant="outline"
-                    className="w-full border-moss-300 text-moss-700 hover:bg-moss-50"
+                    className="w-full border-border text-foreground hover:bg-muted/50"
                   >
                     Schedule Weekly Report
                   </Button>
@@ -478,19 +494,23 @@ const AdminDashboard = () => {
             </div>
 
             {/* Recent Activity */}
-            <Card className="border-moss-200 bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-moss-900">
-                  <AlertTriangle className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                    <AlertTriangle className="w-4 h-4 text-cosmic-accent" />
+                  </div>
                   Pending Approvals
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {ads.filter(ad => ad.status === 'pending').length === 0 ? (
                   <div className="text-center py-8">
-                    <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-moss-900 mb-2">All caught up!</h3>
-                    <p className="text-moss-600">No ads pending approval at the moment.</p>
+                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="h-8 w-8 text-cosmic-accent" />
+                    </div>
+                    <h3 className="text-lg font-medium text-foreground mb-2">All caught up!</h3>
+                    <p className="text-muted-foreground">No ads pending approval at the moment.</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -498,14 +518,14 @@ const AdminDashboard = () => {
                       .filter(ad => ad.status === 'pending')
                       .slice(0, 5)
                       .map((ad) => (
-                        <div key={ad.id} className="flex items-center justify-between p-4 bg-moss-50 rounded-lg border border-moss-200">
+                        <div key={ad.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border border-border">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-moss-200 rounded-lg flex items-center justify-center">
-                              <span className="text-sm font-medium text-moss-900">{ad.client.charAt(0)}</span>
+                            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                              <span className="text-sm font-medium text-foreground">{ad.client.charAt(0)}</span>
                             </div>
                             <div>
-                              <h3 className="font-medium text-moss-900">{ad.title}</h3>
-                              <p className="text-sm text-moss-600">{ad.client} • {ad.type} Ad</p>
+                              <h3 className="font-medium text-foreground">{ad.title}</h3>
+                              <p className="text-sm text-muted-foreground">{ad.client} • {ad.type} Ad</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
@@ -515,7 +535,7 @@ const AdminDashboard = () => {
                                 setSelectedAd(ad);
                                 setApprovalDialogOpen(true);
                               }}
-                              className="bg-moss-600 hover:bg-moss-700"
+                              className="bg-cosmic-accent hover:bg-cosmic-accent/90 text-white"
                             >
                               Review
                             </Button>
@@ -530,29 +550,31 @@ const AdminDashboard = () => {
 
           <TabsContent value="ads" className="space-y-6">
             {/* Search and Filter */}
-            <Card className="border-moss-200 bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-moss-900">
-                  <Settings className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                    <Settings className="w-4 h-4 text-cosmic-accent" />
+                  </div>
                   Ad Management
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col md:flex-row gap-4 mb-6">
                   <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-moss-400 h-4 w-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                     <Input
                       placeholder="Search ads by title or client..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 border-moss-300"
+                      className="pl-10 border-border"
                     />
                   </div>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-48 border-moss-300">
+                    <SelectTrigger className="w-48 border-border">
                       <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-card border border-border">
                       <SelectItem value="all">All Status</SelectItem>
                       <SelectItem value="draft">Draft</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
@@ -565,17 +587,17 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Ads Table */}
-                <div className="border border-moss-200 rounded-lg overflow-hidden">
+                <div className="border border-border rounded-lg overflow-hidden">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-moss-50">
-                        <TableHead className="text-moss-900">Ad Title</TableHead>
-                        <TableHead className="text-moss-900">Client</TableHead>
-                        <TableHead className="text-moss-900">Type</TableHead>
-                        <TableHead className="text-moss-900">Status</TableHead>
-                        <TableHead className="text-moss-900">Budget</TableHead>
-                        <TableHead className="text-moss-900">Performance</TableHead>
-                        <TableHead className="text-moss-900">Actions</TableHead>
+                      <TableRow className="bg-muted/50">
+                        <TableHead className="text-foreground">Ad Title</TableHead>
+                        <TableHead className="text-foreground">Client</TableHead>
+                        <TableHead className="text-foreground">Type</TableHead>
+                        <TableHead className="text-foreground">Status</TableHead>
+                        <TableHead className="text-foreground">Budget</TableHead>
+                        <TableHead className="text-foreground">Performance</TableHead>
+                        <TableHead className="text-foreground">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>

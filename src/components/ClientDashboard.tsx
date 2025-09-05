@@ -98,26 +98,29 @@ const ClientDashboard = () => {
         throw error;
       }
       // Map the database data to match our interface
-      const mappedAds: Ad[] = data?.map(ad => ({
+      const formattedAds: Ad[] = data?.map(ad => ({
         id: ad.id,
-        title: `Ad for ${ad.city || 'Unknown Location'}`,
-        status: 'active',
+        title: (ad as any).title || `Ad for ${ad.city || 'Unknown Location'}`,
+        description: (ad as any).description || `Targeting ${ad.city || 'various locations'}`,
+        media_url: ad.media_url,
+        status: 'active', // Default status since status field doesn't exist
         created_at: ad.created_at,
         campaign_id: ad.campaign_id,
-        media_url: ad.media_url,
+        tags: (ad as any).tags ? (Array.isArray((ad as any).tags) ? (ad as any).tags : [(ad as any).tags]) : [],
         city: ad.city,
         gender: ad.gender,
         language: ad.language,
         age_min: ad.age_min,
         age_max: ad.age_max
       })) || [];
-      setAds(mappedAds);
+
+      setAds(formattedAds);
     } catch (error) {
       console.error('Error fetching ads:', error);
       toast({
         title: "Error",
-        description: "Failed to load ads. Please try refreshing the page.",
-        variant: "destructive",
+        description: "Failed to load ads. Please try again.",
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
@@ -125,20 +128,18 @@ const ClientDashboard = () => {
   };
 
   const fetchCampaigns = async () => {
-    if (!user) return;
-
     try {
       const { data, error } = await supabase
         .from('campaigns')
-        .select('id, name');
+        .select('id, name')
+        .order('created_at', { ascending: false });
 
       if (error) {
-        if (error.code === 'PGRST301' || error.message.includes('permission denied')) {
-          // User setup still in progress, campaigns will load after ads setup completes
-          return;
-        }
-        throw error;
+        // If campaigns table doesn't exist, just continue without campaigns
+        console.log('Campaigns table not available:', error);
+        return;
       }
+
       setCampaigns(data || []);
     } catch (error) {
       console.error('Error fetching campaigns:', error);
@@ -149,38 +150,39 @@ const ClientDashboard = () => {
     if (!user) return;
 
     try {
-      // Skip organization check since organization_id doesn't exist in profiles
-      // In a real implementation, you'd properly handle organization relationships
-
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('ads')
-        .insert({
-          title: values.title,
-          description: values.description,
-          campaign_id: values.campaign_id,
-          video_url: values.video_url,
-          image_url: values.image_url,
-          // Note: created_by and organization_id fields don't exist in ads table
-          // This is demo data - in real implementation you'd add these fields to the database
-          tags: values.tags ? values.tags.split(',').map(tag => tag.trim()) : null,
-        });
+        .insert([
+          {
+            title: values.title,
+            description: values.description,
+            campaign_id: values.campaign_id,
+            tags: values.tags ? values.tags.split(',').map(tag => tag.trim()) : [],
+            media_url: values.image_url || values.video_url,
+            user_id: user.id,
+          }
+        ])
+        .select();
 
       if (error) throw error;
 
       toast({
-        title: 'Success',
-        description: 'Ad created successfully',
+        title: "Success!",
+        description: "Ad created successfully.",
       });
 
-      setIsDialogOpen(false);
+      // Reset form and close dialog
       form.reset();
+      setIsDialogOpen(false);
+      
+      // Refresh ads list
       fetchAds();
     } catch (error) {
       console.error('Error creating ad:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to create ad',
-        variant: 'destructive',
+        title: "Error",
+        description: "Failed to create ad. Please try again.",
+        variant: "destructive"
       });
     }
   };
@@ -188,63 +190,80 @@ const ClientDashboard = () => {
   const handleFileUpload = (url: string, fileName: string, type: 'image' | 'video') => {
     if (type === 'image') {
       form.setValue('image_url', url);
-    } else if (type === 'video') {
+    } else {
       form.setValue('video_url', url);
     }
     
     toast({
-      title: 'File uploaded',
-      description: `${fileName} has been uploaded successfully`,
+      title: "File uploaded successfully",
+      description: `${fileName} has been uploaded.`,
     });
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return 'bg-success text-success-foreground';
-      case 'pending': return 'bg-warning text-warning-foreground';
-      case 'draft': return 'bg-muted text-muted-foreground';
-      case 'paused': return 'bg-secondary text-secondary-foreground';
-      default: return 'bg-muted text-muted-foreground';
+    switch (status.toLowerCase()) {
+      case 'active':
+        return 'bg-cosmic-accent/10 text-cosmic-accent border-cosmic-accent/30';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'draft':
+        return 'bg-muted text-muted-foreground border-border';
+      case 'rejected':
+        return 'bg-red-100 text-red-800 border-red-200';
+      default:
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
   const getAdTypeIcon = (ad: Ad) => {
-    if (ad.video_url) return <Video className="h-5 w-5" />;
-    if (ad.image_url) return <ImageIcon className="h-5 w-5" />;
-    return <FileText className="h-5 w-5" />;
+    if (ad.media_url) {
+      if (ad.media_url.includes('.mp4') || ad.media_url.includes('video')) {
+        return <Video className="h-4 w-4 text-cosmic-accent" />;
+      } else {
+        return <ImageIcon className="h-4 w-4 text-cosmic-accent" />;
+      }
+    }
+    return <FileText className="h-4 w-4 text-cosmic-accent" />;
   };
 
   if (loading) {
     return (
-      <>
+      <div className="min-h-screen bg-background">
+        <div className="cosmic-grid opacity-20 absolute inset-0"></div>
         <NavBar />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="min-h-screen flex items-center justify-center relative z-10">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cosmic-accent"></div>
+            </div>
+            <p className="text-muted-foreground">Loading your dashboard...</p>
+          </div>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-accent/5">
+    <div className="min-h-screen bg-background">
+      <div className="cosmic-grid opacity-20 absolute inset-0"></div>
       <NavBar />
       
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-6 relative z-10">
         <Tabs defaultValue="ads" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="ads" className="flex items-center space-x-2">
+          <TabsList className="grid w-full grid-cols-4 bg-muted/50 backdrop-blur-sm">
+            <TabsTrigger value="ads" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
               <Upload className="h-4 w-4" />
               <span>Ads</span>
             </TabsTrigger>
-            <TabsTrigger value="campaigns" className="flex items-center space-x-2">
+            <TabsTrigger value="campaigns" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
               <Target className="h-4 w-4" />
               <span>Campaigns</span>
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center space-x-2">
+            <TabsTrigger value="analytics" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
               <BarChart3 className="h-4 w-4" />
               <span>Analytics</span>
             </TabsTrigger>
-            <TabsTrigger value="audience" className="flex items-center space-x-2">
+            <TabsTrigger value="audience" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
               <Users className="h-4 w-4" />
               <span>Audience</span>
             </TabsTrigger>
@@ -254,7 +273,7 @@ const ClientDashboard = () => {
             {/* Header */}
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold text-foreground tracking-tighter">
                   Ad Management
                 </h1>
                 <p className="text-muted-foreground">
@@ -263,14 +282,14 @@ const ClientDashboard = () => {
               </div>
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-primary to-accent hover:shadow-lg transition-all">
+                  <Button className="bg-cosmic-accent hover:bg-cosmic-accent/90 text-white">
                     <Plus className="h-4 w-4 mr-2" />
                     Create Ad
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[600px]">
+                <DialogContent className="sm:max-w-[600px] bg-card border-border">
                   <DialogHeader>
-                    <DialogTitle>Create New Ad</DialogTitle>
+                    <DialogTitle className="text-foreground">Create New Ad</DialogTitle>
                   </DialogHeader>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -279,40 +298,46 @@ const ClientDashboard = () => {
                         name="title"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Ad Title</FormLabel>
+                            <FormLabel className="text-foreground">Title</FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter ad title" {...field} />
+                              <Input placeholder="Enter ad title" {...field} className="border-border" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         control={form.control}
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Description</FormLabel>
+                            <FormLabel className="text-foreground">Description</FormLabel>
                             <FormControl>
-                              <Textarea placeholder="Ad description" {...field} />
+                              <Textarea 
+                                placeholder="Enter ad description" 
+                                {...field} 
+                                className="border-border"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         control={form.control}
                         name="campaign_id"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Campaign (Optional)</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
+                            <FormLabel className="text-foreground">Campaign (Optional)</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger className="border-border">
                                   <SelectValue placeholder="Select a campaign" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="bg-card border-border">
                                 {campaigns.map((campaign) => (
                                   <SelectItem key={campaign.id} value={campaign.id}>
                                     {campaign.name}
@@ -324,24 +349,28 @@ const ClientDashboard = () => {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         control={form.control}
                         name="tags"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Tags (comma separated)</FormLabel>
+                            <FormLabel className="text-foreground">Tags (comma-separated)</FormLabel>
                             <FormControl>
-                              <Input placeholder="tag1, tag2, tag3" {...field} />
+                              <Input 
+                                placeholder="e.g., sports, lifestyle, tech" 
+                                {...field} 
+                                className="border-border"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      
-                      {/* File Upload Sections */}
-                      <div className="space-y-4">
+
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <FormLabel>Image Upload</FormLabel>
+                          <FormLabel className="text-foreground">Image Upload</FormLabel>
                           <FileUpload
                             bucket="ad-assets"
                             accept="image/*"
@@ -351,7 +380,7 @@ const ClientDashboard = () => {
                         </div>
                         
                         <div>
-                          <FormLabel>Video Upload</FormLabel>
+                          <FormLabel className="text-foreground">Video Upload</FormLabel>
                           <FileUpload
                             bucket="ad-assets"
                             accept="video/*"
@@ -362,10 +391,10 @@ const ClientDashboard = () => {
                       </div>
 
                       <div className="flex justify-end space-x-2 pt-4">
-                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border">
                           Cancel
                         </Button>
-                        <Button type="submit">Create Ad</Button>
+                        <Button type="submit" className="bg-cosmic-accent hover:bg-cosmic-accent/90 text-white">Create Ad</Button>
                       </div>
                     </form>
                   </Form>
@@ -374,48 +403,63 @@ const ClientDashboard = () => {
             </div>
 
             {/* Recent Ads */}
-            <Card className="border-0 bg-white/80 backdrop-blur">
+            <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Calendar className="h-5 w-5" />
-                  <span>Your Ads</span>
+                  <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                    <Calendar className="h-4 w-4 text-cosmic-accent" />
+                  </div>
+                  <span className="text-foreground">Your Ads</span>
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-muted-foreground">
                   Manage your advertising content
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {ads.length === 0 ? (
                   <div className="text-center py-8">
-                    <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium text-muted-foreground">No ads created yet</h3>
+                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Upload className="h-8 w-8 text-cosmic-accent" />
+                    </div>
+                    <h3 className="text-lg font-medium text-foreground mb-2">No ads created yet</h3>
                     <p className="text-sm text-muted-foreground">Create your first ad to get started</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {ads.map((ad) => (
-                      <div key={ad.id} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-accent/50 transition-colors">
-                        <div className="flex items-center space-x-4">
-                          <div className="p-2 rounded-full bg-primary/10">
-                            {getAdTypeIcon(ad)}
+                      <Card key={ad.id} className="border border-border bg-card hover:bg-muted/50 transition-colors">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                                {getAdTypeIcon(ad)}
+                              </div>
+                              <div>
+                                <h4 className="font-medium text-foreground">{ad.title}</h4>
+                                <p className="text-sm text-muted-foreground">
+                                  {new Date(ad.created_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge className={getStatusColor(ad.status)}>
+                              {ad.status === 'active' && <CheckCircle className="w-3 h-3 mr-1" />}
+                              {ad.status}
+                            </Badge>
                           </div>
-                          <div>
-                            <h4 className="font-medium">{ad.title}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Created on {new Date(ad.created_at).toLocaleDateString()}
-                            </p>
-                            {ad.description && (
-                              <p className="text-sm text-muted-foreground mt-1">{ad.description}</p>
-                            )}
-                          </div>
-                        </div>
-                        <Badge className={getStatusColor(ad.status)}>
-                          {ad.status === 'active' && <CheckCircle className="w-3 h-3 mr-1" />}
-                          {ad.status === 'pending' && <Clock className="w-3 h-3 mr-1" />}
-                          {ad.status === 'draft' && <AlertCircle className="w-3 h-3 mr-1" />}
-                          {ad.status.charAt(0).toUpperCase() + ad.status.slice(1)}
-                        </Badge>
-                      </div>
+                          {ad.description && (
+                            <p className="text-sm text-muted-foreground mb-3">{ad.description}</p>
+                          )}
+                          {ad.tags && ad.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {ad.tags.map((tag, index) => (
+                                <Badge key={index} variant="outline" className="text-xs border-border">
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
                 )}
@@ -431,17 +475,31 @@ const ClientDashboard = () => {
             <AnalyticsDashboard />
           </TabsContent>
 
-          <TabsContent value="audience">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-foreground">Audience Insights</h2>
-              <Card>
-                <CardContent className="flex flex-col items-center justify-center py-8">
-                  <Users className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium text-muted-foreground">Audience insights coming soon</h3>
-                  <p className="text-sm text-muted-foreground">Advanced targeting and audience analysis will be available here</p>
-                </CardContent>
-              </Card>
-            </div>
+          <TabsContent value="audience" className="space-y-6">
+            <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
+                    <Users className="h-4 w-4 text-cosmic-accent" />
+                  </div>
+                  <span className="text-foreground">Audience Insights</span>
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Advanced audience analytics and targeting insights
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users className="h-8 w-8 text-cosmic-accent" />
+                  </div>
+                  <h3 className="text-lg font-medium text-foreground mb-2">Coming Soon</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Advanced audience insights and targeting features are coming soon.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
