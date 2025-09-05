@@ -332,13 +332,14 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="cosmic-grid opacity-20 absolute inset-0"></div>
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background grid */}
+      <div className="absolute inset-0 cosmic-grid opacity-20"></div>
       <NavBar />
       
       {/* Header */}
-      <div className="border-b border-border bg-card/95 backdrop-blur-sm relative z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="w-full py-6 px-6 md:px-12 bg-background relative z-10">
+        <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button 
@@ -351,8 +352,8 @@ const AdminDashboard = () => {
                 Back to Dashboard
               </Button>
               <div>
-                <h1 className="text-3xl font-bold text-foreground tracking-tighter">Admin Control Center</h1>
-                <p className="text-muted-foreground">Manage ads, organizations, and platform analytics</p>
+                <h1 className="text-3xl md:text-4xl font-medium tracking-tighter text-foreground">Admin Control Center</h1>
+                <p className="text-muted-foreground text-lg">Manage ads, organizations, and platform analytics</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -374,75 +375,75 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6 space-y-6 relative z-10">
+      <div className="max-w-7xl mx-auto p-6 md:p-12 space-y-16 relative z-10">
         {/* Analytics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Total Ads</CardTitle>
-                <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                  <BarChart3 className="w-5 h-5 text-cosmic-accent" />
-                </div>
+          <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+                <BarChart3 size={24} className="text-cosmic-accent" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">{analytics.totalAds}</div>
-              <p className="text-muted-foreground text-sm">
-                {analytics.pendingApprovals > 0 && `${analytics.pendingApprovals} pending approval`}
-              </p>
-            </CardContent>
-          </Card>
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-foreground">Total Ads</h3>
+                </div>
+                <div className="text-3xl font-bold text-foreground">{analytics.totalAds}</div>
+                <p className="text-sm text-muted-foreground">
+                  {analytics.pendingApprovals > 0 && `${analytics.pendingApprovals} pending approval`}
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Active Ads</CardTitle>
-                <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-cosmic-accent" />
-                </div>
+          <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+                <TrendingUp size={24} className="text-cosmic-accent" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">{analytics.activeAds}</div>
-              <p className="text-muted-foreground text-sm">Currently running</p>
-            </CardContent>
-          </Card>
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-foreground">Active Ads</h3>
+                </div>
+                <div className="text-3xl font-bold text-foreground">{analytics.activeAds}</div>
+                <p className="text-sm text-muted-foreground">Currently running</p>
+              </div>
+            </div>
+          </div>
 
-          <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Total Impressions</CardTitle>
-                <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                  <Users className="w-5 h-5 text-cosmic-accent" />
-                </div>
+          <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+                <Users size={24} className="text-cosmic-accent" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">{analytics.impressions.toLocaleString()}</div>
-              <p className="text-muted-foreground text-sm">{analytics.conversions} conversions</p>
-            </CardContent>
-          </Card>
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-foreground">Total Impressions</h3>
+                </div>
+                <div className="text-3xl font-bold text-foreground">{analytics.impressions.toLocaleString()}</div>
+                <p className="text-sm text-muted-foreground">{analytics.conversions} conversions</p>
+              </div>
+            </div>
+          </div>
 
-          <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
-                <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                  <DollarSign className="w-5 h-5 text-cosmic-accent" />
-                </div>
+          <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+                <DollarSign size={24} className="text-cosmic-accent" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">${analytics.revenue.toLocaleString()}</div>
-              <p className="text-muted-foreground text-sm">{analytics.clients} organizations</p>
-            </CardContent>
-          </Card>
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-foreground">Total Revenue</h3>
+                </div>
+                <div className="text-3xl font-bold text-foreground">${analytics.revenue.toLocaleString()}</div>
+                <p className="text-sm text-muted-foreground">{analytics.clients} organizations</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3 max-w-md bg-muted/50 backdrop-blur-sm">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 max-w-md bg-muted/50">
             <TabsTrigger value="overview" className="data-[state=active]:bg-card data-[state=active]:text-foreground">Overview</TabsTrigger>
             <TabsTrigger value="ads" className="data-[state=active]:bg-card data-[state=active]:text-foreground">Ad Management</TabsTrigger>
             <TabsTrigger value="organizations" className="data-[state=active]:bg-card data-[state=active]:text-foreground">Organizations</TabsTrigger>
@@ -451,25 +452,25 @@ const AdminDashboard = () => {
           <TabsContent value="overview" className="space-y-6">
             {/* Quick Actions */}
             <div className="grid md:grid-cols-2 gap-6">
-              <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                      <FileDown className="w-4 h-4 text-cosmic-accent" />
+              <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+                    <FileDown size={24} className="text-cosmic-accent" />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-medium text-foreground">Generate Reports</h3>
                     </div>
-                    Generate Reports
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">Create detailed revenue and performance reports</p>
-                  <Button
-                    onClick={generateReport}
-                    className="w-full bg-cosmic-accent hover:bg-cosmic-accent/90 text-white"
-                  >
-                    Generate Revenue Report
-                  </Button>
-                </CardContent>
-              </Card>
+                    <p className="text-sm text-muted-foreground">Create detailed revenue and performance reports</p>
+                     <Button
+                       onClick={generateReport}
+                       className="w-full bg-cosmic-accent hover:bg-cosmic-accent/90 text-white"
+                     >
+                       Generate Revenue Report
+                     </Button>
+                   </div>
+                 </div>
+               </div>
 
               <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
                 <CardHeader>

@@ -220,16 +220,21 @@ const AdUploadFlow = () => {
   );
 
   const renderStep1 = () => (
-    <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-2xl text-center text-foreground tracking-tighter">
-          Upload Your Creative Assets
-        </CardTitle>
-        <p className="text-center text-muted-foreground">
-          Upload high-quality images or videos for your campaign
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+      <div className="flex items-start gap-4 mb-6">
+        <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+          <Upload size={24} className="text-cosmic-accent" />
+        </div>
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center justify-between">
+            <h3 className="font-medium text-foreground">Upload Your Creative Assets</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Upload high-quality images or videos for your campaign
+          </p>
+        </div>
+      </div>
+      <div className="space-y-6">
         {/* Drag and Drop Zone */}
         <div
           {...getRootProps()}
@@ -320,21 +325,26 @@ const AdUploadFlow = () => {
             Continue <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 
   const renderStep2 = () => (
-    <Card className="border-0 shadow-xl">
-      <CardHeader>
-        <CardTitle className="text-2xl text-center bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          Campaign Setup
-        </CardTitle>
-        <p className="text-center text-muted-foreground">
-          Define your campaign goals and messaging
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+      <div className="flex items-start gap-4 mb-6">
+        <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+          <Target size={24} className="text-cosmic-accent" />
+        </div>
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center justify-between">
+            <h3 className="font-medium text-foreground">Campaign Setup</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Define your campaign goals and messaging
+          </p>
+        </div>
+      </div>
+      <div className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
@@ -423,8 +433,8 @@ const AdUploadFlow = () => {
             Continue <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 
   const renderStep3 = () => (

@@ -228,8 +228,9 @@ const ClientDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="cosmic-grid opacity-20 absolute inset-0"></div>
+      <div className="min-h-screen bg-background relative overflow-hidden">
+        {/* Background grid */}
+        <div className="absolute inset-0 cosmic-grid opacity-20"></div>
         <NavBar />
         <div className="min-h-screen flex items-center justify-center relative z-10">
           <div className="text-center space-y-4">
@@ -244,251 +245,255 @@ const ClientDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="cosmic-grid opacity-20 absolute inset-0"></div>
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background grid */}
+      <div className="absolute inset-0 cosmic-grid opacity-20"></div>
       <NavBar />
       
-      <div className="container mx-auto p-6 relative z-10">
-        <Tabs defaultValue="ads" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-muted/50 backdrop-blur-sm">
-            <TabsTrigger value="ads" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
-              <Upload className="h-4 w-4" />
-              <span>Ads</span>
-            </TabsTrigger>
-            <TabsTrigger value="campaigns" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
-              <Target className="h-4 w-4" />
-              <span>Campaigns</span>
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
-              <BarChart3 className="h-4 w-4" />
-              <span>Analytics</span>
-            </TabsTrigger>
-            <TabsTrigger value="audience" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
-              <Users className="h-4 w-4" />
-              <span>Audience</span>
-            </TabsTrigger>
-          </TabsList>
+      <div className="w-full py-20 px-6 md:px-12 relative z-10">
+        <div className="max-w-7xl mx-auto space-y-16">
+          <Tabs defaultValue="ads" className="w-full">
+            <TabsList className="grid w-full grid-cols-4 bg-muted/50">
+              <TabsTrigger value="ads" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
+                <Upload className="h-4 w-4" />
+                <span>Ads</span>
+              </TabsTrigger>
+              <TabsTrigger value="campaigns" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
+                <Target className="h-4 w-4" />
+                <span>Campaigns</span>
+              </TabsTrigger>
+              <TabsTrigger value="analytics" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
+                <BarChart3 className="h-4 w-4" />
+                <span>Analytics</span>
+              </TabsTrigger>
+              <TabsTrigger value="audience" className="flex items-center space-x-2 data-[state=active]:bg-card data-[state=active]:text-foreground">
+                <Users className="h-4 w-4" />
+                <span>Audience</span>
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="ads" className="space-y-6">
-            {/* Header */}
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-3xl font-bold text-foreground tracking-tighter">
+            <TabsContent value="ads" className="space-y-6">
+              {/* Header */}
+              <div className="text-center space-y-4 max-w-3xl mx-auto">
+                <h2 className="text-3xl md:text-4xl font-medium tracking-tighter text-foreground">
                   Ad Management
-                </h1>
-                <p className="text-muted-foreground">
+                </h2>
+                <p className="text-muted-foreground text-lg">
                   Create and manage your advertising content
                 </p>
               </div>
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-cosmic-accent hover:bg-cosmic-accent/90 text-white">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Ad
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[600px] bg-card border-border">
-                  <DialogHeader>
-                    <DialogTitle className="text-foreground">Create New Ad</DialogTitle>
-                  </DialogHeader>
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="title"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-foreground">Title</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Enter ad title" {...field} className="border-border" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-foreground">Description</FormLabel>
-                            <FormControl>
-                              <Textarea 
-                                placeholder="Enter ad description" 
-                                {...field} 
-                                className="border-border"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="campaign_id"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-foreground">Campaign (Optional)</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              
+              <div className="flex justify-center">
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-cosmic-accent hover:bg-cosmic-accent/90 text-white">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Ad
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[600px] bg-card border-border">
+                    <DialogHeader>
+                      <DialogTitle className="text-foreground">Create New Ad</DialogTitle>
+                    </DialogHeader>
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="title"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-foreground">Title</FormLabel>
                               <FormControl>
-                                <SelectTrigger className="border-border">
-                                  <SelectValue placeholder="Select a campaign" />
-                                </SelectTrigger>
+                                <Input placeholder="Enter ad title" {...field} className="border-border" />
                               </FormControl>
-                              <SelectContent className="bg-card border-border">
-                                {campaigns.map((campaign) => (
-                                  <SelectItem key={campaign.id} value={campaign.id}>
-                                    {campaign.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                      <FormField
-                        control={form.control}
-                        name="tags"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-foreground">Tags (comma-separated)</FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="e.g., sports, lifestyle, tech" 
-                                {...field} 
-                                className="border-border"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                        <FormField
+                          control={form.control}
+                          name="description"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-foreground">Description</FormLabel>
+                              <FormControl>
+                                <Textarea 
+                                  placeholder="Enter ad description" 
+                                  {...field} 
+                                  className="border-border"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <FormLabel className="text-foreground">Image Upload</FormLabel>
-                          <FileUpload
-                            bucket="ad-assets"
-                            accept="image/*"
-                            maxSize={5}
-                            onUpload={(url, fileName) => handleFileUpload(url, fileName, 'image')}
-                          />
-                        </div>
-                        
-                        <div>
-                          <FormLabel className="text-foreground">Video Upload</FormLabel>
-                          <FileUpload
-                            bucket="ad-assets"
-                            accept="video/*"
-                            maxSize={50}
-                            onUpload={(url, fileName) => handleFileUpload(url, fileName, 'video')}
-                          />
-                        </div>
-                      </div>
+                        <FormField
+                          control={form.control}
+                          name="campaign_id"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-foreground">Campaign (Optional)</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="border-border">
+                                    <SelectValue placeholder="Select a campaign" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent className="bg-card border-border">
+                                  {campaigns.map((campaign) => (
+                                    <SelectItem key={campaign.id} value={campaign.id}>
+                                      {campaign.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                      <div className="flex justify-end space-x-2 pt-4">
-                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border">
-                          Cancel
-                        </Button>
-                        <Button type="submit" className="bg-cosmic-accent hover:bg-cosmic-accent/90 text-white">Create Ad</Button>
-                      </div>
-                    </form>
-                  </Form>
-                </DialogContent>
-              </Dialog>
-            </div>
+                        <FormField
+                          control={form.control}
+                          name="tags"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-foreground">Tags (comma-separated)</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="e.g., sports, lifestyle, tech" 
+                                  {...field} 
+                                  className="border-border"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-            {/* Recent Ads */}
-            <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                    <Calendar className="h-4 w-4 text-cosmic-accent" />
-                  </div>
-                  <span className="text-foreground">Your Ads</span>
-                </CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  Manage your advertising content
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {ads.length === 0 ? (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Upload className="h-8 w-8 text-cosmic-accent" />
-                    </div>
-                    <h3 className="text-lg font-medium text-foreground mb-2">No ads created yet</h3>
-                    <p className="text-sm text-muted-foreground">Create your first ad to get started</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {ads.map((ad) => (
-                      <Card key={ad.id} className="border border-border bg-card hover:bg-muted/50 transition-colors">
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                                {getAdTypeIcon(ad)}
-                              </div>
-                              <div>
-                                <h4 className="font-medium text-foreground">{ad.title}</h4>
-                                <p className="text-sm text-muted-foreground">
-                                  {new Date(ad.created_at).toLocaleDateString()}
-                                </p>
-                              </div>
-                            </div>
-                            <Badge className={getStatusColor(ad.status)}>
-                              {ad.status === 'active' && <CheckCircle className="w-3 h-3 mr-1" />}
-                              {ad.status}
-                            </Badge>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <FormLabel className="text-foreground">Image Upload</FormLabel>
+                            <FileUpload
+                              bucket="ad-assets"
+                              accept="image/*"
+                              maxSize={5}
+                              onUpload={(url, fileName) => handleFileUpload(url, fileName, 'image')}
+                            />
                           </div>
-                          {ad.description && (
-                            <p className="text-sm text-muted-foreground mb-3">{ad.description}</p>
-                          )}
-                          {ad.tags && ad.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1">
-                              {ad.tags.map((tag, index) => (
-                                <Badge key={index} variant="outline" className="text-xs border-border">
-                                  {tag}
-                                </Badge>
-                              ))}
+                          
+                          <div>
+                            <FormLabel className="text-foreground">Video Upload</FormLabel>
+                            <FileUpload
+                              bucket="ad-assets"
+                              accept="video/*"
+                              maxSize={50}
+                              onUpload={(url, fileName) => handleFileUpload(url, fileName, 'video')}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex justify-end space-x-2 pt-4">
+                          <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border">
+                            Cancel
+                          </Button>
+                          <Button type="submit" className="bg-cosmic-accent hover:bg-cosmic-accent/90 text-white">Create Ad</Button>
+                        </div>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              {/* Recent Ads */}
+              <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+                    <Calendar size={24} className="text-cosmic-accent" />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-medium text-foreground">Your Ads</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Manage your advertising content
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  {ads.length === 0 ? (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Upload className="h-8 w-8 text-cosmic-accent" />
+                      </div>
+                      <h3 className="text-lg font-medium text-foreground mb-2">No ads created yet</h3>
+                      <p className="text-sm text-muted-foreground">Create your first ad to get started</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {ads.map((ad) => (
+                        <div key={ad.id} className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+                          <div className="flex items-start gap-4">
+                            <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+                              {getAdTypeIcon(ad)}
                             </div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
+                            <div className="flex-1 space-y-2">
+                              <div className="flex items-center justify-between">
+                                <h3 className="font-medium text-foreground">{ad.title}</h3>
+                                <Badge className={getStatusColor(ad.status)}>
+                                  {ad.status === 'active' && <CheckCircle className="w-3 h-3 mr-1" />}
+                                  {ad.status}
+                                </Badge>
+                              </div>
+                              {ad.description && (
+                                <p className="text-sm text-muted-foreground">{ad.description}</p>
+                              )}
+                              <p className="text-sm text-muted-foreground">
+                                {new Date(ad.created_at).toLocaleDateString()}
+                              </p>
+                              {ad.tags && ad.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {ad.tags.map((tag, index) => (
+                                    <Badge key={index} variant="outline" className="text-xs border-border">
+                                      {tag}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="campaigns">
+              <CampaignManager />
+            </TabsContent>
+
+            <TabsContent value="analytics">
+              <AnalyticsDashboard />
+            </TabsContent>
+
+            <TabsContent value="audience" className="space-y-6">
+              <div className="p-6 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="flex-shrink-0 p-2 rounded-lg bg-muted">
+                    <Users size={24} className="text-cosmic-accent" />
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="campaigns">
-            <CampaignManager />
-          </TabsContent>
-
-          <TabsContent value="analytics">
-            <AnalyticsDashboard />
-          </TabsContent>
-
-          <TabsContent value="audience" className="space-y-6">
-            <Card className="border border-border bg-card hover:bg-muted/50 transition-colors backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                    <Users className="h-4 w-4 text-cosmic-accent" />
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-medium text-foreground">Audience Insights</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Advanced audience analytics and targeting insights
+                    </p>
                   </div>
-                  <span className="text-foreground">Audience Insights</span>
-                </CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  Advanced audience analytics and targeting insights
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                </div>
                 <div className="text-center py-8">
                   <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                     <Users className="h-8 w-8 text-cosmic-accent" />
@@ -498,10 +503,10 @@ const ClientDashboard = () => {
                     Advanced audience insights and targeting features are coming soon.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );
