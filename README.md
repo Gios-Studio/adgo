@@ -53,3 +53,4 @@ curl -s "https://<project>.functions.supabase.co/pacing-check?campaign_id=<uuid>
 - Aggregations refresh **hourly** + **daily** via pg_cron; change schedules if needed.
 - Dedupe keys auto-clean after 24h.
 - `process-creative` intentionally keeps dimension/duration null to keep it lightweight. We can add image/video probes later.
+# redeploy
