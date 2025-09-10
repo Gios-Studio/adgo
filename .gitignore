@@ -40,3 +40,18 @@ supabase/.temp/
 # ── Supabase artifacts
 supabase/migrations/_archived/
 supabase/sql/
+
+# Next.js build artifacts
+.next/
+out/
+
+# Build outputs
+dist/
+dist-ssr/
+
+# Supabase
+.supabase/
+supabase/.branches/
+
+# Misc
+*.swp
