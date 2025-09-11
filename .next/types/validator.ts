@@ -3,6 +3,7 @@
 // This file validates that all pages and layouts export the correct types
 
 
+import type { NextApiHandler } from "next/types.js"
 
 type PagesPageConfig = {
   default: React.ComponentType<any> | ((props: any) => React.ReactNode | Promise<React.ReactNode> | never | void)
@@ -23,7 +24,7 @@ type PagesPageConfig = {
 }
 
 type ApiRouteConfig = {
-  default: (req: any, res: any) => Promise<Response | void> | Response | void
+  default: (req: any, res: any) => ReturnType<NextApiHandler>
   config?: {
     api?: {
       bodyParser?: boolean | { sizeLimit?: string }
@@ -42,122 +43,173 @@ type ApiRouteConfig = {
 
 // Validate ../../pages/Analytics.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/Analytics.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/CampaignCalendar.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/CampaignCalendar.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/Dashboard.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/Dashboard.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/MyAds.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/MyAds.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/Settings.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/Settings.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/Wallet.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/Wallet.js")
-  handler satisfies PagesPageConfig
-}
-
-// Validate ../../pages/_app.tsx
-{
-  const handler = {} as typeof import("../../pages/_app.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/dashboard/ad-upload.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/dashboard/ad-upload.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/dashboard/advertiser.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/dashboard/advertiser.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/dashboard/driver-report.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/dashboard/driver-report.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/dashboard/driver.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/dashboard/driver.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/dashboard/partner-report.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/dashboard/partner-report.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/dashboard/partner.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/dashboard/partner.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/dev/events-test.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/dev/events-test.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/index.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/index.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/login.tsx
 {
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
   const handler = {} as typeof import("../../pages/login.js")
-  handler satisfies PagesPageConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/api/driver/wallet.ts
 {
+  type __IsExpected<Specific extends ApiRouteConfig> = Specific
   const handler = {} as typeof import("../../pages/api/driver/wallet.js")
-  handler satisfies ApiRouteConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/api/health.ts
 {
+  type __IsExpected<Specific extends ApiRouteConfig> = Specific
   const handler = {} as typeof import("../../pages/api/health.js")
-  handler satisfies ApiRouteConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/api/metrics/ctr.ts
 {
+  type __IsExpected<Specific extends ApiRouteConfig> = Specific
   const handler = {} as typeof import("../../pages/api/metrics/ctr.js")
-  handler satisfies ApiRouteConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../pages/api/sdk/events.ts
 {
+  type __IsExpected<Specific extends ApiRouteConfig> = Specific
   const handler = {} as typeof import("../../pages/api/sdk/events.js")
-  handler satisfies ApiRouteConfig
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 
