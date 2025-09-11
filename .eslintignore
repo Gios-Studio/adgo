@@ -1,0 +1,10 @@
+# Ignore build outputs
+.next
+dist
+build
+
+# Ignore Supabase generated code
+supabase/functions/**
+
+# Ignore typegen files
+*.d.ts
