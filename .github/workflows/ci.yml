@@ -36,3 +36,9 @@ jobs:
 
       - name: Build Next.js
         run: npm run build
+
+      - name: Install dependencies
+        run: npm ci || npm install --legacy-peer-deps
+        
+      - name: Supabase migrations check
+        run: npx supabase db lint
