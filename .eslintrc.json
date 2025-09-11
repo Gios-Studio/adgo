@@ -1,7 +1,11 @@
-rules: {
-  "@typescript-eslint/no-explicit-any": "off",
-  "@typescript-eslint/no-empty-object-type": "off",
-  "@typescript-eslint/no-require-imports": "off",
-  "react-refresh/only-export-components": "warn",
-  "no-unsafe-optional-chaining": "warn"
+{
+  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "plugins": ["@typescript-eslint", "react-hooks"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-object-type": "off",
+    "@typescript-eslint/no-require-imports": "off",
+    "react-refresh/only-export-components": "warn",
+    "no-unsafe-optional-chaining": "warn"
+  }
 }
