@@ -54,3 +54,7 @@ curl -s "https://<project>.functions.supabase.co/pacing-check?campaign_id=<uuid>
 - Dedupe keys auto-clean after 24h.
 - `process-creative` intentionally keeps dimension/duration null to keep it lightweight. We can add image/video probes later.
 # redeploy
+
+## CI Test
+
+This is just a test commit to trigger GitHub Actions CI workflow.
