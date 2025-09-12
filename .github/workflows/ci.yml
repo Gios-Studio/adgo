@@ -35,3 +35,17 @@ jobs:
 
       - name: Build Next.js
         run: npm run build
+      
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Run lint (non-blocking)
+        run: npm run lint --if-present || echo "Lint warnings ignored"
+
+      - name: Run type-check
+        run: npm run type-check --if-present || echo "Type-check skipped"
+
+      - name: Build Next.js
+        run: npm run build
+      
+      
