@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,8 +12,8 @@ interface RoleSelectionProps {
 
 const RoleSelection = ({ onRoleSelect }: RoleSelectionProps) => {
   const [selectedRole, setSelectedRole] = useState<'advertiser' | 'admin' | null>(null);
-  const navigate = useNavigate();
-  const { toast } = useToast();
+ const router = useRouter();
+router.push("/dashboard");
 
   const handleContinue = () => {
     if (!selectedRole) {

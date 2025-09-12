@@ -20,7 +20,7 @@
     "esModuleInterop": true,
     "strictNullChecks": true
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "docs/policies/refund-policy-v1.0.pdf"],
   "exclude": ["node_modules"],
   "references": [
     { "path": "./tsconfig.app.json" },

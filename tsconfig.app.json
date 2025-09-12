@@ -7,6 +7,6 @@
     "tsBuildInfoFile": "./.tsbuild/app.tsbuildinfo",
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "docs/policies/refund-policy-v1.0.pdf"],
   "exclude": ["node_modules", ".next"]
 }

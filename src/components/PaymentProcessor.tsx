@@ -22,7 +22,7 @@ import {
   Receipt
 } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 interface PaymentHistory {
   id: string;

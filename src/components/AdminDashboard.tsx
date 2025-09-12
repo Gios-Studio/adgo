@@ -32,7 +32,7 @@ import {
   TrendingDown
 } from "lucide-react";
 import { NavBar } from './NavBar';
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { supabase } from "@/integrations/supabase/client";
 
 interface AnalyticsData {

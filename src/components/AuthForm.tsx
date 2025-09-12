@@ -1,7 +1,7 @@
 // src/components/AuthForm.tsx
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useRouter } from "next/router";
 
 type Mode = "signin" | "signup";
 

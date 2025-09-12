@@ -1,4 +1,27 @@
 // pages/dashboard/ad-upload.tsx
+// src/lib/adgo-upload.ts
+function validateFile(file: File) {
+  const maxImageSizeMB = 5;
+  const maxVideoSizeMB = 20;
+  const isImage = file.type.startsWith("image/");
+  const isVideo = file.type.startsWith("video/");
+
+  if (isImage && file.size > maxImageSizeMB * 1024 * 1024) {
+    throw new Error("Image must be under 5MB");
+  }
+  if (isVideo && file.size > maxVideoSizeMB * 1024 * 1024) {
+    throw new Error("Video must be under 20MB");
+  }
+  if (file.size > 50 * 1024 * 1024) {
+  setError("File too large (>50MB).");
+  return;
+}
+}
+
+export async function uploadCreative(file: File, opts: { orgId: string; campaignId: string; creativeId: string }) {
+  validateFile(file); // ✅ validate before upload
+
+}
 "use client";
 
 import { useState } from "react";
@@ -80,4 +103,8 @@ export default function AdUpload() {
       {message && <p className="text-sm">{message}</p>}
     </div>
   );
+}
+
+function setError(arg0: string) {
+  throw new Error("Function not implemented.");
 }

@@ -1,5 +1,5 @@
 // src/components/TopNav.tsx
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function TopNav() {
