@@ -18,6 +18,8 @@
     "agent:seed": "curl -sS \"https://ykqsavtoqrhrimvwjubz.functions.supabase.co/agent-tick\" -H \"Authorization: Bearer $SRK\" -H \"Content-Type: application/json\" -d '{\"task\":\"seed_data\"}'",
     "lint": "eslint . || true",
     "vercel-build": "npm install --legacy-peer-deps && next build --no-lint --no-types"
+    "build:dev": "next build"
+
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -89,8 +91,6 @@
     "@types/node": "^22.18.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@vitejs/plugin-react": "^5.0.2",
-    "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.5.3",
@@ -102,6 +102,5 @@
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "typescript-eslint": "^8.0.1",
-    "vite": "^7.1.5"
   }
 }
