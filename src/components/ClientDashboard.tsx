@@ -102,16 +102,16 @@ const ClientDashboard = () => {
         id: ad.id,
         title: (ad as any).title || `Ad for ${ad.city || 'Unknown Location'}`,
         description: (ad as any).description || `Targeting ${ad.city || 'various locations'}`,
-        media_url: ad.media_url,
+        media_url: ad.media_url || undefined,
         status: 'active', // Default status since status field doesn't exist
-        created_at: ad.created_at,
-        campaign_id: ad.campaign_id,
+        created_at: ad.created_at || new Date().toISOString(),
+        campaign_id: ad.campaign_id || undefined,
         tags: (ad as any).tags ? (Array.isArray((ad as any).tags) ? (ad as any).tags : [(ad as any).tags]) : [],
-        city: ad.city,
-        gender: ad.gender,
-        language: ad.language,
-        age_min: ad.age_min,
-        age_max: ad.age_max
+        city: ad.city || undefined,
+        gender: ad.gender || undefined,
+        language: ad.language || undefined,
+        age_min: ad.age_min || undefined,
+        age_max: ad.age_max || undefined
       })) || [];
 
       setAds(formattedAds);

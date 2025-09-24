@@ -77,12 +77,12 @@ export const CampaignManager = () => {
       const mappedCampaigns: Campaign[] = data?.map(campaign => ({
         id: campaign.id,
         name: campaign.name,
-        start_date: campaign.start_date,
-        end_date: campaign.end_date,
-        budget: campaign.budget,
+        start_date: campaign.start_date || undefined,
+        end_date: campaign.end_date || undefined,
+        budget: campaign.budget || undefined,
         status: 'active',
-        created_at: campaign.created_at,
-        org_id: campaign.org_id,
+        created_at: campaign.created_at || new Date().toISOString(),
+        org_id: campaign.org_id || undefined,
         created_by: 'demo-user',
         organization_id: 'demo-org'
       })) || [];

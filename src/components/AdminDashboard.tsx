@@ -171,7 +171,7 @@ const AdminDashboard = () => {
         organization: 'Demo Organization',
         type: ad.media_url ? (ad.media_url.includes('.mp4') ? 'Video' : 'Image') : 'Text',
         status: 'active' as 'draft' | 'pending' | 'approved' | 'rejected' | 'active' | 'paused',
-        created_at: ad.created_at,
+        created_at: ad.created_at || new Date().toISOString(),
         budget_total: 1000, // Demo budget
         impressions: Math.floor(Math.random() * 1000), // Demo impressions
         clicks: Math.floor(Math.random() * 50), // Demo clicks
@@ -203,7 +203,7 @@ const AdminDashboard = () => {
         total_ads: Math.floor(Math.random() * 5) + 1, // Demo ad count
         total_spent: Math.floor(Math.random() * 5000) + 1000, // Demo spending
         is_active: true, // Demo active status since field doesn't exist
-        created_at: org.created_at
+        created_at: org.created_at || new Date().toISOString()
       })) || [];
 
       setOrganizations(formattedOrgs);
