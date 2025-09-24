@@ -17,7 +17,7 @@
     "agent:scaffold": "curl -sS \"https://ykqsavtoqrhrimvwjubz.functions.supabase.co/agent-tick\" -H \"Authorization: Bearer $SRK\" -H \"Content-Type: application/json\" -d '{\"task\":\"scaffold_pages\"}'",
     "agent:seed": "curl -sS \"https://ykqsavtoqrhrimvwjubz.functions.supabase.co/agent-tick\" -H \"Authorization: Bearer $SRK\" -H \"Content-Type: application/json\" -d '{\"task\":\"seed_data\"}'",
     "lint": "eslint . || true",
-    "vercel-build": "npm install --legacy-peer-deps && next build --no-lint --no-types"
+    "vercel-build": "npm install --legacy-peer-deps && next build --no-lint --no-types",
     "build:dev": "next build"
 
   },
@@ -101,6 +101,6 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
-    "typescript-eslint": "^8.0.1",
+    "typescript-eslint": "^8.0.1"
   }
 }
