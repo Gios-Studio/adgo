@@ -21,5 +21,8 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     sourcemap: true
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom']
   }
 }));
