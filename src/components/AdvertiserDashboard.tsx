@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -150,11 +150,11 @@ const AdvertiserDashboard = () => {
 
   const { user, signOut } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/');
+    router.push('/');
   };
 
   const getStatusColor = (status: string) => {
@@ -207,7 +207,7 @@ const AdvertiserDashboard = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => navigate('/demo')}
+                onClick={() => router.push('/demo')}
                 className="hover:bg-primary/10"
               >
                 Demo
@@ -215,7 +215,7 @@ const AdvertiserDashboard = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => navigate('/ad-display')}
+                onClick={() => router.push('/ad-display')}
                 className="hover:bg-primary/10"
               >
                 Ad Display
@@ -259,7 +259,7 @@ const AdvertiserDashboard = () => {
           
           <div className="flex gap-3 mt-4 sm:mt-0">
             <Button 
-              onClick={() => navigate('/calendar')}
+              onClick={() => router.push('/calendar')}
               variant="outline"
               className="border-primary/20 hover:bg-primary/5"
             >
@@ -267,7 +267,7 @@ const AdvertiserDashboard = () => {
               Schedule Campaign
             </Button>
             <Button 
-              onClick={() => navigate('/ad-upload')}
+              onClick={() => router.push('/ad-upload')}
               className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -587,7 +587,7 @@ const AdvertiserDashboard = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button 
-                  onClick={() => navigate('/ad-upload')}
+                  onClick={() => router.push('/ad-upload')}
                   className="w-full justify-start bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg"
                 >
                   <Plus className="h-4 w-4 mr-2" />

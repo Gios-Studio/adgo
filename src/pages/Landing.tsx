@@ -27,7 +27,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 
 const Landing = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [companySize, setCompanySize] = useState("");
@@ -128,13 +128,13 @@ const Landing = () => {
             <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost"
-                onClick={() => navigate("/login")}
+                onClick={() => router.push("/login")}
                 className="hover:bg-primary/10"
               >
                 Sign In
               </Button>
               <Button 
-                onClick={() => navigate("/auth")}
+                onClick={() => router.push("/auth")}
                 className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg transition-all duration-300"
               >
                 Get Started
@@ -180,7 +180,7 @@ const Landing = () => {
                 <Button 
                   size="lg"
                   variant="outline"
-                  onClick={() => navigate("/demo")}
+                  onClick={() => router.push("/demo")}
                   className="border-primary/20 hover:bg-primary/5 text-lg px-8 py-4"
                 >
                   Watch Demo <Play className="ml-2 h-5 w-5" />

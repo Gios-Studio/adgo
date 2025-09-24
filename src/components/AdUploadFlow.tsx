@@ -14,7 +14,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { format } from 'date-fns';
 import { 
   Upload, 
@@ -103,7 +103,7 @@ const AdUploadFlow = () => {
   });
 
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setUploading(true);
@@ -189,7 +189,7 @@ const AdUploadFlow = () => {
     
     // Navigate back to dashboard after a short delay
     setTimeout(() => {
-      navigate('/client-dashboard');
+      router.push('/client-dashboard');
     }, 2000);
   };
 
@@ -962,7 +962,7 @@ const AdUploadFlow = () => {
             </div>
             <Button 
               variant="outline" 
-              onClick={() => navigate('/client-dashboard')}
+              onClick={() => router.push('/client-dashboard')}
               className="border-primary/20 hover:bg-primary/5"
             >
               Back to Dashboard

@@ -74,7 +74,7 @@ interface OrganizationData {
 
 const AdminDashboard = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const router = useRouter();
   
   // State management
   const [analytics, setAnalytics] = useState<AnalyticsData>({
@@ -345,7 +345,7 @@ const AdminDashboard = () => {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={() => navigate('/client-dashboard')}
+                onClick={() => router.push('/client-dashboard')}
                 className="text-foreground hover:text-cosmic-accent"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />

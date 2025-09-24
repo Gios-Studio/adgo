@@ -7,5 +7,8 @@ export default defineConfig({
   resolve: {
     alias: { "@": path.resolve(__dirname, "src") }
   },
-  server: { port: 5173, host: true, hmr: { protocol: "ws", host: "localhost", port: 5173 } }
+  server: { port: 8080, host: true, hmr: { protocol: "ws", host: "localhost", port: 8080 } },
+  define: {
+    'process.env': process.env
+  }
 });

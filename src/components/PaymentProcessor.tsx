@@ -45,7 +45,7 @@ interface BudgetAllocation {
 }
 
 const PaymentProcessor = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   // Payment form state
   const [amount, setAmount] = useState("");
@@ -200,7 +200,7 @@ const PaymentProcessor = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate('/client-dashboard')}
+              onClick={() => router.push('/client-dashboard')}
               className="text-moss-700 hover:text-moss-800"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
