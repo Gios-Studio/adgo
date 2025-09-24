@@ -12,8 +12,8 @@ interface RoleSelectionProps {
 
 const RoleSelection = ({ onRoleSelect }: RoleSelectionProps) => {
   const [selectedRole, setSelectedRole] = useState<'advertiser' | 'admin' | null>(null);
- const router = useRouter();
-router.push("/dashboard");
+  const router = useRouter();
+  const { toast } = useToast();
 
   const handleContinue = () => {
     if (!selectedRole) {
@@ -29,9 +29,9 @@ router.push("/dashboard");
     
     // Navigate based on role
     if (selectedRole === 'advertiser') {
-      navigate('/client-dashboard');
+      router.push('/client-dashboard');
     } else {
-      navigate('/admin-dashboard');
+      router.push('/admin-dashboard');
     }
   };
 
