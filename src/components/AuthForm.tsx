@@ -12,9 +12,8 @@ export default function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
-  const [params] = useSearchParams();
-  const navigate = useNavigate();
-  const next = params.get("next") || "/dashboard";
+  const router = useRouter();
+  const next = "/dashboard";
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +24,7 @@ export default function AuthForm() {
       if (mode === "signin") {
         const { error } = await supabase!.auth.signInWithPassword({ email, password });
         if (error) return setErr(pretty(error.message));
-        navigate(next, { replace: true });
+        router.push(next);
       } else {
         const { error } = await supabase!.auth.signUp({ email, password });
         if (error) return setErr(pretty(error.message));

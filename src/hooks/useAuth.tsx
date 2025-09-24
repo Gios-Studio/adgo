@@ -6,9 +6,10 @@ type AuthCtx = {
   loading: boolean;
   session: Session | null;
   user: User | null;
+  signOut: () => Promise<void>;
 };
 
-const Ctx = createContext<AuthCtx>({ loading: true, session: null, user: null });
+const Ctx = createContext<AuthCtx>({ loading: true, session: null, user: null, signOut: async () => {} });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -35,10 +36,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  const signOut = async () => {
+    await supabase?.auth.signOut();
+  };
+
   const value = useMemo<AuthCtx>(() => ({
     loading,
     session,
     user: session?.user ?? null,
+    signOut,
   }), [loading, session]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
