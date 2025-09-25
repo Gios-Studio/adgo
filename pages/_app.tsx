@@ -1,12 +1,10 @@
-// pages/_app.tsx
-import type { AppProps } from "next/app";
-import App from "@/App";
-import "@/styles/globals.css"; // keep if you have global styles
+import Footer from "@/components/Footer";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: any) {
   return (
-    <App>
+    <>
       <Component {...pageProps} />
-    </App>
+      <Footer />
+    </>
   );
 }

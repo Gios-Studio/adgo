@@ -1,44 +1,48 @@
-// components/DriverWallet.tsx
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/lib/supabase";
 
-export default function DriverWallet({ driverId }: { driverId: string }) {
-  const [wallet, setWallet] = useState<number>(0);
-  const [bonus, setBonus] = useState<number>(0);
+export default function DriverWallet() {
+  const [entries, setEntries] = useState<any[]>([]);
 
   useEffect(() => {
-    supabase.from("drivers")
-      .select("wallet_balance")
-      .eq("id", driverId)
-      .single()
-      .then(({ data }) => setWallet(data?.wallet_balance || 0));
-
-    supabase.from("campaign_metrics")
-      .select("clicks")
-      .eq("tenant_id", driverId)
-      .then(({ data }) => {
-        const totalClicks = data?.reduce((sum, m) => sum + m.clicks, 0) || 0;
-        setBonus(totalClicks > 50 ? 500 : 0); // bonus if >50 clicks
-      });
-  }, [driverId]);
-
-  const requestPayout = async () => {
-    await supabase.from("transactions").insert({
-      tenant_id: driverId,
-      amount: wallet,
-      type: "driver_payout",
+    supabase.from("driver_wallet_snapshot").select("*").then(({ data }) => {
+      if (data) setEntries(data);
     });
-    alert("Payout requested!");
-  };
+  }, []);
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow">
-      <h2 className="text-xl font-bold">Driver Wallet</h2>
-      <p className="text-2xl">{wallet} KES</p>
-      {bonus > 0 && <p className="text-green-600">Bonus: {bonus} KES 🎉</p>}
-      <button onClick={requestPayout} className="mt-2 bg-green-600 text-white px-4 py-2 rounded">
-        Request Payout
-      </button>
+    <div className="p-6">
+      <h2 className="text-xl font-bold mb-4">Driver Wallet</h2>
+      {entries.length > 0 && (
+        <div className="mb-4">
+          <p>
+            Balance:{" "}
+            <strong>
+              KES {entries[0].balance_cents / 100}
+            </strong>
+          </p>
+        </div>
+      )}
+      <table className="w-full text-left border">
+        <thead>
+          <tr>
+            <th className="p-2">Date</th>
+            <th className="p-2">Type</th>
+            <th className="p-2">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {entries.map((e) => (
+            <tr key={e.ledger_id}>
+              <td className="p-2">{new Date(e.created_at).toLocaleString()}</td>
+              <td className="p-2">{e.type}</td>
+              <td className="p-2">
+                {e.credit > 0 ? `+${e.credit}` : `-${e.debit}`}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

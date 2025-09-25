@@ -51,3 +51,4 @@ supabase/.branches/
 
 # Misc
 *.swp
+.vercel
