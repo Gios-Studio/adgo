@@ -1,7 +1,7 @@
 name: DB Migrate
 
 on:
-  workflow_dispatch:   # manual trigger so you control when it runs
+  workflow_dispatch:
     inputs:
       environment:
         description: "Choose the database environment"
@@ -19,19 +19,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set environment DB URL
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Select DB URL
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+            if [ -n "${{ secrets.SUPABASE_DB_URL_PROD }}" ]; then
               echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL_PROD }}" >> $GITHUB_ENV
             else
-              echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL_STAGING }}" >> $GITHUB_ENV
+              echo "ERROR: SUPABASE_DB_URL_PROD not defined" && exit 1
             fi
           else
-            echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL_STAGING }}" >> $GITHUB_ENV
+            if [ -n "${{ secrets.SUPABASE_DB_URL_STAGING }}" ]; then
+              echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL_STAGING }}" >> $GITHUB_ENV
+            else
+              echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> $GITHUB_ENV
+            fi
           fi
+
+      - name: Lint migrations (dry run)
+        run: |
+          npx supabase db lint --db-url $SUPABASE_DB_URL
 
       - name: Run migrations
         run: |
-          echo "Running migrations against $SUPABASE_DB_URL"
           npx supabase db push --db-url $SUPABASE_DB_URL
