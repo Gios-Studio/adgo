@@ -1,6 +1,7 @@
+
 # AdGo Process Documentation
 
-This document summarizes all 40 processes implemented in the AdGo platform, grouped by sprint wave. Each process includes its definition, protection type, acceptance criteria, and risks with mitigations.
+This document provides a comprehensive summary of all 40 processes implemented in the AdGo platform, grouped by sprint wave and expansion. Each process includes its definition, protection type, acceptance criteria, and risks with mitigations.
 
 ---
 
@@ -148,18 +149,115 @@ This document summarizes all 40 processes implemented in the AdGo platform, grou
 
 ---
 
-## Remaining Processes (Wave 1-3, Legacy & Expansion)
+## Legacy & Expansion Processes
 
-23-40. **See AGENT_GUIDE.md for legacy, expansion, and auxiliary processes.**
-   - Each process follows the same documentation format: definition, protection, acceptance, risks/mitigations.
-   - For full details, refer to AGENT_GUIDE.md and process-specific READMEs.
+23. **Ad Creative Approval Workflow**
+    - **Definition:** Automated and manual review of ad creatives before launch.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** All creatives pass approval before delivery.
+    - **Risks & Mitigations:** Delays; mitigate with parallel review queues.
 
----
+24. **Advertiser Onboarding**
+    - **Definition:** Streamlined onboarding for new advertisers.
+    - **Protection Type:** Trademark
+    - **Acceptance Criteria:** Advertisers complete onboarding in <10 minutes.
+    - **Risks & Mitigations:** Drop-off; mitigate with guided flows.
 
-## Appendix
-- **IP/Trademark/Patent/Copyright:** See legal folder for registration details.
-- **Acceptance Criteria:** All processes validated by CI, test coverage, and manual review.
-- **Risks & Mitigations:** See risk register in docs/risk-register.md.
+25. **Driver Onboarding**
+    - **Definition:** Streamlined onboarding for new drivers.
+    - **Protection Type:** Trademark
+    - **Acceptance Criteria:** Drivers complete onboarding in <10 minutes.
+    - **Risks & Mitigations:** Drop-off; mitigate with guided flows.
+
+26. **Partner Portal**
+    - **Definition:** Portal for partners to manage campaigns and analytics.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** Partners access all relevant data and controls.
+    - **Risks & Mitigations:** Unauthorized access; mitigate with RBAC.
+
+27. **Client Portal**
+    - **Definition:** Portal for clients to view campaign performance.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** Clients access real-time analytics.
+    - **Risks & Mitigations:** Data lag; mitigate with live sync.
+
+28. **Audit Trail Export**
+    - **Definition:** Exportable audit trail for compliance and review.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** Audit trails are exportable in standard formats.
+    - **Risks & Mitigations:** Data leakage; mitigate with access controls.
+
+29. **Driver Wallet**
+    - **Definition:** Digital wallet for driver payouts and incentives.
+    - **Protection Type:** Patent
+    - **Acceptance Criteria:** Wallet balances update in real time.
+    - **Risks & Mitigations:** Fraud; mitigate with transaction monitoring.
+
+30. **Advertiser Wallet**
+    - **Definition:** Digital wallet for advertiser payments and credits.
+    - **Protection Type:** Patent
+    - **Acceptance Criteria:** Wallet balances update in real time.
+    - **Risks & Mitigations:** Fraud; mitigate with transaction monitoring.
+
+31. **Partner Analytics**
+    - **Definition:** Analytics dashboard for partners.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** Analytics are accurate and up-to-date.
+    - **Risks & Mitigations:** Data drift; mitigate with regular audits.
+
+32. **Client Analytics**
+    - **Definition:** Analytics dashboard for clients.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** Analytics are accurate and up-to-date.
+    - **Risks & Mitigations:** Data drift; mitigate with regular audits.
+
+33. **Driver Report Generation**
+    - **Definition:** Automated generation of driver performance reports.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** Reports are generated and delivered on schedule.
+    - **Risks & Mitigations:** Report errors; mitigate with validation.
+
+34. **Partner Report Generation**
+    - **Definition:** Automated generation of partner performance reports.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** Reports are generated and delivered on schedule.
+    - **Risks & Mitigations:** Report errors; mitigate with validation.
+
+35. **Client Report Generation**
+    - **Definition:** Automated generation of client performance reports.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** Reports are generated and delivered on schedule.
+    - **Risks & Mitigations:** Report errors; mitigate with validation.
+
+36. **SDK Event Tracking**
+    - **Definition:** Tracks SDK events for analytics and debugging.
+    - **Protection Type:** Patent
+    - **Acceptance Criteria:** All SDK events are logged and queryable.
+    - **Risks & Mitigations:** Missed events; mitigate with test coverage.
+
+37. **API Health Monitoring**
+    - **Definition:** Monitors health of all API endpoints.
+    - **Protection Type:** Patent
+    - **Acceptance Criteria:** API health is tracked and alerts are sent on failure.
+    - **Risks & Mitigations:** Missed alerts; mitigate with redundancy.
+
+38. **Multi-Region Failover**
+    - **Definition:** Supports failover across multiple regions for high availability.
+    - **Protection Type:** Patent
+    - **Acceptance Criteria:** No downtime during regional outages.
+    - **Risks & Mitigations:** Failover lag; mitigate with active monitoring.
+
+39. **SDK Integration Testing**
+    - **Definition:** Automated integration tests for SDK modules.
+    - **Protection Type:** Copyright
+    - **Acceptance Criteria:** All SDK modules pass integration tests.
+    - **Risks & Mitigations:** Missed edge cases; mitigate with broad test coverage.
+
+40. **Regulatory Compliance Engine**
+    - **Definition:** Ensures all processes comply with relevant regulations.
+    - **Protection Type:** Patent
+    - **Acceptance Criteria:** Compliance checks pass for all releases.
+    - **Risks & Mitigations:** Regulatory changes; mitigate with regular legal review.
 
 ---
 
