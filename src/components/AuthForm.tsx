@@ -13,7 +13,7 @@ export default function AuthForm() {
   const [err, setErr] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const router = useRouter();
-  const next = "/dashboard";
+  const next = "/";
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
