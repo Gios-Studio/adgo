@@ -38,3 +38,7 @@ This file defines how the AdGo Agent should work in this repo.
 - Wave 3: Privacy, Security & Expansion (6 processes)
 
 Implement wave by wave, commit after each process.
+
+## Workflow Files
+- Do not delete or modify `.github/workflows/auto-pr.yml`.
+- Only update this file if explicitly instructed.

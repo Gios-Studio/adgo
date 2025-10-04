@@ -1,3 +1,4 @@
+"use client";
 // pages/dashboard/ad-upload.tsx
 // src/lib/adgo-upload.ts
 function validateFile(file: File) {
@@ -22,7 +23,6 @@ export async function uploadCreative(file: File, opts: { orgId: string; campaign
   validateFile(file); // ✅ validate before upload
 
 }
-"use client";
 
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";

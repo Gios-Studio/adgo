@@ -1,9 +1,12 @@
 // src/pages/Dashboard.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { useKPI } from './useKPI';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Dashboard() {
   const [name, setName] = useState<string>("");
+  const { data: kpi, error } = useKPI();
 
   useEffect(() => {
     let mounted = true;
@@ -14,6 +17,9 @@ export default function Dashboard() {
     })();
     return () => { mounted = false; };
   }, []);
+
+  if (error) return <div>Error loading metrics</div>;
+  if (!kpi) return <div>Loading...</div>;
 
   return (
     <div className="p-6 space-y-4">
@@ -32,6 +38,20 @@ export default function Dashboard() {
           <li><a className="underline" href="/analytics">Analytics</a></li>
         </ul>
       </div>
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        <div>Views: {kpi.impressions}</div>
+        <div>Clicks: {kpi.clicks}</div>
+        <div>CTR: {kpi.ctr}%</div>
+        <div>ROI: {kpi.roi}%</div>
+      </div>
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={[kpi]}>
+          <XAxis dataKey="impressions" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="clicks" fill="#8884d8" />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 }

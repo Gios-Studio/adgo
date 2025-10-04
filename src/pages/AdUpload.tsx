@@ -1,4 +1,79 @@
-// adgo-upload.ts
+import { useState } from "react";
+import AdUploadFilters from "./AdUploadFilters";
+import Modal from "./Modal"; // Assume a simple modal component
+import { supabase } from "@/lib/supabaseClient";
+import toast from "react-hot-toast";
+
+export default function AdUpload() {
+  const [form, setForm] = useState({ title: "", description: "", file: null });
+  const [filters, setFilters] = useState({ radius: 5, language: "English", riderType: "All" });
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // File validation
+  const handleFile = (e: any) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const validTypes = ["image/", "video/"];
+    if (!validTypes.some(t => file.type.startsWith(t))) {
+      toast.error("File must be image or video");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File too large (max 10MB)");
+      return;
+    }
+    setForm(f => ({ ...f, file }));
+  };
+
+  // Preview modal
+  const handlePreview = () => setPreviewOpen(true);
+
+  // Upload logic
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      // Upload file to Supabase Storage (pseudo)
+      // const { data, error } = await supabase.storage.from("ads").upload(form.file.name, form.file);
+      // Save campaign/ad with filters
+      await supabase.from("ads").insert({
+        ...form,
+        targeting: filters,
+        // media_url: data?.Key,
+      });
+      toast.success("Ad uploaded!");
+    } catch (err) {
+      toast.error("Upload failed");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <input name="title" placeholder="Title" onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required />
+      <textarea name="description" placeholder="Description" onChange={e => setForm(f => ({ ...f, description: e.target.value }))} required />
+      <input type="file" accept=\"image/*,video/*\" onChange={handleFile} required />
+      <AdUploadFilters filters={filters} onChange={setFilters} />
+      <button type="button" onClick={handlePreview} className="bg-gray-200 px-4 py-2 rounded">Preview</button>
+      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>
+        {loading ? "Uploading..." : "Upload"}
+      </button>
+      {previewOpen && (
+        <Modal onClose={() => setPreviewOpen(false)}>
+          <h2 className="font-bold mb-2">Ad Preview</h2>
+          <div>{form.title}</div>
+          <div>{form.description}</div>
+          {form.file && (form.file.type.startsWith("image/") ?
+            <img src={URL.createObjectURL(form.file)} className="max-w-xs" /> :
+            <video src={URL.createObjectURL(form.file)} controls className="max-w-xs" />
+          )}
+          <div>Targeting: {filters.radius}km, {filters.language}, {filters.riderType}</div>
+        </Modal>
+      )}
+    </form>
+  );
+}// adgo-upload.ts
 // Usage (React): await uploadCreative(file, { orgId, campaignId, creativeId })
 import { createClient } from "@supabase/supabase-js";
 
