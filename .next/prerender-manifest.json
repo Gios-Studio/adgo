@@ -1,11 +1,1 @@
-{
-  "version": 4,
-  "routes": {},
-  "dynamicRoutes": {},
-  "notFoundRoutes": [],
-  "preview": {
-    "previewModeId": "ec8ae20ddc6d745e7c871913684b9d5c",
-    "previewModeSigningKey": "052f5eb021abc898fe690cf26e934f978795f780d048376e75f372dc61b2161e",
-    "previewModeEncryptionKey": "781d6c8d2bc1a50bdc5b3dc5cefed97fb04e35ffd267fe0d5a4ded2464f1c110"
-  }
-}
+{"version":4,"routes":{},"dynamicRoutes":{"/[...page]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/[...page]","routeRegex":"^\\/(.+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"049de91bc2e85147c6fd9e9e4740adfb","previewModeSigningKey":"8bb5b733751c83d52a6267bbd42c1918654212370b601af34cc86fd26e6c8d97","previewModeEncryptionKey":"682bec06cff6a08f3362913be10cb7f08f8164245a7048e78a6d6a094dc736e4"}}
