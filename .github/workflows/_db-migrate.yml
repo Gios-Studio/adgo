@@ -1,49 +1,46 @@
-name: DB Migrate
+name: Supabase DB Migrations
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: "Choose the database environment"
-        required: true
-        default: "staging"
-        type: choice
-        options:
-          - staging
-          - production
+  push:
+    branches: [ "main" ]
 
 jobs:
   migrate:
     runs-on: ubuntu-latest
+    name: Apply Supabase migrations remotely
+
+    env:
+      SUPABASE_DB_URL_PROD: ${{ secrets.SUPABASE_DB_URL_PROD }}
+      SUPABASE_DB_URL_STAGING: ${{ secrets.SUPABASE_DB_URL_STAGING }}
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL_PROD }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          version: latest
+          node-version: 18
 
-      - name: Select DB URL
-        run: |
-          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
-            if [ -n "${{ secrets.SUPABASE_DB_URL_PROD }}" ]; then
-              echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL_PROD }}" >> $GITHUB_ENV
-            else
-              echo "ERROR: SUPABASE_DB_URL_PROD not defined" && exit 1
-            fi
-          else
-            if [ -n "${{ secrets.SUPABASE_DB_URL_STAGING }}" ]; then
-              echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL_STAGING }}" >> $GITHUB_ENV
-            else
-              echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> $GITHUB_ENV
-            fi
-          fi
+      - name: Install Supabase CLI
+        run: npm install -g supabase@latest
 
-      - name: Lint migrations (dry run)
+      - name: Link to Supabase project
         run: |
-          npx supabase db lint --db-url $SUPABASE_DB_URL
+          npx supabase link --project-ref $SUPABASE_PROJECT_ID --access-token $SUPABASE_ACCESS_TOKEN
 
-      - name: Run migrations
+      - name: Verify Supabase remote connection
         run: |
-          npx supabase db push --db-url $SUPABASE_DB_URL
+          echo "🔍 Testing Supabase connection..."
+          npx supabase db remote connect --db-url "$SUPABASE_DB_URL" --schema public --yes || exit 1
+          echo "✅ Connection verified."
+
+      - name: Apply pending migrations
+        run: |
+          echo "🚀 Applying migrations to production..."
+          npx supabase migration list
+          npx supabase db push --db-url "$SUPABASE_DB_URL" --linked --schema public
+          echo "✅ Migrations applied successfully."
