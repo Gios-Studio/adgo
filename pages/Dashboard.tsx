@@ -1,7 +1,7 @@
 // src/pages/Dashboard.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useKPI } from './useKPI';
+import { useKPI } from '../hooks/useKPI';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Dashboard() {

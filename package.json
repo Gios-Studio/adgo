@@ -4,21 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "lint": "eslint .",
     "build": "next build",
-    "start": "next start",
-    "preview": "vite preview",
-    "supabase:link": "supabase link --project-ref ykqsavtoqrhrimvwjubz",
-    "supabase:push": "supabase db push",
-    "supabase:studio": "supabase studio",
-    "supabase:serve": "supabase functions serve",
-    "supabase:deploy": "supabase functions deploy",
-    "agent:scaffold:local": "node scripts/scaffold_from_prompts.mjs",
-    "agent:scaffold": "curl -sS \"https://ykqsavtoqrhrimvwjubz.functions.supabase.co/agent-tick\" -H \"Authorization: Bearer $SRK\" -H \"Content-Type: application/json\" -d '{\"task\":\"scaffold_pages\"}'",
-    "agent:seed": "curl -sS \"https://ykqsavtoqrhrimvwjubz.functions.supabase.co/agent-tick\" -H \"Authorization: Bearer $SRK\" -H \"Content-Type: application/json\" -d '{\"task\":\"seed_data\"}'",
-    "lint": "eslint . || true",
-    "vercel-build": "npm install --legacy-peer-deps && next build --no-lint --no-types",
-    "build:dev": "next build"
+    "dev": "next dev",
+    "start": "next start"
   },
   "dependencies": {
     "@builder.io/react": "^8.2.8",

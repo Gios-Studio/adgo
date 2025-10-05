@@ -3,7 +3,9 @@ import type { AppProps } from "next/app";
 import App from "@/App";
 import "@/styles/globals.css"; // keep if you have global styles
 import { Toaster } from "react-hot-toast";
-import { builder } from '@builder.io/react';
+import { builder, BuilderComponent } from '@builder.io/react';
+
+builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
 builder.init("af2d418e03484a10b50b332058b99748");
 
