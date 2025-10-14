@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="md:col-span-2 space-y-6">
             <Logo />
             <p className="text-muted-foreground max-w-xs">
-              Modern financial operations platform for teams that value efficiency, security, and results.
+              Kenya's premier mobile advertising platform connecting brands with drivers and passengers for impactful, location-based marketing.
             </p>
             <div className="flex items-center gap-4">
               <a href="#" className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
@@ -33,47 +33,47 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-medium text-foreground mb-4">Product</h3>
+            <h3 className="font-medium text-foreground mb-4">Platform</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Pricing</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">API Documentation</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Integrations</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Changelog</a></li>
+              <li><a href="/advertiser" className="hover:text-foreground transition-colors">For Advertisers</a></li>
+              <li><a href="/driver" className="hover:text-foreground transition-colors">For Drivers</a></li>
+              <li><a href="/analytics" className="hover:text-foreground transition-colors">Analytics</a></li>
+              <li><a href="/campaigns" className="hover:text-foreground transition-colors">Campaign Manager</a></li>
+              <li><a href="/sdk" className="hover:text-foreground transition-colors">SDK Integration</a></li>
             </ul>
           </div>
 
           <div>
             <h3 className="font-medium text-foreground mb-4">Company</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">About</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Press</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Partners</a></li>
+              <li><a href="/about" className="hover:text-foreground transition-colors">About AdGo</a></li>
+              <li><a href="/blog" className="hover:text-foreground transition-colors">Blog</a></li>
+              <li><a href="/careers" className="hover:text-foreground transition-colors">Careers</a></li>
+              <li><a href="/press" className="hover:text-foreground transition-colors">Press Kit</a></li>
+              <li><a href="/partners" className="hover:text-foreground transition-colors">Partner Program</a></li>
             </ul>
           </div>
 
           <div>
             <h3 className="font-medium text-foreground mb-4">Support</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Contact Us</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Status</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Security</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Privacy</a></li>
+              <li><a href="/help" className="hover:text-foreground transition-colors">Help Center</a></li>
+              <li><a href="/contact" className="hover:text-foreground transition-colors">Contact Us</a></li>
+              <li><a href="/status" className="hover:text-foreground transition-colors">System Status</a></li>
+              <li><a href="mailto:support@adgo.co.ke" className="hover:text-foreground transition-colors">Email Support</a></li>
+              <li><a href="tel:+254700000000" className="hover:text-foreground transition-colors">+254 700 000 000</a></li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-border pt-8 mt-12 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2024 Financial Operations Platform. All rights reserved.
+            © 2024 AdGo Kenya Limited. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Cookies</a>
+            <a href="/terms-of-service" className="hover:text-foreground transition-colors">Terms of Service</a>
+            <a href="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</a>
+            <a href="/cookie-policy" className="hover:text-foreground transition-colors">Cookie Policy</a>
           </div>
         </div>
       </div>

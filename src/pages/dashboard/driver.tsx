@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+// pages/dashboard/driver.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Wallet } from "@/types/wallets";
-import { Transaction } from "@/types/transactions";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,23 +10,66 @@ const supabase = createClient(
 );
 
 export default function DriverDashboard() {
-  const [wallets, setWallets] = useState<Wallet[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [wallets, setWallets] = useState<any[]>([]);
+  const [txns, setTxns] = useState<any[]>([]);
 
   useEffect(() => {
-    supabase.from("wallets").select("*").then(({ data }) => {
-      if (data) setWallets(data as Wallet[]);
-    });
+    const fetchData = async () => {
+      const { data: walletData } = await supabase
+        .from("wallets")
+        .select("*");
 
-    supabase.from("transactions").select("*").then(({ data }) => {
-      if (data) setTransactions(data as Transaction[]);
-    });
+      const { data: txnData } = await supabase
+        .from("transactions")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      setWallets(walletData || []);
+      setTxns(txnData || []);
+    };
+    fetchData();
   }, []);
 
   return (
-    <div className="p-6">
-      <h1>Driver Wallet & Payouts</h1>
-      <pre>{JSON.stringify({ wallets, transactions }, null, 2)}</pre>
+    <div className="p-6 space-y-8">
+      <h1 className="text-2xl font-bold">Driver Wallet</h1>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-2">Balance</h2>
+        {wallets.map((w, i) => (
+          <div key={i} className="border p-3 rounded mb-2">
+            <p><strong>Wallet:</strong> {w.id}</p>
+            <p><strong>Balance:</strong> {w.balance_cents / 100} {w.currency}</p>
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-2">Transactions</h2>
+        <table className="w-full border">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-2">Type</th>
+              <th className="p-2">Amount</th>
+              <th className="p-2">Ref</th>
+              <th className="p-2">Memo</th>
+              <th className="p-2">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {txns.map((t, i) => (
+              <tr key={i}>
+                <td className="p-2">{t.type}</td>
+                <td className="p-2">{t.amount_cents / 100}</td>
+                <td className="p-2">{t.ref}</td>
+                <td className="p-2">{t.memo}</td>
+                <td className="p-2">{new Date(t.created_at).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
     </div>
   );
 }

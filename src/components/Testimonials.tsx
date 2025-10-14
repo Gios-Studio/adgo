@@ -45,7 +45,7 @@ const Testimonials = () => {
             >
               <div className="space-y-4">
                 <blockquote className="text-foreground leading-relaxed">
-                  "{testimonial.quote}"
+                  &quot;{testimonial.quote}&quot;
                 </blockquote>
                 
                 <div className="flex items-center gap-3">

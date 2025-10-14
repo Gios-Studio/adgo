@@ -147,7 +147,7 @@ const CampaignCalendar = () => {
 
               <div className="border rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium">Valentine's Day Promo</h4>
+                  <h4 className="font-medium">Valentine&apos;s Day Promo</h4>
                   <span className="text-sm text-muted-foreground">Planned</span>
                 </div>
                 <div className="text-sm text-muted-foreground">

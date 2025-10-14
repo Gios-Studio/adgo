@@ -1,14 +1,31 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
+# AdGo - Mobile Advertising Platform
+# https://adgo.co.ke
 
 User-agent: *
 Allow: /
+
+# Allow important pages
+Allow: /Landing
+Allow: /login  
+Allow: /signup
+Allow: /Waitlist
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /cookie-policy
+
+# Disallow admin and dashboard areas
+Disallow: /dashboard/
+Disallow: /Admin
+Disallow: /api/
+Disallow: /_next/
+Disallow: /dev/
+
+# Disallow sensitive files
+Disallow: *.json
+Disallow: /EnvDebug
+
+# Sitemap location
+Sitemap: https://adgo.co.ke/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

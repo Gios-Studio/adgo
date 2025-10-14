@@ -31,7 +31,7 @@ export default function UtilityAd({ rideId, ad }: { rideId: string; ad: Ad }) {
         meta: { title: ad.title },
       }).catch(console.error);
     }
-  }, [rideId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [rideId]);
 
   if (!visible) return null;
 

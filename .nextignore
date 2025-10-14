@@ -1,0 +1,8 @@
+# Completely ignore Supabase Edge Functions (Deno code)
+supabase/functions/
+supabase/functions/**
+
+# Optional: ignore anything Deno-related
+*.deno.*
+**/deno_modules/**
+**/https@deno.land/**

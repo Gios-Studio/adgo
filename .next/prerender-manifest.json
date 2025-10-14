@@ -1,11 +1,26 @@
 {
   "version": 4,
   "routes": {},
-  "dynamicRoutes": {},
+  "dynamicRoutes": {
+    "/[...page]": {
+      "routeRegex": "^/(.+?)(?:/)?$",
+      "dataRoute": "/_next/data/g727s0CMCeihnvU3LYevD/[...page].json",
+      "fallback": null,
+      "dataRouteRegex": "^/_next/data/g727s0CMCeihnvU3LYevD/(.+?)\\.json$",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    }
+  },
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "4d29a62ac954ae0e0df9201d00e0706b",
-    "previewModeSigningKey": "a0d8c49081b92e5e5d82f8cb630be03927acfa9e2a210347ac77ff13e1ab07f4",
-    "previewModeEncryptionKey": "62b0efb162a20dd81ffa473d5c8d19b30e1e129d0d999c7d99deb2a8eec98372"
+    "previewModeId": "ab88bda92cd11570415aa279e68c312f",
+    "previewModeSigningKey": "abc29bdfedf9d2b4b08c35cc638f68bd362d7f5698aad2f39217a9ce28579dca",
+    "previewModeEncryptionKey": "0f1ea5368dd654534a545ea92ce521dd2639fc691dff1b21f7df4bb2fed06916"
   }
 }

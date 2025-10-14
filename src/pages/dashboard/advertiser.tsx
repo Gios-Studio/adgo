@@ -1,48 +1,71 @@
-// src/pages/dashboard/advertiser.tsx
+// pages/dashboard/advertiser.tsx
+"use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Campaign } from "@/types/campaign";
-import { Metrics } from "@/types/metrics";
-import Link from "next/link";
 
-// Supabase client
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
 export default function AdvertiserDashboard() {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [metrics, setMetrics] = useState<Metrics[]>([]);
+  const [metrics, setMetrics] = useState<any[]>([]);
+  const [fraud, setFraud] = useState<any[]>([]);
 
   useEffect(() => {
-    supabase.from("campaigns").select("*").then(({ data }) => {
-      if (data) setCampaigns(data as Campaign[]);
-    });
+    const fetchData = async () => {
+      const { data: ctrData } = await supabase
+        .from("campaign_ctr")
+        .select("*");
 
-    supabase.from("metrics").select("*").then(({ data }) => {
-      if (data) setMetrics(data as Metrics[]);
-    });
+      const { data: fraudData } = await supabase
+        .from("fraud_flags")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      setMetrics(ctrData || []);
+      setFraud(fraudData || []);
+    };
+    fetchData();
   }, []);
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-8">
       <h1 className="text-2xl font-bold">Advertiser Dashboard</h1>
 
-      {/* Refund Policy static link */}
-      <Link
-        href="/docs/refund-policy-v1.0.pdf"
-        target="_blank"
-        className="text-blue-600 underline"
-      >
-        View Refund Policy
-      </Link>
+      <section>
+        <h2 className="text-xl font-semibold mb-2">Campaign CTR</h2>
+        <table className="w-full border">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-2">Campaign</th>
+              <th className="p-2">Impressions</th>
+              <th className="p-2">Clicks</th>
+              <th className="p-2">CTR (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {metrics.map((row, i) => (
+              <tr key={i}>
+                <td className="p-2">{row.campaign_id}</td>
+                <td className="p-2">{row.impressions}</td>
+                <td className="p-2">{row.clicks}</td>
+                <td className="p-2">{row.ctr}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
 
-      {/* Example raw data output */}
-      <pre className="bg-gray-100 p-4 rounded">
-        {JSON.stringify({ campaigns, metrics }, null, 2)}
-      </pre>
+      <section>
+        <h2 className="text-xl font-semibold mb-2">Fraud Alerts</h2>
+        <ul className="list-disc pl-6">
+          {fraud.map((f, i) => (
+            <li key={i}>{f.reason} (Ride {f.ride_id})</li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

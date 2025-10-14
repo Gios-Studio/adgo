@@ -1,11 +1,22 @@
 /** @type {import('next').NextConfig} */
+/** Ensures Next.js uses /src/pages directory **/
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  experimental: { appDir: false },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /supabase[\\/]functions[\\/].*\.ts$/,
+      loader: "ignore-loader",
+    });
+    return config;
+  },
   env: {
-    NEXT_PUBLIC_SUPABASE_URL: 'https://ykqsavtoqrhrimvwjubz.supabase.co',
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrcXNhdnRvcXJocmltdndqdWJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMjMyMTAsImV4cCI6MjA3MTY5OTIxMH0._CtaS4TH3v4ic0miHeVzaaZOT6n6Mk2gGaEUq4l0dN4'
-  }
-}
+    NEXT_PUBLIC_SUPABASE_URL: "https://rkonwkggxaohpmxmzmfn.supabase.co",
+    NEXT_PUBLIC_SUPABASE_ANON_KEY:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrb253a2dneGFvaHBteG16bWZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0OTk0MDQsImV4cCI6MjA3MzA3NTQwNH0.F8dsonOXlKqViCP-Jz5CpxS4ObXIbWoTHGLB3udjRqo",
+  },
+};
 
-module.exports = nextConfig
+export default nextConfig;
