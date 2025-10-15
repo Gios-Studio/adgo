@@ -87,7 +87,7 @@ const sdkValidation = {
     },
     
     promo_code_links: {
-      format: 'https://adgo.co.ke/promo/[code]',
+      format: 'https://adgosolutions.com/promo/[code]',
       functionality: 'Unique promo codes with attribution',
       test_result: '✅ FUNCTIONAL - Promo links track conversions',
       expiration: '30 days from generation'

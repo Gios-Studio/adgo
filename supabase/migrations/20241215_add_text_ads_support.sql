@@ -1,3 +1,13 @@
+-- AdGo Platform - Database Schema & Migrations
+-- 
+-- Copyright (c) 2025 AdGo Solutions Limited.
+-- All rights reserved.
+-- 
+-- This database schema is proprietary and confidential.
+-- Unauthorized access, copying, or modification is strictly prohibited.
+-- 
+-- Build: 20251015_073830
+
 -- Add text-only ad support and language options to ads table
 -- This migration adds support for text-based advertisements with multi-language capabilities
 
@@ -157,7 +167,7 @@ insert into public.ads (
   'active',
   (select id from auth.users limit 1),
   null,
-  'https://adgo.co.ke/signup'
+  'https://adgosolutions.com/signup'
 ),
 -- Swahili text ad
 (
@@ -169,6 +179,6 @@ insert into public.ads (
   'active',
   (select id from auth.users limit 1),
   null,
-  'https://adgo.co.ke/jiunge'
+  'https://adgosolutions.com/jiunge'
 )
 on conflict do nothing;

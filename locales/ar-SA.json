@@ -1,0 +1,96 @@
+{
+  "common": {
+    "loading": "جار التحميل...",
+    "error": "خطأ",
+    "success": "نجح", 
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "retry": "إعادة المحاولة",
+    "close": "إغلاق"
+  },
+  "sdk": {
+    "initialization": {
+      "starting": "جار تهيئة AdGo SDK...",
+      "success": "AdGo SDK جاهز",
+      "failed": "فشل في تهيئة AdGo SDK"
+    },
+    "license": {
+      "verifying": "جار التحقق من الترخيص...",
+      "valid": "تم التحقق من الترخيص بنجاح",
+      "invalid": "مفتاح ترخيص غير صالح",
+      "expired": "انتهت صلاحية الترخيص",
+      "limit_exceeded": "تم تجاوز حد الاستخدام"
+    },
+    "api": {
+      "request_failed": "فشل في طلب API",
+      "network_error": "خطأ في الاتصال بالشبكة",
+      "timeout": "انتهت مهلة الطلب",
+      "unauthorized": "وصول غير مصرح",
+      "rate_limited": "طلبات كثيرة جداً، يرجى المحاولة لاحقاً"
+    },
+    "ads": {
+      "loading": "جار تحميل الإعلان...",
+      "display_error": "فشل في عرض الإعلان",
+      "no_ads": "لا توجد إعلانات متاحة",
+      "blocked": "تم حظر الإعلان بواسطة تفضيلات المستخدم"
+    },
+    "analytics": {
+      "tracking": "جار تتبع الحدث...",
+      "upload_failed": "فشل في رفع بيانات التحليلات",
+      "offline_mode": "ستتزامن التحليلات عند الاتصال"
+    }
+  },
+  "dashboard": {
+    "navigation": {
+      "overview": "نظرة عامة",
+      "analytics": "التحليلات", 
+      "campaigns": "الحملات",
+      "settings": "الإعدادات",
+      "billing": "الفواتير",
+      "support": "الدعم"
+    },
+    "metrics": {
+      "impressions": "مرات الظهور",
+      "clicks": "النقرات",
+      "conversions": "التحويلات",
+      "revenue": "الإيرادات",
+      "ctr": "معدل النقر",
+      "cpm": "التكلفة لكل ألف",
+      "roi": "العائد على الاستثمار"
+    },
+    "campaigns": {
+      "create": "إنشاء حملة",
+      "edit": "تعديل الحملة",
+      "delete": "حذف الحملة",
+      "pause": "إيقاف الحملة مؤقتاً",
+      "resume": "استئناف الحملة",
+      "status": {
+        "active": "نشط",
+        "paused": "متوقف مؤقتاً",
+        "completed": "مكتمل",
+        "draft": "مسودة"
+      }
+    }
+  },
+  "errors": {
+    "validation": {
+      "required": "هذا الحقل مطلوب",
+      "invalid_email": "عنوان بريد إلكتروني غير صالح",
+      "invalid_url": "تنسيق URL غير صالح",
+      "min_length": "الحد الأدنى للطول هو {{min}} أحرف",
+      "max_length": "الحد الأقصى للطول هو {{max}} حرف"
+    },
+    "network": {
+      "offline": "أنت غير متصل حالياً",
+      "connection_lost": "انقطع الاتصال، جار إعادة المحاولة...",
+      "server_error": "خطأ في الخادم، يرجى المحاولة مرة أخرى",
+      "maintenance": "الخدمة غير متاحة مؤقتاً للصيانة"
+    }
+  },
+  "notifications": {
+    "campaign_started": "بدأت الحملة '{{name}}'",
+    "campaign_completed": "اكتملت الحملة '{{name}}'",
+    "budget_warning": "الحملة '{{name}}' تقترب من حد الميزانية",
+    "low_balance": "رصيد الحساب منخفض، يرجى إضافة أموال"
+  }
+}

@@ -1,3 +1,19 @@
+/**
+ * AdGo Platform - Advanced Advertising Technology Suite
+ * 
+ * Copyright (c) 2025 AdGo Solutions Limited.
+ * All rights reserved.
+ * 
+ * This source code is proprietary and confidential.
+ * Unauthorized copying, modification, distribution, or use of this file,
+ * via any medium, is strictly prohibited without explicit written consent.
+ * 
+ * For licensing information, please contact: legal@adgosolutions.com
+ * 
+ * Build: 20251015_073830
+ * Generated: 2025-10-15 04:38:34 UTC
+ */
+
 import React from 'react';
 import Logo from './Logo';
 
@@ -60,7 +76,7 @@ const Footer = () => {
               <li><a href="/help" className="hover:text-foreground transition-colors">Help Center</a></li>
               <li><a href="/contact" className="hover:text-foreground transition-colors">Contact Us</a></li>
               <li><a href="/status" className="hover:text-foreground transition-colors">System Status</a></li>
-              <li><a href="mailto:support@adgo.co.ke" className="hover:text-foreground transition-colors">Email Support</a></li>
+              <li><a href="mailto:support@adgosolutions.com" className="hover:text-foreground transition-colors">Email Support</a></li>
               <li><a href="tel:+254700000000" className="hover:text-foreground transition-colors">+254 700 000 000</a></li>
             </ul>
           </div>
@@ -68,7 +84,7 @@ const Footer = () => {
 
         <div className="border-t border-border pt-8 mt-12 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2024 AdGo Kenya Limited. All rights reserved.
+            © 2025 AdGo Solutions Limited. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <a href="/terms-of-service" className="hover:text-foreground transition-colors">Terms of Service</a>

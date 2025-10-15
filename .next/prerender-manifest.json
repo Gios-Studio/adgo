@@ -4,9 +4,9 @@
   "dynamicRoutes": {
     "/[...page]": {
       "routeRegex": "^/(.+?)(?:/)?$",
-      "dataRoute": "/_next/data/g727s0CMCeihnvU3LYevD/[...page].json",
+      "dataRoute": "/_next/data/CzyaP9Qu_lUbSEQ2WDDcD/[...page].json",
       "fallback": null,
-      "dataRouteRegex": "^/_next/data/g727s0CMCeihnvU3LYevD/(.+?)\\.json$",
+      "dataRouteRegex": "^/_next/data/CzyaP9Qu_lUbSEQ2WDDcD/(.+?)\\.json$",
       "allowHeader": [
         "host",
         "x-matched-path",

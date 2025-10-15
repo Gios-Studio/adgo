@@ -1,0 +1,36 @@
+{
+  "brand_info": {
+    "company": "AdGo Solutions Limited.",
+    "trademark": "AdGo™",
+    "registered_trademark": "AdGo® - Advanced Advertising Technology",
+    "copyright": "© 2025 AdGo Solutions Limited.",
+    "protection_level": "maximum"
+  },
+  "protected_assets": {
+    "logos": [
+      "adgo-logo.png",
+      "adgo-logo-full.png", 
+      "adgo-icon.png"
+    ],
+    "brand_colors": {
+      "primary": "#667eea",
+      "secondary": "#764ba2",
+      "accent": "#ffd700"
+    },
+    "typography": {
+      "primary_font": "Inter",
+      "brand_font": "Poppins"
+    }
+  },
+  "usage_restrictions": {
+    "logo_min_size": "24px",
+    "clear_space": "equal_to_logo_height",
+    "color_variations": "approved_palette_only",
+    "modifications": "prohibited"
+  },
+  "enforcement": {
+    "monitoring": "automated",
+    "reporting_email": "brandprotection@adgosolutions.com",
+    "legal_contact": "legal@adgosolutions.com"
+  }
+}

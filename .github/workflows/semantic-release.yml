@@ -1,0 +1,89 @@
+name: 🔖 Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  release:
+    name: 🚀 Create Release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: 🏗️ Install dependencies
+        run: |
+          npm install -g semantic-release
+          npm install -g @semantic-release/changelog
+          npm install -g @semantic-release/git
+          npm install -g @semantic-release/github
+      
+      - name: 🔖 Create release
+        run: semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # Update documentation version
+  update-docs-version:
+    name: 📚 Update Documentation Version
+    needs: release
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 🔄 Get latest release
+        id: get_release
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "latest_tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Latest release tag: ${LATEST_TAG}"
+      
+      - name: 📝 Update documentation config
+        run: |
+          # Update version in docusaurus.config.js
+          sed -i "s/version: '[^']*'/version: '${{ steps.get_release.outputs.latest_tag }}'/g" docs/docusaurus.config.js
+          
+          # Update version in package.json
+          sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"${{ steps.get_release.outputs.latest_tag }}\"/g" docs/package.json
+      
+      - name: 💾 Commit version updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/docusaurus.config.js docs/package.json
+          git commit -m "docs: update version to ${{ steps.get_release.outputs.latest_tag }}" || exit 0
+          git push
+      
+      - name: 🚀 Trigger documentation deployment
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Content-Type: application/json" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type":"deploy_docs","client_payload":{"version":"${{ steps.get_release.outputs.latest_tag }}"}}'

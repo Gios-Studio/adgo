@@ -195,7 +195,7 @@ async function runComplianceTests() {
           
           // Check for key compliance elements
           const hasLastUpdated = html.includes('Last Updated');
-          const hasContactInfo = html.includes('adgo.co.ke');
+          const hasContactInfo = html.includes('adgosolutions.com');
           const hasDataRights = html.includes('right to') || html.includes('rights');
           
           if (hasLastUpdated && hasContactInfo && hasDataRights) {

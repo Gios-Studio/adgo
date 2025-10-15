@@ -6,7 +6,7 @@
 
   <!-- Homepage -->
   <url>
-    <loc>https://adgo.co.ke/</loc>
+    <loc>https://adgosolutions.com/</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
 
   <!-- Main Landing Page -->
   <url>
-    <loc>https://adgo.co.ke/Landing</loc>
+    <loc>https://adgosolutions.com/Landing</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -22,14 +22,14 @@
 
   <!-- Authentication Pages -->
   <url>
-    <loc>https://adgo.co.ke/login</loc>
+    <loc>https://adgosolutions.com/login</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://adgo.co.ke/signup</loc>
+    <loc>https://adgosolutions.com/signup</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -37,7 +37,7 @@
 
   <!-- Waitlist/Registration -->
   <url>
-    <loc>https://adgo.co.ke/Waitlist</loc>
+    <loc>https://adgosolutions.com/Waitlist</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -45,21 +45,21 @@
 
   <!-- Legal Pages -->
   <url>
-    <loc>https://adgo.co.ke/privacy-policy</loc>
+    <loc>https://adgosolutions.com/privacy-policy</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://adgo.co.ke/terms-of-service</loc>
+    <loc>https://adgosolutions.com/terms-of-service</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://adgo.co.ke/cookie-policy</loc>
+    <loc>https://adgosolutions.com/cookie-policy</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -67,14 +67,14 @@
 
   <!-- Public Pages -->
   <url>
-    <loc>https://adgo.co.ke/analytics</loc>
+    <loc>https://adgosolutions.com/analytics</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://adgo.co.ke/settings</loc>
+    <loc>https://adgosolutions.com/settings</loc>
     <lastmod>2024-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

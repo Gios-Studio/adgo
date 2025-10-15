@@ -153,6 +153,12 @@
       "namedRegex": "^/dashboard/partner\\-report(?:/)?$"
     },
     {
+      "page": "/dashboard/telemetry",
+      "regex": "^/dashboard/telemetry(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/telemetry(?:/)?$"
+    },
+    {
       "page": "/dev/events-test",
       "regex": "^/dev/events\\-test(?:/)?$",
       "routeKeys": {},
@@ -225,8 +231,8 @@
       "routeKeys": {
         "nxtPpage": "nxtPpage"
       },
-      "dataRouteRegex": "^/_next/data/g727s0CMCeihnvU3LYevD/(.+?)\\.json$",
-      "namedDataRouteRegex": "^/_next/data/g727s0CMCeihnvU3LYevD/(?<nxtPpage>.+?)\\.json$"
+      "dataRouteRegex": "^/_next/data/CzyaP9Qu_lUbSEQ2WDDcD/(.+?)\\.json$",
+      "namedDataRouteRegex": "^/_next/data/CzyaP9Qu_lUbSEQ2WDDcD/(?<nxtPpage>.+?)\\.json$"
     }
   ],
   "rsc": {

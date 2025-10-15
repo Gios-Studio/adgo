@@ -31,7 +31,7 @@ const TEST_CONFIG = {
       ad_text: 'Join AdGo today! Experience the future of mobile advertising in Kenya. Download now and start earning.',
       language: 'en',
       ad_type: 'text',
-      cta_link: 'https://adgo.co.ke/signup'
+      cta_link: 'https://adgosolutions.com/signup'
     }
   },
   driver: {

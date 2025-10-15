@@ -1,0 +1,96 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success", 
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "retry": "Retry",
+    "close": "Close"
+  },
+  "sdk": {
+    "initialization": {
+      "starting": "AdGo SDK initializing...",
+      "success": "AdGo SDK ready",
+      "failed": "AdGo SDK initialization failed"
+    },
+    "license": {
+      "verifying": "Verifying license...",
+      "valid": "License verified successfully",
+      "invalid": "Invalid license key",
+      "expired": "License has expired",
+      "limit_exceeded": "Usage limit exceeded"
+    },
+    "api": {
+      "request_failed": "API request failed",
+      "network_error": "Network connection error",
+      "timeout": "Request timeout",
+      "unauthorized": "Unauthorized access",
+      "rate_limited": "Too many requests, please try again later"
+    },
+    "ads": {
+      "loading": "Loading advertisement...",
+      "display_error": "Failed to display advertisement",
+      "no_ads": "No advertisements available",
+      "blocked": "Advertisement blocked by user preferences"
+    },
+    "analytics": {
+      "tracking": "Tracking event...",
+      "upload_failed": "Failed to upload analytics data",
+      "offline_mode": "Analytics will sync when online"
+    }
+  },
+  "dashboard": {
+    "navigation": {
+      "overview": "Overview",
+      "analytics": "Analytics", 
+      "campaigns": "Campaigns",
+      "settings": "Settings",
+      "billing": "Billing",
+      "support": "Support"
+    },
+    "metrics": {
+      "impressions": "Impressions",
+      "clicks": "Clicks",
+      "conversions": "Conversions",
+      "revenue": "Revenue",
+      "ctr": "Click-through Rate",
+      "cpm": "Cost per Thousand",
+      "roi": "Return on Investment"
+    },
+    "campaigns": {
+      "create": "Create Campaign",
+      "edit": "Edit Campaign",
+      "delete": "Delete Campaign",
+      "pause": "Pause Campaign",
+      "resume": "Resume Campaign",
+      "status": {
+        "active": "Active",
+        "paused": "Paused",
+        "completed": "Completed",
+        "draft": "Draft"
+      }
+    }
+  },
+  "errors": {
+    "validation": {
+      "required": "This field is required",
+      "invalid_email": "Invalid email address",
+      "invalid_url": "Invalid URL format",
+      "min_length": "Minimum length is {{min}} characters",
+      "max_length": "Maximum length is {{max}} characters"
+    },
+    "network": {
+      "offline": "You are currently offline",
+      "connection_lost": "Connection lost, retrying...",
+      "server_error": "Server error, please try again",
+      "maintenance": "Service temporarily unavailable for maintenance"
+    }
+  },
+  "notifications": {
+    "campaign_started": "Campaign '{{name}}' has started",
+    "campaign_completed": "Campaign '{{name}}' has completed",
+    "budget_warning": "Campaign '{{name}}' is approaching budget limit",
+    "low_balance": "Account balance is low, please add funds"
+  }
+}
