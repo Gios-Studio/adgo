@@ -32,10 +32,28 @@ const EventParamsSchema = z.object({
   meta: z.record(z.any()).optional()
 });
 
+// Batch event schema for performance optimization
+const BatchEventSchema = z.object({
+  events: z.array(EventParamsSchema).min(1).max(50), // Max 50 events per batch
+  batch_id: z.string().uuid().optional()
+});
+
 const QueryParamsSchema = z.object({
   ride_id: z.string().min(1),
   device_id: z.string().min(1),
   zone: z.string().default('post-ride')
+});
+
+// Enhanced query schema for pagination and delta sync
+const EventsQuerySchema = z.object({
+  ride_id: z.string().min(1).optional(),
+  device_id: z.string().min(1).optional(),
+  zone: z.string().default('post-ride'),
+  limit: z.coerce.number().min(1).max(100).default(50),
+  offset: z.coerce.number().min(0).default(0),
+  since: z.string().datetime().optional(), // Delta sync timestamp
+  campaign_id: z.string().uuid().optional(),
+  event_type: z.enum(['impression', 'click', 'conversion']).optional()
 });
 
 // Exponential retry configuration
@@ -166,7 +184,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('X-Response-Time', Date.now().toString());
     
     if (req.method === "GET") {
-      return await serveAd(req, res);
+      // Check if this is an events query or ad serving request
+      const hasEventQueryParams = req.query.limit || req.query.offset || req.query.since || req.query.event_type;
+      if (hasEventQueryParams) {
+        return await queryEvents(req, res);
+      } else {
+        return await serveAd(req, res);
+      }
     } else if (req.method === "POST") {
       return await recordEvent(req, res);
     } else {
@@ -183,6 +207,89 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       message: error.message,
       sdk_version: "1.0.0",
       timestamp: new Date().toISOString()
+    });
+  }
+}
+
+// Enhanced event querying with pagination and delta sync
+async function queryEvents(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const validationResult = EventsQuerySchema.safeParse(req.query);
+    
+    if (!validationResult.success) {
+      return res.status(400).json({ 
+        error: "invalid_query_parameters",
+        details: validationResult.error.issues,
+        sdk_version: "1.0.0"
+      });
+    }
+    
+    const { 
+      ride_id, 
+      device_id, 
+      zone, 
+      limit, 
+      offset, 
+      since, 
+      campaign_id, 
+      event_type 
+    } = validationResult.data;
+    
+    // Build query with performance optimizations
+    let query = supabase
+      .from('analytics_events')
+      .select('id, campaign_id, ad_id, event_type, device_id, ride_id, region, created_at, occurred_at, meta', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+    
+    // Apply filters
+    if (ride_id) query = query.eq('ride_id', ride_id);
+    if (device_id) query = query.eq('device_id', device_id);
+    if (zone) query = query.eq('region', zone);
+    if (campaign_id) query = query.eq('campaign_id', campaign_id);
+    if (event_type) query = query.eq('event_type', event_type);
+    
+    // Delta sync optimization
+    if (since) {
+      query = query.gte('created_at', since);
+    }
+    
+    const { data: events, error, count } = await query;
+    
+    if (error) {
+      console.error('Query events error:', error);
+      return res.status(500).json({ 
+        error: 'Failed to query events',
+        sdk_version: "1.0.0" 
+      });
+    }
+    
+    // Calculate pagination metadata
+    const hasMore = count ? (offset + limit) < count : false;
+    const nextOffset = hasMore ? offset + limit : null;
+    
+    return res.status(200).json({
+      events: events || [],
+      pagination: {
+        limit,
+        offset,
+        total: count || 0,
+        hasMore,
+        nextOffset
+      },
+      deltaSync: {
+        since: since || null,
+        latestTimestamp: events?.[0]?.created_at || null
+      },
+      sdk_version: "1.0.0",
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('Query events error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to query events',
+      sdk_version: "1.0.0" 
     });
   }
 }
@@ -273,9 +380,85 @@ async function serveAd(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
+// Batch event processing for performance optimization
+async function recordBatchEvents(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const validationResult = BatchEventSchema.safeParse(req.body);
+    
+    if (!validationResult.success) {
+      return res.status(400).json({ 
+        error: "invalid_batch_parameters",
+        details: validationResult.error.issues,
+        sdk_version: "1.0.0"
+      });
+    }
+    
+    const { events, batch_id } = validationResult.data;
+    const batchStartTime = Date.now();
+    
+    // Process events in batches for optimal performance
+    const processedEvents = events.map(event => {
+      const normalizedRideId = normalizeRideId(event.ride_id);
+      return {
+        campaign_id: event.campaign_id,
+        ad_id: event.ad_id,
+        ride_id: normalizedRideId,
+        device_id: event.device_id || null,
+        event_type: event.event_type,
+        region: event.zone || 'post-ride',
+        occurred_at: new Date().toISOString(),
+        meta: { 
+          ...event.meta, 
+          batch_id,
+          batch_processing: true 
+        }
+      };
+    });
+    
+    // Batch insert with retry logic
+    const insertResult = await withRetry(async () => {
+      const { data, error } = await supabase
+        .from('analytics_events')
+        .insert(processedEvents)
+        .select();
+      
+      if (error) throw error;
+      return data;
+    });
+    
+    const processingTime = Date.now() - batchStartTime;
+    
+    return res.status(200).json({
+      success: true,
+      batch_id: batch_id || uuidv4(),
+      events_processed: insertResult.length,
+      processing_time_ms: processingTime,
+      event_ids: insertResult.map(e => e.id),
+      sdk_version: "1.0.0",
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error: any) {
+    console.error('Batch event error:', error);
+    return res.status(500).json({
+      error: "batch_processing_failed",
+      message: error.message,
+      sdk_version: "1.0.0",
+      timestamp: new Date().toISOString()
+    });
+  }
+}
+
 async function recordEvent(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Enhanced Zod validation
+    // Check if this is a batch request
+    const isBatch = Array.isArray(req.body.events);
+    
+    if (isBatch) {
+      return await recordBatchEvents(req, res);
+    }
+    
+    // Single event validation
     const validationResult = EventParamsSchema.safeParse(req.body);
     
     if (!validationResult.success) {

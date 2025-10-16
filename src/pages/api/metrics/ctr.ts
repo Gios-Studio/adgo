@@ -103,17 +103,56 @@ async function getOverallMetrics(req: NextApiRequest, res: NextApiResponse, peri
         startDate.setDate(now.getDate() - 1);
     }
     
-    // Get analytics events for the period
-    const { data: events, error } = await supabase
-      .from('analytics_events')
-      .select('event_type, created_at')
-      .gte('created_at', startDate.toISOString());
+    // Try to use materialized view for better performance
+    let impressions = 0, clicks = 0, conversions = 0;
     
-    if (error) throw error;
+    try {
+      // Select appropriate time-based columns from materialized view
+      let selectColumns = 'impressions, clicks, conversions';
+      if (period === '24h') {
+        selectColumns = 'impressions_24h, clicks_24h, conversions_24h';
+      } else if (period === '7d') {
+        selectColumns = 'impressions_7d, clicks_7d, conversions_7d';  
+      }
+      
+      const { data: aggregated, error: viewError } = await supabase
+        .from('campaign_metrics')
+        .select(selectColumns);
+      
+      if (!viewError && aggregated?.length > 0) {
+        // Sum metrics from materialized view
+        for (const row of aggregated) {
+          if (period === '24h') {
+            impressions += (row as any).impressions_24h || 0;
+            clicks += (row as any).clicks_24h || 0;
+            conversions += (row as any).conversions_24h || 0;
+          } else if (period === '7d') {
+            impressions += (row as any).impressions_7d || 0;
+            clicks += (row as any).clicks_7d || 0;
+            conversions += (row as any).conversions_7d || 0;
+          } else {
+            impressions += (row as any).impressions || 0;
+            clicks += (row as any).clicks || 0;
+            conversions += (row as any).conversions || 0;
+          }
+        }
+      } else {
+        throw new Error('Materialized view not available');
+      }
+    } catch (fallbackError) {
+      // Fallback to direct query if materialized view fails
+      const { data: events, error } = await supabase
+        .from('analytics_events')
+        .select('event_type, created_at')
+        .gte('created_at', startDate.toISOString());
+      
+      if (error) throw error;
+      
+      impressions = events?.filter(e => e.event_type === 'impression').length || 0;
+      clicks = events?.filter(e => e.event_type === 'click').length || 0;
+      conversions = events?.filter(e => e.event_type === 'conversion').length || 0;
+    }
     
-    const impressions = events?.filter(e => e.event_type === 'impression').length || 0;
-    const clicks = events?.filter(e => e.event_type === 'click').length || 0;
-    const conversions = events?.filter(e => e.event_type === 'conversion').length || 0;
     const ctr = impressions > 0 ? ((clicks / impressions) * 100) : 0;
     const conversionRate = clicks > 0 ? ((conversions / clicks) * 100) : 0;
     
