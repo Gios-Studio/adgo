@@ -16,36 +16,71 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
+import { z } from 'zod';
+
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+
+// Zod schemas for parameter validation
+const MetricsQuerySchema = z.object({
+  campaign_id: z.string().uuid().optional(),
+  partner_id: z.string().uuid().optional(), 
+  period: z.enum(['1h', '24h', '7d', '30d']).default('24h'),
+  format: z.enum(['json', 'csv']).default('json').optional()
+});
+
+// Enhanced metrics response schema
+const MetricsResponseSchema = z.object({
+  period: z.string(),
+  impressions: z.number().int().min(0),
+  clicks: z.number().int().min(0),
+  conversions: z.number().int().min(0).optional(),
+  ctr: z.number().min(0).max(100),
+  conversionRate: z.number().min(0).max(100).optional(),
+  timestamp: z.string().datetime()
+});
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { campaign_id, period = '24h', partner_id } = req.query;
+    // Validate query parameters with Zod
+    const validationResult = MetricsQuerySchema.safeParse(req.query);
+    
+    if (!validationResult.success) {
+      return res.status(400).json({ 
+        error: "invalid_parameters",
+        details: validationResult.error.issues 
+      });
+    }
+    
+    const { campaign_id, period, partner_id, format } = validationResult.data;
     
     // If no specific campaign, return overall metrics
     if (!campaign_id && !partner_id) {
-      return await getOverallMetrics(req, res, period as string);
+      return await getOverallMetrics(req, res, period, format);
     }
     
     // If campaign_id provided, return campaign-specific metrics
     if (campaign_id) {
-      return await getCampaignMetrics(req, res, campaign_id as string);
+      return await getCampaignMetrics(req, res, campaign_id, format);
     }
     
     // If partner_id provided, return partner-specific metrics
     if (partner_id) {
-      return await getPartnerMetrics(req, res, partner_id as string, period as string);
+      return await getPartnerMetrics(req, res, partner_id, period, format);
     }
     
     return res.status(400).json({ error: "missing_required_parameters" });
   } catch (error: any) {
     console.error('Metrics API Error:', error);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ 
+      error: "internal_server_error", 
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 }
 
 // Get overall platform metrics
-async function getOverallMetrics(req: NextApiRequest, res: NextApiResponse, period: string) {
+async function getOverallMetrics(req: NextApiRequest, res: NextApiResponse, period: string, format?: string) {
   try {
     // Calculate date range based on period
     const now = new Date();
@@ -98,7 +133,7 @@ async function getOverallMetrics(req: NextApiRequest, res: NextApiResponse, peri
 }
 
 // Get campaign-specific metrics
-async function getCampaignMetrics(req: NextApiRequest, res: NextApiResponse, campaign_id: string) {
+async function getCampaignMetrics(req: NextApiRequest, res: NextApiResponse, campaign_id: string, format?: string) {
   try {
     const { data, error } = await supabase
       .from("campaign_ctr")
@@ -138,7 +173,7 @@ async function getCampaignMetrics(req: NextApiRequest, res: NextApiResponse, cam
 }
 
 // Get partner-specific metrics
-async function getPartnerMetrics(req: NextApiRequest, res: NextApiResponse, partner_id: string, period: string) {
+async function getPartnerMetrics(req: NextApiRequest, res: NextApiResponse, partner_id: string, period: string, format?: string) {
   try {
     // Get partner campaigns
     const { data: campaigns, error: campaignError } = await supabase

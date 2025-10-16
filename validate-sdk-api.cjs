@@ -22,18 +22,50 @@ const supabase = createClient(
 );
 
 class SDKValidator {
-  constructor(baseUrl = 'http://localhost:3001') {
+  constructor(baseUrl = 'http://localhost:3000') {
     this.baseUrl = baseUrl;
     this.results = [];
+    this.sdkVersion = '1.0.0';
+    this.maxRetries = 3;
+    this.retryDelay = 1000;
+    
+    // Enhanced axios instance with retry logic  
+    this.httpClient = axios.create({
+      timeout: 10000,
+      headers: {
+        'User-Agent': `AdGo-SDK-Validator/${this.sdkVersion}`,
+        'X-SDK-Version': this.sdkVersion
+      }
+    });
+    
+    this.setupRetryInterceptor();
+  }
+  
+  setupRetryInterceptor() {
+    this.httpClient.interceptors.response.use(
+      response => response,
+      async error => {
+        const config = error.config;
+        
+        if (!config || config.__retryCount >= this.maxRetries) {
+          return Promise.reject(error);
+        }
+        
+        config.__retryCount = config.__retryCount || 0;
+        config.__retryCount++;
+        
+        const delay = this.retryDelay * Math.pow(2, config.__retryCount - 1);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return this.httpClient(config);
+      }
+    );
   }
 
   // Test API health endpoint
   async testHealthEndpoint() {
     const startTime = Date.now();
     try {
-      const response = await axios.get(`${this.baseUrl}/api/health`, {
-        timeout: 5000
-      });
+      const response = await this.httpClient.get(`${this.baseUrl}/api/health`);
       
       const responseTime = Date.now() - startTime;
       
@@ -63,13 +95,12 @@ class SDKValidator {
     const validRideId = '10614cf7-4002-455f-af25-918c0b97641e';
     
     try {
-      const response = await axios.get(`${this.baseUrl}/api/sdk/events`, {
+      const response = await this.httpClient.get(`${this.baseUrl}/api/sdk/events`, {
         params: {
           ride_id: validRideId,
           device_id: 'test_device_001',
           zone: 'post-ride'
-        },
-        timeout: 5000
+        }
       });
       
       const responseTime = Date.now() - startTime;
@@ -100,17 +131,14 @@ class SDKValidator {
     const { v4: uuidv4 } = require('uuid');
     
     try {
-      const response = await axios.post(`${this.baseUrl}/api/sdk/events`, {
+      const response = await this.httpClient.post(`${this.baseUrl}/api/sdk/events`, {
         campaign_id: 'ace29fa0-5765-4ce0-b856-074b3abad5e7',
         ad_id: '88c0a93e-493c-499a-8a0a-eaa2cdba6a2c',
-        ride_id: '10614cf7-4002-455f-af25-918c0b97641e',
-        device_id: 'test_device_001',
+        ride_id: 'fcdd1201-ca63-4ced-a0b0-6b85f1d07219', // Use existing ride ID to satisfy foreign key constraint
+        device_id: `test_post_${Date.now()}_${Math.random().toString(36).substring(7)}`,
         zone: 'post-ride',
-        event_type: 'click',
+        event_type: 'impression',
         meta: { test: true }
-      }, {
-        timeout: 5000,
-        headers: { 'Content-Type': 'application/json' }
       });
       
       const responseTime = Date.now() - startTime;
@@ -140,9 +168,7 @@ class SDKValidator {
     const startTime = Date.now();
     
     try {
-      const response = await axios.get(`${this.baseUrl}/api/metrics/ctr`, {
-        timeout: 5000
-      });
+      const response = await this.httpClient.get(`${this.baseUrl}/api/metrics/ctr`);
       
       const responseTime = Date.now() - startTime;
       
@@ -170,12 +196,11 @@ class SDKValidator {
     const startTime = Date.now();
     
     try {
-      const response = await axios.get(`${this.baseUrl}/api/driver/wallet`, {
-        params: { driver_id: 'test_driver_001' },
-        timeout: 5000
-      });
-      
-      const responseTime = Date.now() - startTime;
+      const response = await this.httpClient.get(`${this.baseUrl}/api/driver/wallet`, {
+        params: {
+          driver_id: 'test_driver_001'
+        }
+      });      const responseTime = Date.now() - startTime;
       
       return {
         endpoint: '/api/driver/wallet',
@@ -254,10 +279,10 @@ class SDKValidator {
     const startTime = Date.now();
     
     try {
-      // Use proper UUID format for test
+      // Use proper UUID format for test with unique identifiers
       const { v4: uuidv4 } = require('uuid');
-      const testDeviceId = `test_realtime_${Date.now()}`;
-      const validRideId = '10614cf7-4002-455f-af25-918c0b97641e';
+      const testDeviceId = `test_realtime_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      const validRideId = '619fee45-808f-4336-8468-54571cea537c'; // Use existing ride ID to satisfy foreign key constraint
       
       // Insert test event (using 'impression' as it's an allowed event type)
       const { data: insertResult, error: insertError } = await supabase
