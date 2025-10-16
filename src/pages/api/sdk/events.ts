@@ -18,7 +18,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4, validate as isUUID } from 'uuid';
 import { z } from 'zod';
-import { performanceCache } from '@/lib/performanceCache';
+import { performanceCache } from '../../../lib/performanceCache';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
