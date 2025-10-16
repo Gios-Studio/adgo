@@ -1,0 +1,96 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès", 
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "retry": "Réessayer",
+    "close": "Fermer"
+  },
+  "sdk": {
+    "initialization": {
+      "starting": "Initialisation d'AdGo SDK...",
+      "success": "AdGo SDK prêt",
+      "failed": "Échec de l'initialisation d'AdGo SDK"
+    },
+    "license": {
+      "verifying": "Vérification de la licence...",
+      "valid": "Licence vérifiée avec succès",
+      "invalid": "Clé de licence invalide",
+      "expired": "La licence a expiré",
+      "limit_exceeded": "Limite d'utilisation dépassée"
+    },
+    "api": {
+      "request_failed": "Échec de la requête API",
+      "network_error": "Erreur de connexion réseau",
+      "timeout": "Délai d'attente de la requête",
+      "unauthorized": "Accès non autorisé",
+      "rate_limited": "Trop de requêtes, veuillez réessayer plus tard"
+    },
+    "ads": {
+      "loading": "Chargement de la publicité...",
+      "display_error": "Échec de l'affichage de la publicité",
+      "no_ads": "Aucune publicité disponible",
+      "blocked": "Publicité bloquée par les préférences utilisateur"
+    },
+    "analytics": {
+      "tracking": "Suivi de l'événement...",
+      "upload_failed": "Échec du téléchargement des données analytiques",
+      "offline_mode": "Les analyses se synchroniseront en ligne"
+    }
+  },
+  "dashboard": {
+    "navigation": {
+      "overview": "Aperçu",
+      "analytics": "Analyses", 
+      "campaigns": "Campagnes",
+      "settings": "Paramètres",
+      "billing": "Facturation",
+      "support": "Support"
+    },
+    "metrics": {
+      "impressions": "Impressions",
+      "clicks": "Clics",
+      "conversions": "Conversions",
+      "revenue": "Revenus",
+      "ctr": "Taux de clic",
+      "cpm": "Coût par mille",
+      "roi": "Retour sur investissement"
+    },
+    "campaigns": {
+      "create": "Créer une campagne",
+      "edit": "Modifier la campagne",
+      "delete": "Supprimer la campagne",
+      "pause": "Suspendre la campagne",
+      "resume": "Reprendre la campagne",
+      "status": {
+        "active": "Actif",
+        "paused": "Suspendu",
+        "completed": "Terminé",
+        "draft": "Brouillon"
+      }
+    }
+  },
+  "errors": {
+    "validation": {
+      "required": "Ce champ est obligatoire",
+      "invalid_email": "Adresse e-mail invalide",
+      "invalid_url": "Format d'URL invalide",
+      "min_length": "La longueur minimale est de {{min}} caractères",
+      "max_length": "La longueur maximale est de {{max}} caractères"
+    },
+    "network": {
+      "offline": "Vous êtes actuellement hors ligne",
+      "connection_lost": "Connexion perdue, nouvelle tentative...",
+      "server_error": "Erreur serveur, veuillez réessayer",
+      "maintenance": "Service temporairement indisponible pour maintenance"
+    }
+  },
+  "notifications": {
+    "campaign_started": "La campagne '{{name}}' a commencé",
+    "campaign_completed": "La campagne '{{name}}' est terminée",
+    "budget_warning": "La campagne '{{name}}' approche de la limite budgétaire",
+    "low_balance": "Le solde du compte est faible, veuillez ajouter des fonds"
+  }
+}

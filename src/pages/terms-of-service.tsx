@@ -1,3 +1,19 @@
+/**
+ * AdGo Platform - Advanced Advertising Technology Suite
+ * 
+ * Copyright (c) 2025 AdGo Solutions Limited.
+ * All rights reserved.
+ * 
+ * This source code is proprietary and confidential.
+ * Unauthorized copying, modification, distribution, or use of this file,
+ * via any medium, is strictly prohibited without explicit written consent.
+ * 
+ * For licensing information, please contact: legal@adgosolutions.com
+ * 
+ * Build: 20251015_073830
+ * Generated: 2025-10-15 04:38:36 UTC
+ */
+
 import React from 'react';
 import { NavBar } from '@/components/NavBar';
 import Footer from '@/components/Footer';
@@ -16,7 +32,7 @@ export default function TermsOfService() {
                 <strong>Last Updated:</strong> {new Date().toLocaleDateString()}
               </p>
               <p className="mb-4">
-                Welcome to AdGo Kenya Limited ("AdGo," "we," "us," or "our"). These Terms of Service ("Terms") govern your use of our mobile advertising platform and related services (the "Services").
+                Welcome to AdGo Solutions Limited ("AdGo," "we," "us," or "our"). These Terms of Service ("Terms") govern your use of our mobile advertising platform and related services (the "Services").
               </p>
               <p className="mb-4">
                 By accessing or using our Services, you agree to be bound by these Terms. If you do not agree to these Terms, please do not use our Services.
@@ -26,7 +42,7 @@ export default function TermsOfService() {
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
               <p className="mb-4">
-                These Terms constitute a legally binding agreement between you and AdGo Kenya Limited. By creating an account, accessing our platform, or using our Services, you acknowledge that you have read, understood, and agree to be bound by these Terms.
+                These Terms constitute a legally binding agreement between you and AdGo Solutions Limited. By creating an account, accessing our platform, or using our Services, you acknowledge that you have read, understood, and agree to be bound by these Terms.
               </p>
               <p className="mb-4">
                 If you are using our Services on behalf of an organization, you represent that you have the authority to bind that organization to these Terms.
@@ -220,8 +236,8 @@ export default function TermsOfService() {
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">16. Contact Information</h2>
               <div className="space-y-2">
-                <p><strong>AdGo Kenya Limited</strong></p>
-                <p>Email: <a href="mailto:legal@adgo.co.ke" className="text-blue-600 hover:underline">legal@adgo.co.ke</a></p>
+                <p><strong>AdGo Solutions Limited</strong></p>
+                <p>Email: <a href="mailto:legal@adgosolutions.com" className="text-blue-600 hover:underline">legal@adgosolutions.com</a></p>
                 <p>Phone: +254 700 000 000</p>
                 <p>Address: Nairobi, Kenya</p>
               </div>

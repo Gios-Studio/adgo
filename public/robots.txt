@@ -1,5 +1,5 @@
 # AdGo - Mobile Advertising Platform
-# https://adgo.co.ke
+# https://adgosolutions.com
 
 User-agent: *
 Allow: /
@@ -25,7 +25,7 @@ Disallow: *.json
 Disallow: /EnvDebug
 
 # Sitemap location
-Sitemap: https://adgo.co.ke/sitemap.xml
+Sitemap: https://adgosolutions.com/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1

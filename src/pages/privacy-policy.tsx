@@ -1,3 +1,19 @@
+/**
+ * AdGo Platform - Advanced Advertising Technology Suite
+ * 
+ * Copyright (c) 2025 AdGo Solutions Limited.
+ * All rights reserved.
+ * 
+ * This source code is proprietary and confidential.
+ * Unauthorized copying, modification, distribution, or use of this file,
+ * via any medium, is strictly prohibited without explicit written consent.
+ * 
+ * For licensing information, please contact: legal@adgosolutions.com
+ * 
+ * Build: 20251015_073830
+ * Generated: 2025-10-15 04:38:36 UTC
+ */
+
 import React from 'react';
 import { NavBar } from '@/components/NavBar';
 import Footer from '@/components/Footer';
@@ -16,7 +32,7 @@ export default function PrivacyPolicy() {
                 <strong>Last Updated:</strong> {new Date().toLocaleDateString()}
               </p>
               <p className="mb-4">
-                AdGo Kenya Limited ("AdGo," "we," "us," or "our") respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile advertising platform and related services.
+                AdGo Solutions Limited ("AdGo," "we," "us," or "our") respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile advertising platform and related services.
               </p>
               <p className="mb-4">
                 This policy complies with the Kenya Data Protection Act 2019 (DPA) and the General Data Protection Regulation (GDPR) where applicable.
@@ -116,7 +132,7 @@ export default function PrivacyPolicy() {
                 <li><strong>Withdraw Consent:</strong> Revoke consent at any time</li>
               </ul>
               <p className="mt-4">
-                To exercise these rights, contact us at <a href="mailto:privacy@adgo.co.ke" className="text-blue-600 hover:underline">privacy@adgo.co.ke</a>
+                To exercise these rights, contact us at <a href="mailto:privacy@adgosolutions.com" className="text-blue-600 hover:underline">privacy@adgosolutions.com</a>
               </p>
             </section>
 
@@ -179,15 +195,15 @@ export default function PrivacyPolicy() {
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">12. Contact Information</h2>
               <div className="space-y-2">
-                <p><strong>AdGo Kenya Limited</strong></p>
-                <p>Email: <a href="mailto:privacy@adgo.co.ke" className="text-blue-600 hover:underline">privacy@adgo.co.ke</a></p>
+                <p><strong>AdGo Solutions Limited</strong></p>
+                <p>Email: <a href="mailto:privacy@adgosolutions.com" className="text-blue-600 hover:underline">privacy@adgosolutions.com</a></p>
                 <p>Phone: +254 700 000 000</p>
                 <p>Address: Nairobi, Kenya</p>
               </div>
               
               <div className="mt-6 space-y-2">
                 <p><strong>Data Protection Officer (DPO)</strong></p>
-                <p>Email: <a href="mailto:dpo@adgo.co.ke" className="text-blue-600 hover:underline">dpo@adgo.co.ke</a></p>
+                <p>Email: <a href="mailto:dpo@adgosolutions.com" className="text-blue-600 hover:underline">dpo@adgosolutions.com</a></p>
               </div>
 
               <div className="mt-6 space-y-2">

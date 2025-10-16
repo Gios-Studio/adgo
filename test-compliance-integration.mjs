@@ -109,7 +109,7 @@ async function runIntegrationTests() {
       
       const hasLastUpdated = content.includes('Last Updated');
       const hasKenyaReferences = content.includes('Kenya') || content.includes('Nairobi');
-      const hasContactInfo = content.includes('adgo.co.ke') || content.includes('privacy@');
+      const hasContactInfo = content.includes('adgosolutions.com') || content.includes('privacy@');
       const hasDataRights = content.includes('right to') || content.includes('rights');
       
       console.log(`  ${page.name}:`);

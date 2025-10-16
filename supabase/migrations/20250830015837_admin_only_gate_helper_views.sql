@@ -1,3 +1,13 @@
+-- AdGo Platform - Database Schema & Migrations
+-- 
+-- Copyright (c) 2025 AdGo Solutions Limited.
+-- All rights reserved.
+-- 
+-- This database schema is proprietary and confidential.
+-- Unauthorized access, copying, or modification is strictly prohibited.
+-- 
+-- Build: 20251015_073830
+
 -- Admin-only views
 create or replace view v_admin_users as
 select p.id as user_id, p.email, p.full_name, p.role, w.balance_cents

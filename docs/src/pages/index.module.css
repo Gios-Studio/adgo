@@ -1,0 +1,144 @@
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.heroStats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.stat strong {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.stat span {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.quickStart {
+  padding: 4rem 0;
+  background-color: var(--ifm-background-color-secondary);
+}
+
+.quickStartStep {
+  margin-bottom: 2rem;
+}
+
+.codeBlock {
+  background: var(--ifm-code-background);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.codeBlock pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-size: 0.875rem;
+}
+
+.codeBlock code {
+  color: var(--ifm-code-color);
+  background: transparent;
+  padding: 0;
+}
+
+.platformStats {
+  padding: 4rem 0;
+}
+
+.statCard {
+  text-align: center;
+  padding: 2rem 1rem;
+  border-radius: 8px;
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.statNumber {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 1rem;
+  color: var(--ifm-color-secondary);
+}
+
+.ctaSection {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, var(--ifm-color-primary-lighter), var(--ifm-color-primary));
+  color: white;
+}
+
+.ctaSection h2 {
+  color: white;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .heroStats {
+    gap: 1rem;
+  }
+  
+  .stat {
+    flex: 1 1 50%;
+    min-width: 120px;
+  }
+  
+  .buttons {
+    flex-direction: column;
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+  }
+}
