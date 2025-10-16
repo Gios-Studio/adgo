@@ -1,0 +1,36 @@
+{
+  "id": "getting-started/overview",
+  "title": "AdGo Platform Overview",
+  "description": "Enterprise advertising technology platform with global reach, advanced targeting, and comprehensive analytics.",
+  "source": "@site/docs/getting-started/overview.md",
+  "sourceDirName": "getting-started",
+  "slug": "/",
+  "permalink": "/ar/docs/",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/adgo-inc/adgo-docs/tree/main/docs/getting-started/overview.md",
+  "tags": [],
+  "version": "current",
+  "lastUpdatedBy": "Gios-Studio",
+  "lastUpdatedAt": 1760507631000,
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "slug": "/",
+    "title": "AdGo Platform Overview",
+    "sidebar_label": "Overview",
+    "sidebar_position": 1,
+    "description": "Enterprise advertising technology platform with global reach, advanced targeting, and comprehensive analytics.",
+    "keywords": [
+      "advertising",
+      "ad tech",
+      "platform",
+      "enterprise",
+      "global advertising"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "next": {
+    "title": "Quick Start",
+    "permalink": "/ar/docs/getting-started/quick-start"
+  }
+}

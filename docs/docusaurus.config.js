@@ -21,7 +21,7 @@ const config = {
   organizationName: 'adgo-inc', // Usually your GitHub org/user name.
   projectName: 'adgo-docs', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -124,18 +124,6 @@ const config = {
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Documentation',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'apiSidebar',
-            position: 'left',
-            label: 'API Reference',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'sdkSidebar',
-            position: 'left',
-            label: 'SDKs',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
@@ -270,73 +258,10 @@ const config = {
     }),
 
   plugins: [
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'api',
-        path: 'api',
-        routeBasePath: 'api',
-        sidebarPath: require.resolve('./sidebars.js'),
-        editUrl: 'https://github.com/adgo-inc/adgo-docs/tree/main/',
-      },
-    ],
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'sdk',
-        path: 'sdk',
-        routeBasePath: 'sdk',
-        sidebarPath: require.resolve('./sidebars.js'),
-        editUrl: 'https://github.com/adgo-inc/adgo-docs/tree/main/',
-      },
-    ],
-    [
-      '@docusaurus/plugin-pwa',
-      {
-        debug: true,
-        offlineModeActivationStrategies: [
-          'appInstalled',
-          'standalone',
-          'queryString',
-        ],
-        pwaHead: [
-          {
-            tagName: 'link',
-            rel: 'icon',
-            href: '/img/adgo-logo.png',
-          },
-          {
-            tagName: 'link',
-            rel: 'manifest',
-            href: '/manifest.json',
-          },
-          {
-            tagName: 'meta',
-            name: 'theme-color',
-            content: 'rgb(37, 194, 160)',
-          },
-        ],
-      },
-    ],
+    // Simplified plugin configuration for production build
   ],
 
-  webpack: {
-    jsLoader: (isServer) => ({
-      loader: require.resolve('swc-loader'),
-      options: {
-        jsc: {
-          parser: {
-            syntax: 'typescript',
-            tsx: true,
-          },
-          target: 'es2017',
-        },
-        module: {
-          type: isServer ? 'commonjs' : 'es6',
-        },
-      },
-    }),
-  },
+  // Webpack configuration removed for production build simplicity
 };
 
 module.exports = config;

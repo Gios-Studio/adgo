@@ -1,0 +1,47 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/ar/docs",
+      "versions": [
+        {
+          "name": "current",
+          "label": "1.0.0",
+          "isLast": true,
+          "path": "/ar/docs/",
+          "mainDocId": "getting-started/overview",
+          "docs": [
+            {
+              "id": "getting-started/overview",
+              "path": "/ar/docs/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "getting-started/quick-start",
+              "path": "/ar/docs/getting-started/quick-start",
+              "sidebar": "tutorialSidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "tutorialSidebar": {
+              "link": {
+                "path": "/ar/docs/",
+                "label": "getting-started/overview"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-XXXXXXXXXX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
+    }
+  }
+}

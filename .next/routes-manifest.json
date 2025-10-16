@@ -1,1 +1,248 @@
-{"version":3,"caseSensitive":false,"basePath":"","rewrites":{"beforeFiles":[],"afterFiles":[],"fallback":[]},"redirects":[{"source":"/:path+/","destination":"/:path+","permanent":true,"internal":true,"regex":"^(?:\\/((?:[^\\/]+?)(?:\\/(?:[^\\/]+?))*))\\/$"}],"headers":[{"source":"/api/(.*)","headers":[{"key":"Cache-Control","value":"public, s-maxage=10, stale-while-revalidate"}],"regex":"^\\/api(?:\\/(.*))(?:\\/)?$"},{"source":"/_next/static/(.*)","headers":[{"key":"Cache-Control","value":"public, max-age=31536000, immutable"}],"regex":"^\\/_next\\/static(?:\\/(.*))(?:\\/)?$"}]}
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=10, stale-while-revalidate"
+        }
+      ],
+      "regex": "^/api(?:/(.*))(?:/)?$"
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ],
+      "regex": "^/_next/static(?:/(.*))(?:/)?$"
+    }
+  ],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [],
+  "staticRoutes": [
+    {
+      "page": "/404",
+      "regex": "^/404(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/404(?:/)?$"
+    },
+    {
+      "page": "/admin/review",
+      "regex": "^/admin/review(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/review(?:/)?$"
+    },
+    {
+      "page": "/Admin",
+      "regex": "^/Admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/Admin(?:/)?$"
+    },
+    {
+      "page": "/ads/upload",
+      "regex": "^/ads/upload(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ads/upload(?:/)?$"
+    },
+    {
+      "page": "/AdUpload",
+      "regex": "^/AdUpload(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/AdUpload(?:/)?$"
+    },
+    {
+      "page": "/AdUploadFilters",
+      "regex": "^/AdUploadFilters(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/AdUploadFilters(?:/)?$"
+    },
+    {
+      "page": "/analytics",
+      "regex": "^/analytics(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/analytics(?:/)?$"
+    },
+    {
+      "page": "/CampaignCalendar",
+      "regex": "^/CampaignCalendar(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/CampaignCalendar(?:/)?$"
+    },
+    {
+      "page": "/cookie-policy",
+      "regex": "^/cookie\\-policy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/cookie\\-policy(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
+      "page": "/dashboard/ad-upload",
+      "regex": "^/dashboard/ad\\-upload(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/ad\\-upload(?:/)?$"
+    },
+    {
+      "page": "/dashboard/advertiser",
+      "regex": "^/dashboard/advertiser(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/advertiser(?:/)?$"
+    },
+    {
+      "page": "/dashboard/audit",
+      "regex": "^/dashboard/audit(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/audit(?:/)?$"
+    },
+    {
+      "page": "/dashboard/driver",
+      "regex": "^/dashboard/driver(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/driver(?:/)?$"
+    },
+    {
+      "page": "/dashboard/driver-report",
+      "regex": "^/dashboard/driver\\-report(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/driver\\-report(?:/)?$"
+    },
+    {
+      "page": "/dashboard/driver-wallet",
+      "regex": "^/dashboard/driver\\-wallet(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/driver\\-wallet(?:/)?$"
+    },
+    {
+      "page": "/dashboard/partner",
+      "regex": "^/dashboard/partner(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/partner(?:/)?$"
+    },
+    {
+      "page": "/dashboard/partner-report",
+      "regex": "^/dashboard/partner\\-report(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/partner\\-report(?:/)?$"
+    },
+    {
+      "page": "/dashboard/telemetry",
+      "regex": "^/dashboard/telemetry(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/telemetry(?:/)?$"
+    },
+    {
+      "page": "/dev/events-test",
+      "regex": "^/dev/events\\-test(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dev/events\\-test(?:/)?$"
+    },
+    {
+      "page": "/EnvDebug",
+      "regex": "^/EnvDebug(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/EnvDebug(?:/)?$"
+    },
+    {
+      "page": "/Index",
+      "regex": "^/Index(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/Index(?:/)?$"
+    },
+    {
+      "page": "/Landing",
+      "regex": "^/Landing(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/Landing(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/MyAds",
+      "regex": "^/MyAds(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/MyAds(?:/)?$"
+    },
+    {
+      "page": "/privacy-policy",
+      "regex": "^/privacy\\-policy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy\\-policy(?:/)?$"
+    },
+    {
+      "page": "/Settings",
+      "regex": "^/Settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/Settings(?:/)?$"
+    },
+    {
+      "page": "/signup",
+      "regex": "^/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/signup(?:/)?$"
+    },
+    {
+      "page": "/terms-of-service",
+      "regex": "^/terms\\-of\\-service(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms\\-of\\-service(?:/)?$"
+    },
+    {
+      "page": "/Waitlist",
+      "regex": "^/Waitlist(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/Waitlist(?:/)?$"
+    },
+    {
+      "page": "/wallet",
+      "regex": "^/wallet(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/wallet(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}
