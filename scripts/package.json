@@ -1,6 +1,7 @@
 {
   "name": "adgo-daily-reports",
   "version": "1.0.0",
+  "type": "module",
   "description": "AdGo Platform - Daily KPI Report Generation System",
   "main": "export-reports.ts",
   "scripts": {
@@ -11,17 +12,18 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.8",
-    "pdfkit": "^0.15.0",
     "csv-writer": "^1.6.0",
     "date-fns": "^3.6.0",
-    "node-cron": "^3.0.3"
+    "dotenv": "^17.2.3",
+    "node-cron": "^3.0.3",
+    "pdfkit": "^0.15.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.5",
-    "@types/pdfkit": "^0.13.4",
     "@types/node-cron": "^3.0.11",
-    "typescript": "^5.3.3",
-    "ts-node": "^10.9.2"
+    "@types/pdfkit": "^0.13.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"

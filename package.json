@@ -1,6 +1,6 @@
 {
   "name": "adgo-fe",
-  "version": "1.0.0-launch-ready",
+  "version": "1.0.0-enterprise-ready",
   "private": true,
   "type": "module",
   "scripts": {

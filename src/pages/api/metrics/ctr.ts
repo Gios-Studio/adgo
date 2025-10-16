@@ -17,6 +17,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { z } from 'zod';
+import { performanceCache } from '@/lib/performanceCache';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -52,6 +53,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     
     const { campaign_id, period, partner_id, format } = validationResult.data;
+    
+    // Check cache first (30-second TTL)
+    const cacheKey = `metrics|${campaign_id || 'all'}|${partner_id || 'all'}|${period}|${format || 'json'}`;
+    const cachedResult = performanceCache.get(cacheKey);
+    
+    if (cachedResult) {
+      // Add cache hit header for monitoring
+      res.setHeader('X-Cache', 'HIT');
+      res.setHeader('X-Cache-Key', cacheKey);
+      return res.status(200).json(cachedResult);
+    }
+    
+    // Cache miss - proceed with database query
+    res.setHeader('X-Cache', 'MISS');
+    res.setHeader('X-Cache-Key', cacheKey);
     
     // If no specific campaign, return overall metrics
     if (!campaign_id && !partner_id) {
@@ -174,6 +190,19 @@ async function getOverallMetrics(req: NextApiRequest, res: NextApiResponse, peri
 // Get campaign-specific metrics
 async function getCampaignMetrics(req: NextApiRequest, res: NextApiResponse, campaign_id: string, format?: string) {
   try {
+    // Check cache first
+    const cacheKey = `campaign_metrics|${campaign_id}|${format || 'json'}`;
+    const cachedResult = performanceCache.get(cacheKey);
+    
+    if (cachedResult) {
+      res.setHeader('X-Cache', 'HIT');
+      res.setHeader('X-Cache-Key', cacheKey);
+      return res.status(200).json(cachedResult);
+    }
+    
+    res.setHeader('X-Cache', 'MISS');
+    res.setHeader('X-Cache-Key', cacheKey);
+    
     const { data, error } = await supabase
       .from("campaign_ctr")
       .select("*")
@@ -195,15 +224,19 @@ async function getCampaignMetrics(req: NextApiRequest, res: NextApiResponse, cam
       const clicks = events?.filter(e => e.event_type === 'click').length || 0;
       const ctr = impressions > 0 ? ((clicks / impressions) * 100) : 0;
       
-      return res.status(200).json({
+      const response = {
         campaign_id,
         impressions,
         clicks,
         ctr: Number(ctr.toFixed(2)),
         calculated: true
-      });
+      };
+      
+      performanceCache.set(cacheKey, response);
+      return res.status(200).json(response);
     }
     
+    performanceCache.set(cacheKey, data);
     return res.status(200).json(data);
   } catch (error: any) {
     console.error('Campaign metrics error:', error);
@@ -214,6 +247,19 @@ async function getCampaignMetrics(req: NextApiRequest, res: NextApiResponse, cam
 // Get partner-specific metrics
 async function getPartnerMetrics(req: NextApiRequest, res: NextApiResponse, partner_id: string, period: string, format?: string) {
   try {
+    // Check cache first
+    const cacheKey = `partner_metrics|${partner_id}|${period}|${format || 'json'}`;
+    const cachedResult = performanceCache.get(cacheKey);
+    
+    if (cachedResult) {
+      res.setHeader('X-Cache', 'HIT');
+      res.setHeader('X-Cache-Key', cacheKey);
+      return res.status(200).json(cachedResult);
+    }
+    
+    res.setHeader('X-Cache', 'MISS');
+    res.setHeader('X-Cache-Key', cacheKey);
+    
     // Get partner campaigns
     const { data: campaigns, error: campaignError } = await supabase
       .from('campaigns')
@@ -223,14 +269,17 @@ async function getPartnerMetrics(req: NextApiRequest, res: NextApiResponse, part
     if (campaignError) throw campaignError;
     
     if (!campaigns || campaigns.length === 0) {
-      return res.status(200).json({
+      const response = {
         partner_id,
         period,
         impressions: 0,
         clicks: 0,
         ctr: 0,
         campaigns: 0
-      });
+      };
+      
+      performanceCache.set(cacheKey, response);
+      return res.status(200).json(response);
     }
     
     const campaignIds = campaigns.map(c => c.id);
@@ -247,14 +296,17 @@ async function getPartnerMetrics(req: NextApiRequest, res: NextApiResponse, part
     const clicks = events?.filter(e => e.event_type === 'click').length || 0;
     const ctr = impressions > 0 ? ((clicks / impressions) * 100) : 0;
     
-    return res.status(200).json({
+    const response = {
       partner_id,
       period,
       impressions,
       clicks,
       ctr: Number(ctr.toFixed(2)),
       campaigns: campaigns.length
-    });
+    };
+    
+    performanceCache.set(cacheKey, response);
+    return res.status(200).json(response);
   } catch (error: any) {
     console.error('Partner metrics error:', error);
     return res.status(500).json({ error: 'Failed to get partner metrics' });

@@ -89,7 +89,7 @@ class ReportScheduler {
   stop(): void {
     console.log('🛑 Stopping report scheduler...')
     cron.getTasks().forEach((task) => {
-      task.destroy()
+      task.stop()
     })
     console.log('✅ Report scheduler stopped')
   }

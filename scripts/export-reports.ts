@@ -15,6 +15,10 @@ import path from 'path'
 import { format, subDays } from 'date-fns'
 import PDFDocument from 'pdfkit'
 import { createObjectCsvWriter } from 'csv-writer'
+import dotenv from 'dotenv'
+
+// Load environment variables
+dotenv.config()
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -401,8 +405,8 @@ class KPIReportGenerator {
 // Export for cron job usage
 export default KPIReportGenerator
 
-// CLI execution
-if (require.main === module) {
+// CLI execution  
+if (import.meta.url === `file://${process.argv[1]}`) {
   const generator = new KPIReportGenerator()
   generator.generateAndDistribute()
     .then(() => {
