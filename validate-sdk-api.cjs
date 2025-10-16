@@ -1,257 +1,414 @@
 #!/usr/bin/env node
 
 /**
- * AdGo SDK & API Performance Validation
- * Tests endpoint response times, frequency caps, and attribution URLs
+ * AdGo Platform - SDK Data Sync Verification Suite
+ * 
+ * Copyright (c) 2025 AdGo Solutions Limited.
+ * All rights reserved.
+ * 
+ * Comprehensive testing suite for SDK endpoint validation,
+ * real-time data synchronization, and API compatibility
  */
 
-console.log('📱 AdGo SDK & API Validation');
-console.log('============================\n');
+const { createClient } = require('@supabase/supabase-js');
+const axios = require('axios');
 
-// Mock API performance results based on our implementation
-const sdkValidation = {
-  endpoint_performance: {
-    '/api/sdk/events': {
-      method: 'POST',
-      average_response_time: 145,
-      max_response_time: 189,
-      min_response_time: 98,
-      success_rate: 99.8,
-      target_sla: '<200ms',
-      status: '✅ PASS'
-    },
-    
-    '/api/health': {
-      method: 'GET', 
-      average_response_time: 23,
-      max_response_time: 45,
-      min_response_time: 15,
-      success_rate: 100,
-      target_sla: '<50ms',
-      status: '✅ PASS'
-    },
-    
-    '/api/metrics/ctr': {
-      method: 'GET',
-      average_response_time: 167,
-      max_response_time: 234,
-      min_response_time: 134,
-      success_rate: 99.9,
-      target_sla: '<200ms', 
-      status: '✅ PASS'
-    },
-    
-    '/api/driver/wallet': {
-      method: 'GET',
-      average_response_time: 89,
-      max_response_time: 156,
-      min_response_time: 67,
-      success_rate: 100,
-      target_sla: '<200ms',
-      status: '✅ PASS'
-    }
-  },
-  
-  frequency_caps: {
-    ride_based_limit: {
-      rule: '1 ad per ride_id',
-      test_scenario: 'Multiple impression requests with same ride_id',
-      expected_behavior: 'Only first impression recorded, subsequent blocked',
-      actual_result: '✅ ENFORCED - Duplicate ride_id rejected',
-      status: 'PASS'
-    },
-    
-    device_based_limit: {
-      rule: '1 ad per device per 5 minutes',
-      test_scenario: 'Rapid requests from same device_id',
-      expected_behavior: 'Rate limit applied after first request',
-      actual_result: '✅ ENFORCED - Device cooldown period active',
-      status: 'PASS'
-    },
-    
-    click_velocity_limit: {
-      rule: 'Max 1 click per minute per user',
-      test_scenario: 'Rapid click attempts on same ad',
-      expected_behavior: 'Click spam detection and blocking',
-      actual_result: '✅ ENFORCED - Velocity limits prevent spam',
-      status: 'PASS'
-    }
-  },
-  
-  attribution_urls: {
-    qr_code_generation: {
-      endpoint: '/api/ads/qr-generate',
-      functionality: 'Dynamic QR codes with campaign tracking',
-      test_result: '✅ FUNCTIONAL - QR codes resolve correctly',
-      tracking_data: 'campaign_id, ad_id, driver_id embedded'
-    },
-    
-    promo_code_links: {
-      format: 'https://adgosolutions.com/promo/[code]',
-      functionality: 'Unique promo codes with attribution',
-      test_result: '✅ FUNCTIONAL - Promo links track conversions',
-      expiration: '30 days from generation'
-    },
-    
-    deep_links: {
-      format: 'adgo://ad/[ad_id]?driver=[driver_id]',
-      functionality: 'Mobile app deep linking',
-      test_result: '✅ FUNCTIONAL - Deep links open correctly',
-      fallback: 'Web browser redirect implemented'
-    },
-    
-    utm_tracking: {
-      parameters: 'utm_source=adgo&utm_medium=taxi&utm_campaign=[id]',
-      functionality: 'Google Analytics integration',
-      test_result: '✅ FUNCTIONAL - UTM params properly formatted',
-      analytics: 'Campaign attribution tracked'
-    }
-  },
-  
-  sdk_response_format: {
-    ad_creative_json: {
-      structure: {
-        ad_id: 'UUID format',
-        title: 'String (max 100 chars)',
-        content: 'Media URL or text content',
-        ad_type: 'media|text enum',
-        language: 'ISO 639-1 code',
-        cta_data: 'Call-to-action information',
-        attribution: 'Tracking URLs and codes'
-      },
-      validation: '✅ VALID - Schema enforced',
-      compression: 'gzip enabled for responses >1KB'
-    },
-    
-    error_responses: {
-      format: 'RFC 7807 Problem Details',
-      http_status: 'Appropriate status codes used',
-      error_details: 'Descriptive messages and error codes',
-      validation: '✅ COMPLIANT - Consistent error handling'
-    }
-  },
-  
-  load_testing: {
-    concurrent_requests: {
-      test_load: '100 concurrent requests/second',
-      response_time_p95: '185ms',
-      response_time_p99: '245ms',
-      error_rate: '0.2%',
-      status: '✅ PASS - Within acceptable limits'
-    },
-    
-    database_performance: {
-      query_optimization: 'Indexes on ride_id, device_id, timestamp',
-      connection_pooling: 'Supabase handles 100 concurrent connections',
-      cache_strategy: 'Redis for frequent ad content lookups',
-      status: '✅ OPTIMIZED - Database performs well under load'
+// Load environment variables
+require('dotenv').config({ path: '.env.local' });
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://rkonwkggxaohpmxmzmfn.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
+class SDKValidator {
+  constructor(baseUrl = 'http://localhost:3000') {
+    this.baseUrl = baseUrl;
+    this.results = [];
+  }
+
+  // Test API health endpoint
+  async testHealthEndpoint() {
+    const startTime = Date.now();
+    try {
+      const response = await axios.get(`${this.baseUrl}/api/health`, {
+        timeout: 5000
+      });
+      
+      const responseTime = Date.now() - startTime;
+      
+      return {
+        endpoint: '/api/health',
+        method: 'GET',
+        status: response.status === 200 ? 'PASS' : 'FAIL',
+        responseTime,
+        statusCode: response.status,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        endpoint: '/api/health',
+        method: 'GET',
+        status: 'FAIL',
+        responseTime: Date.now() - startTime,
+        error: error.message
+      };
     }
   }
-};
 
-// Display SDK validation results
-console.log('⚡ API ENDPOINT PERFORMANCE:');
-console.log('===========================');
+  // Test SDK events endpoint - GET (ad serving)
+  async testAdServing() {
+    const startTime = Date.now();
+    const testRideId = `test_ride_${Date.now()}`;
+    
+    try {
+      const response = await axios.get(`${this.baseUrl}/api/sdk/events`, {
+        params: {
+          ride_id: testRideId,
+          device_id: 'test_device_001',
+          zone: 'post-ride'
+        },
+        timeout: 5000
+      });
+      
+      const responseTime = Date.now() - startTime;
+      const hasValidStructure = response.data && (response.data.ad || response.data.message);
+      
+      return {
+        endpoint: '/api/sdk/events',
+        method: 'GET',
+        status: response.status === 200 && hasValidStructure ? 'PASS' : 'WARNING',
+        responseTime,
+        statusCode: response.status,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        endpoint: '/api/sdk/events',
+        method: 'GET',
+        status: 'FAIL',
+        responseTime: Date.now() - startTime,
+        error: error.message
+      };
+    }
+  }
 
-Object.entries(sdkValidation.endpoint_performance).forEach(([endpoint, metrics]) => {
-  console.log(`${endpoint} (${metrics.method}):`);
-  console.log(`  Avg Response: ${metrics.average_response_time}ms (Target: ${metrics.target_sla})`);
-  console.log(`  Range: ${metrics.min_response_time}-${metrics.max_response_time}ms`);
-  console.log(`  Success Rate: ${metrics.success_rate}%`);
-  console.log(`  Status: ${metrics.status}`);
-  console.log('');
-});
+  // Test SDK events endpoint - POST (event tracking)
+  async testEventTracking() {
+    const startTime = Date.now();
+    const testRideId = `test_ride_${Date.now()}`;
+    
+    try {
+      const response = await axios.post(`${this.baseUrl}/api/sdk/events`, {
+        campaign_id: '123e4567-e89b-12d3-a456-426614174000',
+        ad_id: '123e4567-e89b-12d3-a456-426614174001',
+        ride_id: testRideId,
+        device_id: 'test_device_001',
+        zone: 'post-ride',
+        event_type: 'impression',
+        meta: { test: true }
+      }, {
+        timeout: 5000,
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      const responseTime = Date.now() - startTime;
+      const hasValidResponse = response.data && response.data.success;
+      
+      return {
+        endpoint: '/api/sdk/events',
+        method: 'POST',
+        status: response.status === 200 && hasValidResponse ? 'PASS' : 'WARNING',
+        responseTime,
+        statusCode: response.status,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        endpoint: '/api/sdk/events',
+        method: 'POST',
+        status: 'FAIL',
+        responseTime: Date.now() - startTime,
+        error: error.message
+      };
+    }
+  }
 
-console.log('🚦 FREQUENCY CAP VALIDATION:');
-console.log('============================');
+  // Test metrics endpoint
+  async testMetricsEndpoint() {
+    const startTime = Date.now();
+    
+    try {
+      const response = await axios.get(`${this.baseUrl}/api/metrics/ctr`, {
+        timeout: 5000
+      });
+      
+      const responseTime = Date.now() - startTime;
+      
+      return {
+        endpoint: '/api/metrics/ctr',
+        method: 'GET',
+        status: response.status === 200 ? 'PASS' : 'FAIL',
+        responseTime,
+        statusCode: response.status,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        endpoint: '/api/metrics/ctr',
+        method: 'GET',
+        status: 'FAIL',
+        responseTime: Date.now() - startTime,
+        error: error.message
+      };
+    }
+  }
 
-Object.entries(sdkValidation.frequency_caps).forEach(([cap, test]) => {
-  console.log(`${cap.replace(/_/g, ' ').toUpperCase()}:`);
-  console.log(`  Rule: ${test.rule}`);
-  console.log(`  Test: ${test.test_scenario}`);
-  console.log(`  Result: ${test.actual_result}`);
-  console.log(`  Status: ${test.status === 'PASS' ? '✅' : '❌'} ${test.status}`);
-  console.log('');
-});
+  // Test driver wallet endpoint
+  async testDriverWallet() {
+    const startTime = Date.now();
+    
+    try {
+      const response = await axios.get(`${this.baseUrl}/api/driver/wallet`, {
+        params: { driver_id: 'test_driver_001' },
+        timeout: 5000
+      });
+      
+      const responseTime = Date.now() - startTime;
+      
+      return {
+        endpoint: '/api/driver/wallet',
+        method: 'GET',
+        status: response.status === 200 ? 'PASS' : 'WARNING',
+        responseTime,
+        statusCode: response.status,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        endpoint: '/api/driver/wallet',
+        method: 'GET',
+        status: 'FAIL',
+        responseTime: Date.now() - startTime,
+        error: error.message
+      };
+    }
+  }
 
-console.log('🔗 ATTRIBUTION URL TESTING:');
-console.log('===========================');
+  // Test database connectivity and data consistency
+  async testDatabaseSync() {
+    const startTime = Date.now();
+    
+    try {
+      // Test campaigns table
+      const { data: campaigns, error: campaignError } = await supabase
+        .from('campaigns')
+        .select('id, name, status, budget_cents')
+        .limit(5);
+      
+      if (campaignError) throw campaignError;
+      
+      // Test analytics_events table
+      const { data: events, error: eventsError } = await supabase
+        .from('analytics_events')
+        .select('id, campaign_id, event_type, created_at')
+        .limit(5);
+      
+      if (eventsError) throw eventsError;
+      
+      // Test profiles table
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, role, created_at')
+        .limit(5);
+      
+      if (profilesError) throw profilesError;
+      
+      const responseTime = Date.now() - startTime;
+      
+      return {
+        endpoint: 'Database Sync',
+        method: 'QUERY',
+        status: 'PASS',
+        responseTime,
+        data: {
+          campaigns: campaigns?.length || 0,
+          events: events?.length || 0,
+          profiles: profiles?.length || 0
+        }
+      };
+    } catch (error) {
+      return {
+        endpoint: 'Database Sync',
+        method: 'QUERY',
+        status: 'FAIL',
+        responseTime: Date.now() - startTime,
+        error: error.message
+      };
+    }
+  }
 
-Object.entries(sdkValidation.attribution_urls).forEach(([type, config]) => {
-  console.log(`${type.replace(/_/g, ' ').toUpperCase()}:`);
-  console.log(`  Format: ${config.format || config.endpoint || config.parameters}`);
-  console.log(`  Function: ${config.functionality}`);
-  console.log(`  Test: ${config.test_result}`);
-  if (config.tracking_data) console.log(`  Tracking: ${config.tracking_data}`);
-  if (config.expiration) console.log(`  Expiry: ${config.expiration}`);
-  console.log('');
-});
+  // Test real-time event processing
+  async testRealtimeEvents() {
+    const startTime = Date.now();
+    
+    try {
+      const testEventId = `test_${Date.now()}`;
+      
+      // Insert test event
+      const { data: insertResult, error: insertError } = await supabase
+        .from('analytics_events')
+        .insert({
+          campaign_id: '123e4567-e89b-12d3-a456-426614174000',
+          ad_id: '123e4567-e89b-12d3-a456-426614174001',
+          event_type: 'test_sync',
+          device_id: 'test_device',
+          region: 'test',
+          ride_id: testEventId,
+          meta: { sync_test: true }
+        })
+        .select();
+      
+      if (insertError) throw insertError;
+      
+      // Verify event was recorded
+      const { data: verifyResult, error: verifyError } = await supabase
+        .from('analytics_events')
+        .select('*')
+        .eq('ride_id', testEventId)
+        .single();
+      
+      if (verifyError) throw verifyError;
+      
+      // Cleanup test data
+      await supabase
+        .from('analytics_events')
+        .delete()
+        .eq('ride_id', testEventId);
+      
+      const responseTime = Date.now() - startTime;
+      
+      return {
+        endpoint: 'Realtime Events',
+        method: 'INSERT/VERIFY',
+        status: verifyResult ? 'PASS' : 'FAIL',
+        responseTime,
+        data: { eventRecorded: !!verifyResult }
+      };
+    } catch (error) {
+      return {
+        endpoint: 'Realtime Events',
+        method: 'INSERT/VERIFY',
+        status: 'FAIL',
+        responseTime: Date.now() - startTime,
+        error: error.message
+      };
+    }
+  }
 
-console.log('📋 SDK RESPONSE FORMAT:');
-console.log('=======================');
+  // Run complete validation suite
+  async runValidation() {
+    console.log('� Starting SDK Data Sync Verification...');
+    
+    const tests = [
+      this.testHealthEndpoint(),
+      this.testAdServing(),
+      this.testEventTracking(),
+      this.testMetricsEndpoint(),
+      this.testDriverWallet(),
+      this.testDatabaseSync(),
+      this.testRealtimeEvents()
+    ];
+    
+    this.results = await Promise.all(tests);
+    
+    const passed = this.results.filter(r => r.status === 'PASS').length;
+    const failed = this.results.filter(r => r.status === 'FAIL').length;
+    const warnings = this.results.filter(r => r.status === 'WARNING').length;
+    
+    const report = {
+      timestamp: new Date().toISOString(),
+      totalTests: this.results.length,
+      passed,
+      failed,
+      warnings,
+      results: this.results,
+      summary: {
+        apiHealth: this.results.find(r => r.endpoint === '/api/health')?.status === 'PASS',
+        dataSync: this.results.find(r => r.endpoint === 'Database Sync')?.status === 'PASS',
+        realTimeEvents: this.results.find(r => r.endpoint === 'Realtime Events')?.status === 'PASS',
+        payoutSystem: this.results.find(r => r.endpoint === '/api/driver/wallet')?.status !== 'FAIL'
+      }
+    };
+    
+    this.printReport(report);
+    return report;
+  }
 
-console.log('AD CREATIVE JSON:');
-Object.entries(sdkValidation.sdk_response_format.ad_creative_json.structure).forEach(([field, type]) => {
-  console.log(`  ${field}: ${type}`);
-});
-console.log(`  Validation: ${sdkValidation.sdk_response_format.ad_creative_json.validation}`);
-console.log(`  Compression: ${sdkValidation.sdk_response_format.ad_creative_json.compression}`);
-
-console.log('\nERROR HANDLING:');
-console.log(`  Format: ${sdkValidation.sdk_response_format.error_responses.format}`);
-console.log(`  Status: ${sdkValidation.sdk_response_format.error_responses.validation}`);
-
-console.log('\n🏋️ LOAD TESTING RESULTS:');
-console.log('=======================');
-
-const load = sdkValidation.load_testing.concurrent_requests;
-console.log(`Load Test: ${load.test_load}`);
-console.log(`P95 Response Time: ${load.response_time_p95}`);
-console.log(`P99 Response Time: ${load.response_time_p99}`);
-console.log(`Error Rate: ${load.error_rate}`);
-console.log(`Status: ${load.status}`);
-
-console.log('\nDatabase Performance:');
-const db = sdkValidation.load_testing.database_performance;
-console.log(`  Optimization: ${db.query_optimization}`);
-console.log(`  Connections: ${db.connection_pooling}`);
-console.log(`  Caching: ${db.cache_strategy}`);
-console.log(`  Status: ${db.status}`);
-
-// Calculate overall API score
-const endpoints = Object.values(sdkValidation.endpoint_performance);
-const passedEndpoints = endpoints.filter(ep => ep.status.includes('PASS')).length;
-
-const caps = Object.values(sdkValidation.frequency_caps);
-const passedCaps = caps.filter(cap => cap.status === 'PASS').length;
-
-const urls = Object.values(sdkValidation.attribution_urls);
-const functionalUrls = urls.filter(url => url.test_result.includes('FUNCTIONAL')).length;
-
-const endpointScore = Math.round((passedEndpoints / endpoints.length) * 100);
-const capScore = Math.round((passedCaps / caps.length) * 100);
-const urlScore = Math.round((functionalUrls / urls.length) * 100);
-const overallApiScore = Math.round((endpointScore + capScore + urlScore) / 3);
-
-console.log('\n🎯 SDK & API ASSESSMENT:');
-console.log('========================');
-console.log(`Endpoint Performance: ${endpointScore}% (${passedEndpoints}/${endpoints.length} under SLA)`);
-console.log(`Frequency Caps: ${capScore}% (${passedCaps}/${caps.length} enforced)`);
-console.log(`Attribution URLs: ${urlScore}% (${functionalUrls}/${urls.length} functional)`);
-console.log(`Overall API Score: ${overallApiScore}%`);
-
-if (overallApiScore >= 95) {
-  console.log('✅ SDK & API VALIDATION: EXCELLENT');
-  console.log('⚡ All endpoints performing within SLA');
-  console.log('🚦 Frequency caps and fraud prevention active');
-  console.log('🔗 Attribution tracking fully operational');
-} else if (overallApiScore >= 80) {
-  console.log('⚠️ SDK & API VALIDATION: GOOD (Minor optimizations needed)');
-} else {
-  console.log('❌ SDK & API VALIDATION: NEEDS IMPROVEMENT');
+  // Print formatted report
+  printReport(report) {
+    console.log('\n' + '='.repeat(60));
+    console.log('📊 SDK DATA SYNC VERIFICATION REPORT');
+    console.log('='.repeat(60));
+    console.log(`🕐 Timestamp: ${report.timestamp}`);
+    console.log(`📈 Total Tests: ${report.totalTests}`);
+    console.log(`✅ Passed: ${report.passed}`);
+    console.log(`❌ Failed: ${report.failed}`);
+    console.log(`⚠️  Warnings: ${report.warnings}`);
+    console.log('');
+    
+    // Summary status
+    console.log('🎯 SYSTEM SUMMARY:');
+    console.log(`   API Health: ${report.summary.apiHealth ? '✅ OPERATIONAL' : '❌ DOWN'}`);
+    console.log(`   Data Sync: ${report.summary.dataSync ? '✅ SYNCHRONIZED' : '❌ ISSUES'}`);
+    console.log(`   Real-time Events: ${report.summary.realTimeEvents ? '✅ WORKING' : '❌ BROKEN'}`);
+    console.log(`   Payout System: ${report.summary.payoutSystem ? '✅ FUNCTIONAL' : '❌ OFFLINE'}`);
+    console.log('');
+    
+    // Detailed results
+    console.log('📋 DETAILED RESULTS:');
+    report.results.forEach((result, index) => {
+      const icon = result.status === 'PASS' ? '✅' : result.status === 'WARNING' ? '⚠️' : '❌';
+      console.log(`${index + 1}. ${icon} ${result.method} ${result.endpoint}`);
+      console.log(`   Status: ${result.status} | Response: ${result.responseTime}ms`);
+      
+      if (result.error) {
+        console.log(`   Error: ${result.error}`);
+      }
+      
+      if (result.data && typeof result.data === 'object') {
+        console.log(`   Data: ${JSON.stringify(result.data).substring(0, 100)}...`);
+      }
+      console.log('');
+    });
+    
+    const overallHealth = (report.passed / report.totalTests) * 100;
+    console.log(`🏆 OVERALL SDK HEALTH: ${overallHealth.toFixed(1)}%`);
+    
+    if (overallHealth >= 85) {
+      console.log('🎉 SDK is ready for production deployment!');
+    } else if (overallHealth >= 70) {
+      console.log('⚠️  SDK has minor issues that should be addressed');
+    } else {
+      console.log('❌ SDK has critical issues requiring immediate attention');
+    }
+    
+    console.log('='.repeat(60));
+  }
 }
 
-console.log('\n✅ SDK & API Validation Complete!');
-console.log('📱 AdGo SDK ready for production integration');
+// CLI execution
+if (require.main === module) {
+  const validator = new SDKValidator();
+  validator.runValidation()
+    .then((report) => {
+      const overallHealth = (report.passed / report.totalTests) * 100;
+      process.exit(overallHealth >= 70 ? 0 : 1);
+    })
+    .catch((error) => {
+      console.error('❌ SDK validation failed:', error);
+      process.exit(1);
+    });
+}
 
-process.exit(0);
+module.exports = SDKValidator;
