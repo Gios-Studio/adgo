@@ -529,7 +529,7 @@ const Landing = () => {
           </div>
           
           <div className="border-t mt-12 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 AdGo. All rights reserved. Built with precision, powered by AI.</p>
+            <p>&copy; 2025 AdGo Solutions Limited. All rights reserved. Built with precision, powered by AI.</p>
           </div>
         </div>
       </footer>

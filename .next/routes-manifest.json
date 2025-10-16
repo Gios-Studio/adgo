@@ -39,16 +39,7 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [
-    {
-      "page": "/[...page]",
-      "regex": "^/(.+?)(?:/)?$",
-      "routeKeys": {
-        "nxtPpage": "nxtPpage"
-      },
-      "namedRegex": "^/(?<nxtPpage>.+?)(?:/)?$"
-    }
-  ],
+  "dynamicRoutes": [],
   "staticRoutes": [
     {
       "page": "/",
@@ -225,16 +216,7 @@
       "namedRegex": "^/wallet(?:/)?$"
     }
   ],
-  "dataRoutes": [
-    {
-      "page": "/[...page]",
-      "routeKeys": {
-        "nxtPpage": "nxtPpage"
-      },
-      "dataRouteRegex": "^/_next/data/CzyaP9Qu_lUbSEQ2WDDcD/(.+?)\\.json$",
-      "namedDataRouteRegex": "^/_next/data/CzyaP9Qu_lUbSEQ2WDDcD/(?<nxtPpage>.+?)\\.json$"
-    }
-  ],
+  "dataRoutes": [],
   "rsc": {
     "header": "rsc",
     "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",

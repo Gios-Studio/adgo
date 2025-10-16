@@ -32,7 +32,7 @@ export default function PrivacyPolicy() {
                 <strong>Last Updated:</strong> {new Date().toLocaleDateString()}
               </p>
               <p className="mb-4">
-                AdGo Kenya Limited ("AdGo," "we," "us," or "our") respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile advertising platform and related services.
+                AdGo Solutions Limited ("AdGo," "we," "us," or "our") respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile advertising platform and related services.
               </p>
               <p className="mb-4">
                 This policy complies with the Kenya Data Protection Act 2019 (DPA) and the General Data Protection Regulation (GDPR) where applicable.
@@ -195,7 +195,7 @@ export default function PrivacyPolicy() {
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">12. Contact Information</h2>
               <div className="space-y-2">
-                <p><strong>AdGo Kenya Limited</strong></p>
+                <p><strong>AdGo Solutions Limited</strong></p>
                 <p>Email: <a href="mailto:privacy@adgosolutions.com" className="text-blue-600 hover:underline">privacy@adgosolutions.com</a></p>
                 <p>Phone: +254 700 000 000</p>
                 <p>Address: Nairobi, Kenya</p>

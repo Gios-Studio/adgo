@@ -59,7 +59,7 @@ async function validateTask8Complete() {
   
   try {
     const legalPages = [
-      { file: 'src/pages/privacy-policy.tsx', name: 'Privacy Policy', keywords: ['GDPR', 'Kenya DPA', 'right to', 'AdGo Kenya Limited'] },
+      { file: 'src/pages/privacy-policy.tsx', name: 'Privacy Policy', keywords: ['GDPR', 'Kenya DPA', 'right to', 'AdGo Solutions Limited'] },
       { file: 'src/pages/terms-of-service.tsx', name: 'Terms of Service', keywords: ['Kenya', 'advertising platform', 'liability', 'termination'] },
       { file: 'src/pages/cookie-policy.tsx', name: 'Cookie Policy', keywords: ['necessary cookies', 'marketing cookies', 'consent banner', 'Kenya'] }
     ];
@@ -185,7 +185,7 @@ async function validateTask8Complete() {
       const hasPrivacyLink = footerContent.includes('/privacy-policy');
       const hasTermsLink = footerContent.includes('/terms-of-service');
       const hasCookieLink = footerContent.includes('/cookie-policy');
-      const hasAdGoBranding = footerContent.includes('AdGo Kenya Limited');
+      const hasAdGoBranding = footerContent.includes('AdGo Solutions Limited');
       
       console.log(`  ${hasPrivacyLink ? '✅' : '❌'} Privacy Policy link`);
       console.log(`  ${hasTermsLink ? '✅' : '❌'} Terms of Service link`);

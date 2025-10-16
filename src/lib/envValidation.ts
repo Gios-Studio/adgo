@@ -31,10 +31,7 @@ export function validateEnvironment(): EnvValidation {
     'SUPABASE_SERVICE_ROLE_KEY'
   ];
 
-  const optionalVars = [
-    'NEXT_PUBLIC_BUILDER_API_KEY',
-    'NEXT_PUBLIC_BUILDER_PROJECT_ID'
-  ];
+  const optionalVars: string[] = [];
 
   const missingVars: string[] = [];
   const warnings: string[] = [];

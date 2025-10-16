@@ -32,7 +32,7 @@ export default function CookiePolicy() {
                 <strong>Last Updated:</strong> {new Date().toLocaleDateString()}
               </p>
               <p className="mb-4">
-                AdGo Kenya Limited ("AdGo," "we," "us," or "our") uses cookies and similar tracking technologies on our website and platform. This Cookie Policy explains what cookies are, how we use them, and how you can manage your cookie preferences.
+                AdGo Solutions Limited ("AdGo," "we," "us," or "our") uses cookies and similar tracking technologies on our website and platform. This Cookie Policy explains what cookies are, how we use them, and how you can manage your cookie preferences.
               </p>
             </section>
 
@@ -273,7 +273,7 @@ export default function CookiePolicy() {
                 If you have questions about our use of cookies or this Cookie Policy, please contact us:
               </p>
               <div className="space-y-2">
-                <p><strong>AdGo Kenya Limited</strong></p>
+                <p><strong>AdGo Solutions Limited</strong></p>
                 <p>Email: <a href="mailto:privacy@adgosolutions.com" className="text-blue-600 hover:underline">privacy@adgosolutions.com</a></p>
                 <p>Phone: +254 700 000 000</p>
                 <p>Address: Nairobi, Kenya</p>
