@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     const { campaign_id, period, partner_id, format } = validationResult.data;
     
-    // Check cache first (30-second TTL)
+    // Check cache first (60-second TTL for improved performance)
     const cacheKey = `metrics|${campaign_id || 'all'}|${partner_id || 'all'}|${period}|${format || 'json'}`;
     const cachedResult = performanceCache.get(cacheKey);
     
@@ -62,12 +62,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Add cache hit header for monitoring
       res.setHeader('X-Cache', 'HIT');
       res.setHeader('X-Cache-Key', cacheKey);
+      res.setHeader('X-Cache-TTL', '60');
       return res.status(200).json(cachedResult);
     }
     
     // Cache miss - proceed with database query
     res.setHeader('X-Cache', 'MISS');
     res.setHeader('X-Cache-Key', cacheKey);
+    res.setHeader('X-Cache-TTL', '60');
     
     // If no specific campaign, return overall metrics
     if (!campaign_id && !partner_id) {
@@ -232,11 +234,11 @@ async function getCampaignMetrics(req: NextApiRequest, res: NextApiResponse, cam
         calculated: true
       };
       
-      performanceCache.set(cacheKey, response);
+      performanceCache.set(cacheKey, response, 60000); // 60 second TTL
       return res.status(200).json(response);
     }
     
-    performanceCache.set(cacheKey, data);
+    performanceCache.set(cacheKey, data, 60000); // 60 second TTL
     return res.status(200).json(data);
   } catch (error: any) {
     console.error('Campaign metrics error:', error);
@@ -278,7 +280,7 @@ async function getPartnerMetrics(req: NextApiRequest, res: NextApiResponse, part
         campaigns: 0
       };
       
-      performanceCache.set(cacheKey, response);
+      performanceCache.set(cacheKey, response, 60000); // 60 second TTL
       return res.status(200).json(response);
     }
     
@@ -305,7 +307,7 @@ async function getPartnerMetrics(req: NextApiRequest, res: NextApiResponse, part
       campaigns: campaigns.length
     };
     
-    performanceCache.set(cacheKey, response);
+    performanceCache.set(cacheKey, response, 60000); // 60 second TTL
     return res.status(200).json(response);
   } catch (error: any) {
     console.error('Partner metrics error:', error);

@@ -18,6 +18,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4, validate as isUUID } from 'uuid';
 import { z } from 'zod';
+import { performanceCache } from '@/lib/performanceCache';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -44,13 +45,14 @@ const QueryParamsSchema = z.object({
   zone: z.string().default('post-ride')
 });
 
-// Enhanced query schema for pagination and delta sync
+// Enhanced query schema for pagination and delta sync with improved limits
 const EventsQuerySchema = z.object({
   ride_id: z.string().min(1).optional(),
   device_id: z.string().min(1).optional(),
   zone: z.string().default('post-ride'),
-  limit: z.coerce.number().min(1).max(100).default(50),
+  limit: z.coerce.number().min(1).max(100).default(50), // Default 50, max 100
   offset: z.coerce.number().min(0).default(0),
+  cursor: z.string().optional(), // Cursor-based pagination fallback
   since: z.string().datetime().optional(), // Delta sync timestamp
   campaign_id: z.string().uuid().optional(),
   event_type: z.enum(['impression', 'click', 'conversion']).optional()
@@ -114,12 +116,13 @@ async function verifyEventInsertion(eventId: string): Promise<boolean> {
   }
 }
 
-// Exponential retry wrapper for database operations
+// Enhanced exponential retry wrapper with improved duplicate handling
 async function withRetry<T>(
   operation: () => Promise<T>, 
   context: string = 'operation'
 ): Promise<T> {
   let lastError: any;
+  let duplicateAttempts = 0;
   
   for (let attempt = 0; attempt <= RETRY_CONFIG.maxRetries; attempt++) {
     try {
@@ -127,15 +130,21 @@ async function withRetry<T>(
     } catch (error: any) {
       lastError = error;
       
-      // Handle duplicate key constraints specially 
+      // Handle duplicate key constraints specially with limited retries
       if (error.message?.includes('duplicate key') || error.code === '23505') {
-        console.log(`${context} detected duplicate key - returning early`);
-        return { isDuplicate: true, message: 'duplicate_entry' } as T;
+        duplicateAttempts++;
+        if (duplicateAttempts >= 2) {
+          console.log(`${context} detected duplicate key after ${duplicateAttempts} attempts - skipping`);
+          throw error; // Let the caller handle this as a duplicate
+        }
+        console.log(`${context} detected duplicate key - attempt ${duplicateAttempts}/2`);
       }
       
       // Don't retry on other validation errors or client errors
       if (error.code?.startsWith('23') || error.code?.startsWith('42')) {
-        throw error;
+        if (!(error.message?.includes('duplicate key') || error.code === '23505')) {
+          throw error;
+        }
       }
       
       if (attempt === RETRY_CONFIG.maxRetries) {
@@ -143,13 +152,12 @@ async function withRetry<T>(
         throw error;
       }
       
-      // Calculate exponential backoff delay
-      const delay = Math.min(
-        RETRY_CONFIG.baseDelay * Math.pow(2, attempt),
-        RETRY_CONFIG.maxDelay
-      );
+      // Calculate exponential backoff delay with conditional jitter
+      const baseDelay = RETRY_CONFIG.baseDelay * Math.pow(2, attempt);
+      const jitter = Math.random() * 50; // Add 0-50ms jitter to avoid thundering herd
+      const delay = Math.min(baseDelay + jitter, RETRY_CONFIG.maxDelay);
       
-      console.warn(`${context} attempt ${attempt + 1} failed, retrying in ${delay}ms:`, error.message);
+      console.warn(`${context} attempt ${attempt + 1} failed, retrying in ${Math.round(delay)}ms:`, error.message);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
@@ -214,7 +222,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-// Enhanced event querying with pagination and delta sync
+// Enhanced event querying with stable pagination, caching, and fallback mechanisms
 async function queryEvents(req: NextApiRequest, res: NextApiResponse) {
   try {
     const validationResult = EventsQuerySchema.safeParse(req.query);
@@ -233,52 +241,94 @@ async function queryEvents(req: NextApiRequest, res: NextApiResponse) {
       zone, 
       limit, 
       offset, 
+      cursor,
       since, 
       campaign_id, 
       event_type 
     } = validationResult.data;
     
-    // Build query with performance optimizations
-    let query = supabase
-      .from('analytics_events')
-      .select('id, campaign_id, ad_id, event_type, device_id, ride_id, region, created_at, occurred_at, meta', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    // Generate cache key for query results
+    const cacheKey = `events|${ride_id || 'all'}|${device_id || 'all'}|${zone}|${limit}|${offset}|${since || 'all'}|${campaign_id || 'all'}|${event_type || 'all'}`;
     
-    // Apply filters
-    if (ride_id) query = query.eq('ride_id', ride_id);
-    if (device_id) query = query.eq('device_id', device_id);
-    if (zone) query = query.eq('region', zone);
-    if (campaign_id) query = query.eq('campaign_id', campaign_id);
-    if (event_type) query = query.eq('event_type', event_type);
-    
-    // Delta sync optimization
-    if (since) {
-      query = query.gte('created_at', since);
+    // Check cache first (30-second TTL)
+    const cachedResult = performanceCache.get(cacheKey);
+    if (cachedResult) {
+      res.setHeader('X-Cache', 'HIT');
+      res.setHeader('X-Cache-Key', cacheKey.substring(0, 50) + '...');
+      return res.status(200).json({
+        ...cachedResult,
+        cached: true,
+        timestamp: new Date().toISOString()
+      });
     }
     
-    const { data: events, error, count } = await query;
+    res.setHeader('X-Cache', 'MISS');
+    
+    let events, error, count;
+    
+    try {
+      // Primary query attempt with OFFSET/LIMIT
+      const result = await executeOffsetPagination({
+        ride_id, device_id, zone, limit, offset, since, campaign_id, event_type
+      });
+      
+      events = result.data;
+      error = result.error;
+      count = result.count;
+      
+    } catch (offsetError) {
+      console.warn('OFFSET pagination failed, falling back to cursor-based:', offsetError);
+      
+      // Fallback to cursor-based pagination
+      try {
+        const cursorResult = await executeCursorPagination({
+          ride_id, device_id, zone, limit, cursor, since, campaign_id, event_type
+        });
+        
+        events = cursorResult.events;
+        error = cursorResult.error;
+        count = cursorResult.count;
+        
+        res.setHeader('X-Pagination-Method', 'cursor-fallback');
+        
+      } catch (cursorError) {
+        console.error('Both pagination methods failed:', { offsetError, cursorError });
+        return res.status(500).json({ 
+          error: 'pagination_failed',
+          message: 'Both OFFSET and cursor pagination failed',
+          sdk_version: "1.0.0" 
+        });
+      }
+    }
     
     if (error) {
       console.error('Query events error:', error);
       return res.status(500).json({ 
         error: 'Failed to query events',
+        details: error.message,
         sdk_version: "1.0.0" 
       });
+    }
+    
+    // Handle empty results gracefully
+    if (!events) {
+      events = [];
     }
     
     // Calculate pagination metadata
     const hasMore = count ? (offset + limit) < count : false;
     const nextOffset = hasMore ? offset + limit : null;
+    const nextCursor = events.length > 0 ? events[events.length - 1].id : null;
     
-    return res.status(200).json({
+    const result = {
       events: events || [],
       pagination: {
         limit,
         offset,
         total: count || 0,
         hasMore,
-        nextOffset
+        nextOffset,
+        nextCursor
       },
       deltaSync: {
         since: since || null,
@@ -286,15 +336,89 @@ async function queryEvents(req: NextApiRequest, res: NextApiResponse) {
       },
       sdk_version: "1.0.0",
       timestamp: new Date().toISOString()
-    });
+    };
+    
+    // Cache the result for 30 seconds
+    performanceCache.set(cacheKey, result, 30000);
+    
+    return res.status(200).json(result);
     
   } catch (error) {
     console.error('Query events error:', error);
     return res.status(500).json({ 
       error: 'Failed to query events',
+      details: error instanceof Error ? error.message : 'Unknown error',
       sdk_version: "1.0.0" 
     });
   }
+}
+
+// Execute OFFSET/LIMIT pagination
+async function executeOffsetPagination(params: {
+  ride_id?: string;
+  device_id?: string;
+  zone: string;
+  limit: number;
+  offset: number;
+  since?: string;
+  campaign_id?: string;
+  event_type?: string;
+}) {
+  let query = supabase
+    .from('analytics_events')
+    .select('id, campaign_id, ad_id, event_type, device_id, ride_id, region, created_at, occurred_at, meta', { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .range(params.offset, params.offset + params.limit - 1);
+  
+  // Apply filters
+  if (params.ride_id) query = query.eq('ride_id', params.ride_id);
+  if (params.device_id) query = query.eq('device_id', params.device_id);
+  if (params.zone) query = query.eq('region', params.zone);
+  if (params.campaign_id) query = query.eq('campaign_id', params.campaign_id);
+  if (params.event_type) query = query.eq('event_type', params.event_type);
+  if (params.since) query = query.gte('created_at', params.since);
+  
+  return await query;
+}
+
+// Execute cursor-based pagination as fallback
+async function executeCursorPagination(params: {
+  ride_id?: string;
+  device_id?: string;
+  zone: string;
+  limit: number;
+  cursor?: string;
+  since?: string;
+  campaign_id?: string;
+  event_type?: string;
+}) {
+  let query = supabase
+    .from('analytics_events')
+    .select('id, campaign_id, ad_id, event_type, device_id, ride_id, region, created_at, occurred_at, meta')
+    .order('created_at', { ascending: false })
+    .limit(params.limit);
+  
+  // Apply cursor if provided
+  if (params.cursor) {
+    query = query.lt('id', params.cursor);
+  }
+  
+  // Apply filters
+  if (params.ride_id) query = query.eq('ride_id', params.ride_id);
+  if (params.device_id) query = query.eq('device_id', params.device_id);
+  if (params.zone) query = query.eq('region', params.zone);
+  if (params.campaign_id) query = query.eq('campaign_id', params.campaign_id);
+  if (params.event_type) query = query.eq('event_type', params.event_type);
+  if (params.since) query = query.gte('created_at', params.since);
+  
+  const { data: events, error } = await query;
+  
+  // For cursor pagination, we don't get exact count, so estimate
+  return {
+    events,
+    error,
+    count: null // Cursor pagination doesn't provide total count
+  };
 }
 
 async function serveAd(req: NextApiRequest, res: NextApiResponse) {
@@ -384,7 +508,7 @@ async function serveAd(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-// Batch event processing for performance optimization
+// Enhanced batch event processing with safe batching and duplicate handling
 async function recordBatchEvents(req: NextApiRequest, res: NextApiResponse) {
   try {
     const validationResult = BatchEventSchema.safeParse(req.body);
@@ -399,6 +523,7 @@ async function recordBatchEvents(req: NextApiRequest, res: NextApiResponse) {
     
     const { events, batch_id } = validationResult.data;
     const batchStartTime = Date.now();
+    const finalBatchId = batch_id || uuidv4();
     
     // Process events in batches for optimal performance
     const processedEvents = events.map(event => {
@@ -414,31 +539,81 @@ async function recordBatchEvents(req: NextApiRequest, res: NextApiResponse) {
         occurred_at: new Date().toISOString(),
         meta: { 
           ...event.meta, 
-          batch_id,
+          batch_id: finalBatchId,
           batch_processing: true 
         }
       };
     });
     
-    // Batch insert with retry logic
-    const insertResult = await withRetry(async () => {
-      const { data, error } = await supabase
-        .from('analytics_events')
-        .insert(processedEvents)
-        .select();
-      
-      if (error) throw error;
-      return data;
-    });
+    // Enhanced batch insert with Promise.allSettled for reliability
+    const insertResults = await Promise.allSettled(
+      processedEvents.map(async (eventData, index) => {
+        try {
+          // Insert individual events with retry logic
+          const result = await withRetry(async () => {
+            const { data, error } = await supabase
+              .from('analytics_events')
+              .insert(eventData)
+              .select()
+              .single();
+            
+            if (error) throw error;
+            return data;
+          }, `Batch event ${index + 1}/${processedEvents.length}`);
+          
+          return { success: true, data: result, index };
+        } catch (error: any) {
+          // Handle duplicate key violations specially
+          if (error.message?.includes('duplicate key') || error.code === '23505') {
+            console.log(`Batch event ${index + 1}: duplicate entry skipped`);
+            return { success: true, duplicate: true, index };
+          }
+          
+          throw error;
+        }
+      })
+    );
+    
+    // Process results and collect statistics
+    const successful = insertResults.filter(r => r.status === 'fulfilled').length;
+    const failed = insertResults.filter(r => r.status === 'rejected').length;
+    const duplicates = insertResults
+      .filter(r => r.status === 'fulfilled' && r.value.duplicate)
+      .length;
+    
+    const successfulInserts = insertResults
+      .filter((r): r is PromiseFulfilledResult<{ success: boolean; data: any; index: number }> => 
+        r.status === 'fulfilled' && !r.value.duplicate && r.value.data)
+      .map(r => r.value.data);
     
     const processingTime = Date.now() - batchStartTime;
     
+    // Log batch retry information for monitoring
+    if (duplicates > 0 || failed > 0) {
+      const logEntry = {
+        timestamp: new Date().toISOString(),
+        batch_id: finalBatchId,
+        total_events: processedEvents.length,
+        successful: successful,
+        duplicates: duplicates,
+        failed: failed,
+        processing_time_ms: processingTime
+      };
+      
+      // In production, this would write to /logs/batch-retry.log
+      console.log('[BATCH_RETRY_LOG]', JSON.stringify(logEntry));
+    }
+    
     return res.status(200).json({
       success: true,
-      batch_id: batch_id || uuidv4(),
-      events_processed: insertResult.length,
+      batch_id: finalBatchId,
+      events_total: processedEvents.length,
+      events_processed: successful,
+      events_inserted: successfulInserts.length,
+      events_duplicates: duplicates,
+      events_failed: failed,
       processing_time_ms: processingTime,
-      event_ids: insertResult.map(e => e.id),
+      event_ids: successfulInserts.map(e => e.id),
       sdk_version: "1.0.0",
       timestamp: new Date().toISOString()
     });
