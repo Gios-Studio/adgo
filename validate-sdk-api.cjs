@@ -22,7 +22,7 @@ const supabase = createClient(
 );
 
 class SDKValidator {
-  constructor(baseUrl = 'http://localhost:3000') {
+  constructor(baseUrl = 'http://localhost:3001') {
     this.baseUrl = baseUrl;
     this.results = [];
   }
@@ -59,12 +59,13 @@ class SDKValidator {
   // Test SDK events endpoint - GET (ad serving)
   async testAdServing() {
     const startTime = Date.now();
-    const testRideId = `test_ride_${Date.now()}`;
+    const { v4: uuidv4 } = require('uuid');
+    const validRideId = '10614cf7-4002-455f-af25-918c0b97641e';
     
     try {
       const response = await axios.get(`${this.baseUrl}/api/sdk/events`, {
         params: {
-          ride_id: testRideId,
+          ride_id: validRideId,
           device_id: 'test_device_001',
           zone: 'post-ride'
         },
@@ -96,16 +97,16 @@ class SDKValidator {
   // Test SDK events endpoint - POST (event tracking)
   async testEventTracking() {
     const startTime = Date.now();
-    const testRideId = `test_ride_${Date.now()}`;
+    const { v4: uuidv4 } = require('uuid');
     
     try {
       const response = await axios.post(`${this.baseUrl}/api/sdk/events`, {
-        campaign_id: '123e4567-e89b-12d3-a456-426614174000',
-        ad_id: '123e4567-e89b-12d3-a456-426614174001',
-        ride_id: testRideId,
+        campaign_id: 'ace29fa0-5765-4ce0-b856-074b3abad5e7',
+        ad_id: '88c0a93e-493c-499a-8a0a-eaa2cdba6a2c',
+        ride_id: '10614cf7-4002-455f-af25-918c0b97641e',
         device_id: 'test_device_001',
         zone: 'post-ride',
-        event_type: 'impression',
+        event_type: 'click',
         meta: { test: true }
       }, {
         timeout: 5000,
@@ -253,18 +254,20 @@ class SDKValidator {
     const startTime = Date.now();
     
     try {
-      const testEventId = `test_${Date.now()}`;
+      // Use proper UUID format for test
+      const { v4: uuidv4 } = require('uuid');
+      const testDeviceId = `test_realtime_${Date.now()}`;
+      const validRideId = '10614cf7-4002-455f-af25-918c0b97641e';
       
-      // Insert test event
+      // Insert test event (using 'impression' as it's an allowed event type)
       const { data: insertResult, error: insertError } = await supabase
         .from('analytics_events')
         .insert({
-          campaign_id: '123e4567-e89b-12d3-a456-426614174000',
-          ad_id: '123e4567-e89b-12d3-a456-426614174001',
-          event_type: 'test_sync',
-          device_id: 'test_device',
-          region: 'test',
-          ride_id: testEventId,
+          campaign_id: 'ace29fa0-5765-4ce0-b856-074b3abad5e7',
+          ad_id: '88c0a93e-493c-499a-8a0a-eaa2cdba6a2c',
+          event_type: 'impression',
+          device_id: testDeviceId,
+          ride_id: validRideId,
           meta: { sync_test: true }
         })
         .select();
@@ -275,7 +278,7 @@ class SDKValidator {
       const { data: verifyResult, error: verifyError } = await supabase
         .from('analytics_events')
         .select('*')
-        .eq('ride_id', testEventId)
+        .eq('device_id', testDeviceId)
         .single();
       
       if (verifyError) throw verifyError;
@@ -284,7 +287,7 @@ class SDKValidator {
       await supabase
         .from('analytics_events')
         .delete()
-        .eq('ride_id', testEventId);
+        .eq('device_id', testDeviceId);
       
       const responseTime = Date.now() - startTime;
       
