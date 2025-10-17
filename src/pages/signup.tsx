@@ -1,54 +1,57 @@
 /**
  * AdGo Platform - Advanced Advertising Technology Suite
- * 
+ *
  * Copyright (c) 2025 AdGo Solutions Limited.
  * All rights reserved.
- * 
+ *
  * This source code is proprietary and confidential.
  * Unauthorized copying, modification, distribution, or use of this file,
  * via any medium, is strictly prohibited without explicit written consent.
- * 
+ *
  * For licensing information, please contact: legal@adgosolutions.com
- * 
+ *
  * Build: 20251015_073830
  * Generated: 2025-10-15 04:38:36 UTC
  */
 
-import { useState } from 'react'
-import { useRouter } from 'next/router'
-import { supabase } from '@/lib/supabaseClient'
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Signup() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [role, setRole] = useState('advertiser')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("advertiser");
+  const [loading, setLoading] = useState(false);
 
   async function handleSignup(e: any) {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     // 1. Create user in Supabase Auth
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) {
-      alert(error.message)
-      setLoading(false)
-      return
+      alert(error.message);
+      setLoading(false);
+      return;
     }
 
-    const user = data.user
+    const user = data.user;
     if (!user) {
-      alert('No user returned from Supabase')
-      setLoading(false)
-      return
+      alert("No user returned from Supabase");
+      setLoading(false);
+      return;
     }
 
     // 2. Insert user into our public.users table with role
-    await supabase.from('users').insert([{ id: user.id, email, role }]).select()
+    await supabase
+      .from("users")
+      .insert([{ id: user.id, email, role }])
+      .select();
 
     // 3. Redirect based on role
-    router.push(`/dashboard/${role}`)
+    router.push(`/dashboard/${role}`);
   }
 
   return (
@@ -81,8 +84,16 @@ export default function Signup() {
         className="w-full bg-green-600 text-white py-2"
         disabled={loading}
       >
-        {loading ? 'Signing up…' : 'Sign Up'}
+        {loading ? "Signing up…" : "Sign Up"}
       </button>
     </form>
-  )
+  );
+}
+
+// Static Site Generation for auth pages
+export async function getStaticProps() {
+  return {
+    props: {},
+    revalidate: 86400, // Revalidate once per day
+  };
 }

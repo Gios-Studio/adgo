@@ -4,11 +4,482 @@
   ((a.id = 9705),
     (a.ids = [9705]),
     (a.modules = {
-      3939: (a) => {
-        a.exports = require("@supabase/supabase-js");
+      411: (a) => {
+        a.exports = require("@supabase/auth-js");
+      },
+      793: (a, b, c) => {
+        Object.defineProperty(b, "__esModule", { value: !0 });
+        let d = c(8496),
+          e = c(9672),
+          f = c(9390),
+          g = c(5912),
+          h = c(1933),
+          i = c(4970),
+          j = c(6041),
+          k = c(9359);
+        class l {
+          constructor(a, b, c) {
+            var d, f, k;
+            ((this.supabaseUrl = a), (this.supabaseKey = b));
+            let l = (0, j.validateSupabaseUrl)(a);
+            if (!b) throw Error("supabaseKey is required.");
+            ((this.realtimeUrl = new URL("realtime/v1", l)),
+              (this.realtimeUrl.protocol = this.realtimeUrl.protocol.replace(
+                "http",
+                "ws",
+              )),
+              (this.authUrl = new URL("auth/v1", l)),
+              (this.storageUrl = new URL("storage/v1", l)),
+              (this.functionsUrl = new URL("functions/v1", l)));
+            let m = `sb-${l.hostname.split(".")[0]}-auth-token`,
+              n = {
+                db: h.DEFAULT_DB_OPTIONS,
+                realtime: h.DEFAULT_REALTIME_OPTIONS,
+                auth: Object.assign(Object.assign({}, h.DEFAULT_AUTH_OPTIONS), {
+                  storageKey: m,
+                }),
+                global: h.DEFAULT_GLOBAL_OPTIONS,
+              },
+              o = (0, j.applySettingDefaults)(null != c ? c : {}, n);
+            ((this.storageKey = null != (d = o.auth.storageKey) ? d : ""),
+              (this.headers = null != (f = o.global.headers) ? f : {}),
+              o.accessToken
+                ? ((this.accessToken = o.accessToken),
+                  (this.auth = new Proxy(
+                    {},
+                    {
+                      get: (a, b) => {
+                        throw Error(
+                          `@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(b)} is not possible`,
+                        );
+                      },
+                    },
+                  )))
+                : (this.auth = this._initSupabaseAuthClient(
+                    null != (k = o.auth) ? k : {},
+                    this.headers,
+                    o.global.fetch,
+                  )),
+              (this.fetch = (0, i.fetchWithAuth)(
+                b,
+                this._getAccessToken.bind(this),
+                o.global.fetch,
+              )),
+              (this.realtime = this._initRealtimeClient(
+                Object.assign(
+                  {
+                    headers: this.headers,
+                    accessToken: this._getAccessToken.bind(this),
+                  },
+                  o.realtime,
+                ),
+              )),
+              (this.rest = new e.PostgrestClient(new URL("rest/v1", l).href, {
+                headers: this.headers,
+                schema: o.db.schema,
+                fetch: this.fetch,
+              })),
+              (this.storage = new g.StorageClient(
+                this.storageUrl.href,
+                this.headers,
+                this.fetch,
+                null == c ? void 0 : c.storage,
+              )),
+              o.accessToken || this._listenForAuthEvents());
+          }
+          get functions() {
+            return new d.FunctionsClient(this.functionsUrl.href, {
+              headers: this.headers,
+              customFetch: this.fetch,
+            });
+          }
+          from(a) {
+            return this.rest.from(a);
+          }
+          schema(a) {
+            return this.rest.schema(a);
+          }
+          rpc(a, b = {}, c = { head: !1, get: !1, count: void 0 }) {
+            return this.rest.rpc(a, b, c);
+          }
+          channel(a, b = { config: {} }) {
+            return this.realtime.channel(a, b);
+          }
+          getChannels() {
+            return this.realtime.getChannels();
+          }
+          removeChannel(a) {
+            return this.realtime.removeChannel(a);
+          }
+          removeAllChannels() {
+            return this.realtime.removeAllChannels();
+          }
+          _getAccessToken() {
+            var a, b, c, d;
+            return (
+              (a = this),
+              (b = void 0),
+              (c = void 0),
+              (d = function* () {
+                var a, b;
+                if (this.accessToken) return yield this.accessToken();
+                let { data: c } = yield this.auth.getSession();
+                return null !=
+                  (b = null == (a = c.session) ? void 0 : a.access_token)
+                  ? b
+                  : this.supabaseKey;
+              }),
+              new (c || (c = Promise))(function (e, f) {
+                function g(a) {
+                  try {
+                    i(d.next(a));
+                  } catch (a) {
+                    f(a);
+                  }
+                }
+                function h(a) {
+                  try {
+                    i(d.throw(a));
+                  } catch (a) {
+                    f(a);
+                  }
+                }
+                function i(a) {
+                  var b;
+                  a.done
+                    ? e(a.value)
+                    : ((b = a.value) instanceof c
+                        ? b
+                        : new c(function (a) {
+                            a(b);
+                          })
+                      ).then(g, h);
+                }
+                i((d = d.apply(a, b || [])).next());
+              })
+            );
+          }
+          _initSupabaseAuthClient(
+            {
+              autoRefreshToken: a,
+              persistSession: b,
+              detectSessionInUrl: c,
+              storage: d,
+              userStorage: e,
+              storageKey: f,
+              flowType: g,
+              lock: h,
+              debug: i,
+            },
+            j,
+            l,
+          ) {
+            let m = {
+              Authorization: `Bearer ${this.supabaseKey}`,
+              apikey: `${this.supabaseKey}`,
+            };
+            return new k.SupabaseAuthClient({
+              url: this.authUrl.href,
+              headers: Object.assign(Object.assign({}, m), j),
+              storageKey: f,
+              autoRefreshToken: a,
+              persistSession: b,
+              detectSessionInUrl: c,
+              storage: d,
+              userStorage: e,
+              flowType: g,
+              lock: h,
+              debug: i,
+              fetch: l,
+              hasCustomAuthorizationHeader: Object.keys(this.headers).some(
+                (a) => "authorization" === a.toLowerCase(),
+              ),
+            });
+          }
+          _initRealtimeClient(a) {
+            return new f.RealtimeClient(
+              this.realtimeUrl.href,
+              Object.assign(Object.assign({}, a), {
+                params: Object.assign(
+                  { apikey: this.supabaseKey },
+                  null == a ? void 0 : a.params,
+                ),
+              }),
+            );
+          }
+          _listenForAuthEvents() {
+            return this.auth.onAuthStateChange((a, b) => {
+              this._handleTokenChanged(
+                a,
+                "CLIENT",
+                null == b ? void 0 : b.access_token,
+              );
+            });
+          }
+          _handleTokenChanged(a, b, c) {
+            ("TOKEN_REFRESHED" === a || "SIGNED_IN" === a) &&
+            this.changedAccessToken !== c
+              ? ((this.changedAccessToken = c), this.realtime.setAuth(c))
+              : "SIGNED_OUT" === a &&
+                (this.realtime.setAuth(),
+                "STORAGE" == b && this.auth.signOut(),
+                (this.changedAccessToken = void 0));
+          }
+        }
+        b.default = l;
+      },
+      802: (a, b) => {
+        (Object.defineProperty(b, "__esModule", { value: !0 }),
+          (b.version = void 0),
+          (b.version = "2.75.0"));
+      },
+      1933: (a, b, c) => {
+        (Object.defineProperty(b, "__esModule", { value: !0 }),
+          (b.DEFAULT_REALTIME_OPTIONS =
+            b.DEFAULT_AUTH_OPTIONS =
+            b.DEFAULT_DB_OPTIONS =
+            b.DEFAULT_GLOBAL_OPTIONS =
+            b.DEFAULT_HEADERS =
+              void 0));
+        let d = c(802),
+          e = "";
+        ((e =
+          "undefined" != typeof Deno
+            ? "deno"
+            : "undefined" != typeof document
+              ? "web"
+              : "undefined" != typeof navigator &&
+                  "ReactNative" === navigator.product
+                ? "react-native"
+                : "node"),
+          (b.DEFAULT_HEADERS = {
+            "X-Client-Info": `supabase-js-${e}/${d.version}`,
+          }),
+          (b.DEFAULT_GLOBAL_OPTIONS = { headers: b.DEFAULT_HEADERS }),
+          (b.DEFAULT_DB_OPTIONS = { schema: "public" }),
+          (b.DEFAULT_AUTH_OPTIONS = {
+            autoRefreshToken: !0,
+            persistSession: !0,
+            detectSessionInUrl: !0,
+            flowType: "implicit",
+          }),
+          (b.DEFAULT_REALTIME_OPTIONS = {}));
+      },
+      4970: (a, b, c) => {
+        var d = Object.create
+            ? function (a, b, c, d) {
+                void 0 === d && (d = c);
+                var e = Object.getOwnPropertyDescriptor(b, c);
+                ((!e ||
+                  ("get" in e
+                    ? !b.__esModule
+                    : e.writable || e.configurable)) &&
+                  (e = {
+                    enumerable: !0,
+                    get: function () {
+                      return b[c];
+                    },
+                  }),
+                  Object.defineProperty(a, d, e));
+              }
+            : function (a, b, c, d) {
+                (void 0 === d && (d = c), (a[d] = b[c]));
+              },
+          e = Object.create
+            ? function (a, b) {
+                Object.defineProperty(a, "default", {
+                  enumerable: !0,
+                  value: b,
+                });
+              }
+            : function (a, b) {
+                a.default = b;
+              },
+          f = (function () {
+            var a = function (b) {
+              return (a =
+                Object.getOwnPropertyNames ||
+                function (a) {
+                  var b = [];
+                  for (var c in a)
+                    Object.prototype.hasOwnProperty.call(a, c) &&
+                      (b[b.length] = c);
+                  return b;
+                })(b);
+            };
+            return function (b) {
+              if (b && b.__esModule) return b;
+              var c = {};
+              if (null != b)
+                for (var f = a(b), g = 0; g < f.length; g++)
+                  "default" !== f[g] && d(c, b, f[g]);
+              return (e(c, b), c);
+            };
+          })();
+        (Object.defineProperty(b, "__esModule", { value: !0 }),
+          (b.fetchWithAuth =
+            b.resolveHeadersConstructor =
+            b.resolveFetch =
+              void 0));
+        let g = f(c(5750));
+        ((b.resolveFetch = (a) => {
+          let b;
+          return (
+            (b = a || ("undefined" == typeof fetch ? g.default : fetch)),
+            (...a) => b(...a)
+          );
+        }),
+          (b.resolveHeadersConstructor = () =>
+            "undefined" == typeof Headers ? g.Headers : Headers),
+          (b.fetchWithAuth = (a, c, d) => {
+            let e = (0, b.resolveFetch)(d),
+              f = (0, b.resolveHeadersConstructor)();
+            return (b, d) =>
+              (function (a, b, c, d) {
+                return new (c || (c = Promise))(function (e, f) {
+                  function g(a) {
+                    try {
+                      i(d.next(a));
+                    } catch (a) {
+                      f(a);
+                    }
+                  }
+                  function h(a) {
+                    try {
+                      i(d.throw(a));
+                    } catch (a) {
+                      f(a);
+                    }
+                  }
+                  function i(a) {
+                    var b;
+                    a.done
+                      ? e(a.value)
+                      : ((b = a.value) instanceof c
+                          ? b
+                          : new c(function (a) {
+                              a(b);
+                            })
+                        ).then(g, h);
+                  }
+                  i((d = d.apply(a, b || [])).next());
+                });
+              })(void 0, void 0, void 0, function* () {
+                var g;
+                let h = null != (g = yield c()) ? g : a,
+                  i = new f(null == d ? void 0 : d.headers);
+                return (
+                  i.has("apikey") || i.set("apikey", a),
+                  i.has("Authorization") ||
+                    i.set("Authorization", `Bearer ${h}`),
+                  e(b, Object.assign(Object.assign({}, d), { headers: i }))
+                );
+              });
+          }));
       },
       5600: (a) => {
         a.exports = require("next/dist/compiled/next-server/pages-api.runtime.prod.js");
+      },
+      5750: (a) => {
+        a.exports = require("@supabase/node-fetch");
+      },
+      5912: (a) => {
+        a.exports = require("@supabase/storage-js");
+      },
+      6041: (a, b) => {
+        function c(a) {
+          return a.endsWith("/") ? a : a + "/";
+        }
+        (Object.defineProperty(b, "__esModule", { value: !0 }),
+          (b.isBrowser = void 0),
+          (b.uuid = function () {
+            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+              /[xy]/g,
+              function (a) {
+                var b = (16 * Math.random()) | 0;
+                return ("x" == a ? b : (3 & b) | 8).toString(16);
+              },
+            );
+          }),
+          (b.ensureTrailingSlash = c),
+          (b.applySettingDefaults = function (a, b) {
+            var c, d;
+            let { db: e, auth: f, realtime: g, global: h } = a,
+              { db: i, auth: j, realtime: k, global: l } = b,
+              m = {
+                db: Object.assign(Object.assign({}, i), e),
+                auth: Object.assign(Object.assign({}, j), f),
+                realtime: Object.assign(Object.assign({}, k), g),
+                storage: {},
+                global: Object.assign(Object.assign(Object.assign({}, l), h), {
+                  headers: Object.assign(
+                    Object.assign(
+                      {},
+                      null != (c = null == l ? void 0 : l.headers) ? c : {},
+                    ),
+                    null != (d = null == h ? void 0 : h.headers) ? d : {},
+                  ),
+                }),
+                accessToken: () => {
+                  var a, b, c, d;
+                  return (
+                    (a = this),
+                    (b = void 0),
+                    (d = function* () {
+                      return "";
+                    }),
+                    new ((c = void 0), (c = Promise))(function (e, f) {
+                      function g(a) {
+                        try {
+                          i(d.next(a));
+                        } catch (a) {
+                          f(a);
+                        }
+                      }
+                      function h(a) {
+                        try {
+                          i(d.throw(a));
+                        } catch (a) {
+                          f(a);
+                        }
+                      }
+                      function i(a) {
+                        var b;
+                        a.done
+                          ? e(a.value)
+                          : ((b = a.value) instanceof c
+                              ? b
+                              : new c(function (a) {
+                                  a(b);
+                                })
+                            ).then(g, h);
+                      }
+                      i((d = d.apply(a, b || [])).next());
+                    })
+                  );
+                },
+              };
+            return (
+              a.accessToken
+                ? (m.accessToken = a.accessToken)
+                : delete m.accessToken,
+              m
+            );
+          }),
+          (b.validateSupabaseUrl = function (a) {
+            let b = null == a ? void 0 : a.trim();
+            if (!b) throw Error("supabaseUrl is required.");
+            if (!b.match(/^https?:\/\//i))
+              throw Error(
+                "Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.",
+              );
+            try {
+              return new URL(c(b));
+            } catch (a) {
+              throw Error("Invalid supabaseUrl: Provided URL is malformed.");
+            }
+          }),
+          (b.isBrowser = () => !1));
       },
       6472: (a) => {
         a.exports = require("@opentelemetry/api");
@@ -22,7 +493,7 @@
           f = c(8667),
           g = c(3480),
           h = c(6435),
-          i = c(3939);
+          i = c(8226);
         let j = (0, i.createClient)(
           "https://rkonwkggxaohpmxmzmfn.supabase.co",
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrb253a2dneGFvaHBteG16bWZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0OTk0MDQsImV4cCI6MjA3MzA3NTQwNH0.F8dsonOXlKqViCP-Jz5CpxS4ObXIbWoTHGLB3udjRqo",
@@ -1413,6 +1884,125 @@ ${this.getNextSteps(b).join("\n")}
             null == c.waitUntil || c.waitUntil.call(c, Promise.resolve());
           }
         }
+      },
+      8226: (a, b, c) => {
+        var d = Object.create
+            ? function (a, b, c, d) {
+                void 0 === d && (d = c);
+                var e = Object.getOwnPropertyDescriptor(b, c);
+                ((!e ||
+                  ("get" in e
+                    ? !b.__esModule
+                    : e.writable || e.configurable)) &&
+                  (e = {
+                    enumerable: !0,
+                    get: function () {
+                      return b[c];
+                    },
+                  }),
+                  Object.defineProperty(a, d, e));
+              }
+            : function (a, b, c, d) {
+                (void 0 === d && (d = c), (a[d] = b[c]));
+              },
+          e = function (a, b) {
+            for (var c in a)
+              "default" === c ||
+                Object.prototype.hasOwnProperty.call(b, c) ||
+                d(b, a, c);
+          },
+          f = function (a) {
+            return a && a.__esModule ? a : { default: a };
+          };
+        (Object.defineProperty(b, "__esModule", { value: !0 }),
+          (b.createClient =
+            b.SupabaseClient =
+            b.FunctionRegion =
+            b.FunctionsError =
+            b.FunctionsRelayError =
+            b.FunctionsFetchError =
+            b.FunctionsHttpError =
+            b.PostgrestError =
+              void 0));
+        let g = f(c(793));
+        e(c(411), b);
+        var h = c(9672);
+        Object.defineProperty(b, "PostgrestError", {
+          enumerable: !0,
+          get: function () {
+            return h.PostgrestError;
+          },
+        });
+        var i = c(8496);
+        (Object.defineProperty(b, "FunctionsHttpError", {
+          enumerable: !0,
+          get: function () {
+            return i.FunctionsHttpError;
+          },
+        }),
+          Object.defineProperty(b, "FunctionsFetchError", {
+            enumerable: !0,
+            get: function () {
+              return i.FunctionsFetchError;
+            },
+          }),
+          Object.defineProperty(b, "FunctionsRelayError", {
+            enumerable: !0,
+            get: function () {
+              return i.FunctionsRelayError;
+            },
+          }),
+          Object.defineProperty(b, "FunctionsError", {
+            enumerable: !0,
+            get: function () {
+              return i.FunctionsError;
+            },
+          }),
+          Object.defineProperty(b, "FunctionRegion", {
+            enumerable: !0,
+            get: function () {
+              return i.FunctionRegion;
+            },
+          }),
+          e(c(9390), b));
+        var j = c(793);
+        (Object.defineProperty(b, "SupabaseClient", {
+          enumerable: !0,
+          get: function () {
+            return f(j).default;
+          },
+        }),
+          (b.createClient = (a, b, c) => new g.default(a, b, c)),
+          (function () {
+            if ("undefined" == typeof process) return !1;
+            let a = process.version;
+            if (null == a) return !1;
+            let b = a.match(/^v(\d+)\./);
+            return !!b && 18 >= parseInt(b[1], 10);
+          })() &&
+            console.warn(
+              `⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217`,
+            ));
+      },
+      8496: (a) => {
+        a.exports = require("@supabase/functions-js");
+      },
+      9359: (a, b, c) => {
+        (Object.defineProperty(b, "__esModule", { value: !0 }),
+          (b.SupabaseAuthClient = void 0));
+        let d = c(411);
+        class e extends d.AuthClient {
+          constructor(a) {
+            super(a);
+          }
+        }
+        b.SupabaseAuthClient = e;
+      },
+      9390: (a) => {
+        a.exports = require("@supabase/realtime-js");
+      },
+      9672: (a) => {
+        a.exports = require("@supabase/postgrest-js");
       },
     }));
   var b = require("../../../webpack-api-runtime.js");

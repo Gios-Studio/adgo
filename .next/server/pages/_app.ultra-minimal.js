@@ -7,6 +7,9 @@
       361: (a) => {
         a.exports = require("next/dist/compiled/next-server/pages.runtime.prod.js");
       },
+      411: (a) => {
+        a.exports = require("@supabase/auth-js");
+      },
       1612: (a, b, c) => {
         (c.r(b), c.d(b, { default: () => e }));
         var d = c(8732);
@@ -92,8 +95,11 @@
       3873: (a) => {
         a.exports = require("path");
       },
-      3939: (a) => {
-        a.exports = require("@supabase/supabase-js");
+      5750: (a) => {
+        a.exports = require("@supabase/node-fetch");
+      },
+      5912: (a) => {
+        a.exports = require("@supabase/storage-js");
       },
       6060: (a) => {
         a.exports = require("next/dist/shared/lib/no-fallback-error.external.js");
@@ -101,12 +107,21 @@
       6472: (a) => {
         a.exports = require("@opentelemetry/api");
       },
+      8496: (a) => {
+        a.exports = require("@supabase/functions-js");
+      },
       8732: (a) => {
         a.exports = require("react/jsx-runtime");
+      },
+      9390: (a) => {
+        a.exports = require("@supabase/realtime-js");
+      },
+      9672: (a) => {
+        a.exports = require("@supabase/postgrest-js");
       },
     }));
   var b = require("../webpack-runtime.js");
   b.C(a);
-  var c = b.X(0, [1302, 3317, 5781, 1690], () => b((b.s = 3599)));
+  var c = b.X(0, [2631, 3317, 5781, 1690], () => b((b.s = 3599)));
   module.exports = c;
 })();

@@ -7,6 +7,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 /** @type {import('next').NextConfig} */
 /** Production-optimized Next.js config with compression and bundle analysis **/
 const nextConfig = {
+  reactStrictMode: true,
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
@@ -15,6 +16,12 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
+  
+  // Experimental optimizations
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['recharts', '@supabase/supabase-js', 'lucide-react', '@radix-ui/react-icons'],
+  },
   
   // Image optimization
   images: {
@@ -31,13 +38,25 @@ const nextConfig = {
       {
         source: '/api/(.*)',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=10, stale-while-revalidate' },
+          { key: 'Cache-Control', value: 'public, max-age=60, s-maxage=120' },
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
         ],
       },
       {
         source: '/_next/static/(.*)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
         ],
       },
     ];

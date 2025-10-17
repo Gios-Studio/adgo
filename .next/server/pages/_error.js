@@ -7,6 +7,9 @@
       361: (a) => {
         a.exports = require("next/dist/compiled/next-server/pages.runtime.prod.js");
       },
+      411: (a) => {
+        a.exports = require("@supabase/auth-js");
+      },
       1523: (a, b, c) => {
         a.exports = c(3885).vendored.contexts.HeadManagerContext;
       },
@@ -170,8 +173,11 @@
       3873: (a) => {
         a.exports = require("path");
       },
-      3939: (a) => {
-        a.exports = require("@supabase/supabase-js");
+      5750: (a) => {
+        a.exports = require("@supabase/node-fetch");
+      },
+      5912: (a) => {
+        a.exports = require("@supabase/storage-js");
       },
       6060: (a) => {
         a.exports = require("next/dist/shared/lib/no-fallback-error.external.js");
@@ -231,6 +237,9 @@
             null
           );
         }
+      },
+      8496: (a) => {
+        a.exports = require("@supabase/functions-js");
       },
       8624: (a, b, c) => {
         (Object.defineProperty(b, "__esModule", { value: !0 }),
@@ -363,6 +372,12 @@
       8732: (a) => {
         a.exports = require("react/jsx-runtime");
       },
+      9390: (a) => {
+        a.exports = require("@supabase/realtime-js");
+      },
+      9672: (a) => {
+        a.exports = require("@supabase/postgrest-js");
+      },
       9875: (a, b, c) => {
         c.a(a, async (a, d) => {
           try {
@@ -434,6 +449,6 @@
     }));
   var b = require("../webpack-runtime.js");
   b.C(a);
-  var c = b.X(0, [1302, 3317, 5781, 1690], () => b((b.s = 9875)));
+  var c = b.X(0, [2631, 3317, 5781, 1690], () => b((b.s = 9875)));
   module.exports = c;
 })();

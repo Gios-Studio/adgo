@@ -18,7 +18,19 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, s-maxage=10, stale-while-revalidate"
+          "value": "public, max-age=60, s-maxage=120"
+        },
+        {
+          "key": "X-DNS-Prefetch-Control",
+          "value": "on"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         }
       ],
       "regex": "^/api(?:/(.*))(?:/)?$"
@@ -32,6 +44,28 @@
         }
       ],
       "regex": "^/_next/static(?:/(.*))(?:/)?$"
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-DNS-Prefetch-Control",
+          "value": "on"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "origin-when-cross-origin"
+        }
+      ],
+      "regex": "^(?:/(.*))(?:/)?$"
     }
   ],
   "rewrites": {
@@ -270,7 +304,52 @@
       "namedRegex": "^/wallet(?:/)?$"
     }
   ],
-  "dataRoutes": [],
+  "dataRoutes": [
+    {
+      "page": "/admin/review",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/admin/review\\.json$"
+    },
+    {
+      "page": "/ads/upload",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/ads/upload\\.json$"
+    },
+    {
+      "page": "/cookie-policy",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/cookie-policy\\.json$"
+    },
+    {
+      "page": "/dashboard",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/dashboard\\.json$"
+    },
+    {
+      "page": "/dashboard/telemetry",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/dashboard/telemetry\\.json$"
+    },
+    {
+      "page": "/landing",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/landing\\.json$"
+    },
+    {
+      "page": "/login",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/login\\.json$"
+    },
+    {
+      "page": "/privacy-policy",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/privacy-policy\\.json$"
+    },
+    {
+      "page": "/signup",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/signup\\.json$"
+    },
+    {
+      "page": "/terms-of-service",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/terms-of-service\\.json$"
+    },
+    {
+      "page": "/waitlist",
+      "dataRouteRegex": "^/_next/data/RXi0AB6GBCm0lVIaOVDaV/waitlist\\.json$"
+    }
+  ],
   "rsc": {
     "header": "rsc",
     "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",

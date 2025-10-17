@@ -1,22 +1,28 @@
 /**
  * AdGo Platform - Advanced Advertising Technology Suite
- * 
+ *
  * Copyright (c) 2025 AdGo Solutions Limited.
  * All rights reserved.
- * 
+ *
  * This source code is proprietary and confidential.
  * Unauthorized copying, modification, distribution, or use of this file,
  * via any medium, is strictly prohibited without explicit written consent.
- * 
+ *
  * For licensing information, please contact: legal@adgosolutions.com
- * 
+ *
  * Build: 20251015_073830
  * Generated: 2025-10-15 04:38:35 UTC
  */
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { CheckCircle, Rocket, Shield, Zap } from "lucide-react";
 import { toast } from "sonner";
@@ -38,9 +44,9 @@ const Waitlist = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-login-bg to-background flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         <div className="text-center mb-12">
-          <img 
-            src="/lovable-uploads/2832d142-026e-456c-88e4-dbacf37c22e7.png" 
-            alt="Adgo Logo" 
+          <img
+            src="/lovable-uploads/2832d142-026e-456c-88e4-dbacf37c22e7.png"
+            alt="Adgo Logo"
             className="h-16 w-auto mx-auto mb-8"
           />
           <h1 className="text-5xl font-bold mb-4">
@@ -51,8 +57,9 @@ const Waitlist = () => {
             is Coming
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            We're building the most powerful advertising platform to help businesses craft 
-            data-driven strategies that turn clicks into customers.
+            We're building the most powerful advertising platform to help
+            businesses craft data-driven strategies that turn clicks into
+            customers.
           </p>
         </div>
 
@@ -62,7 +69,8 @@ const Waitlist = () => {
               <CardHeader className="text-center">
                 <CardTitle className="text-2xl">Join the Waitlist</CardTitle>
                 <CardDescription>
-                  Be among the first to experience the next generation of ad management
+                  Be among the first to experience the next generation of ad
+                  management
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -84,9 +92,12 @@ const Waitlist = () => {
                 ) : (
                   <div className="text-center space-y-4">
                     <CheckCircle className="h-16 w-16 text-primary mx-auto" />
-                    <h3 className="text-xl font-semibold">You're on the list!</h3>
+                    <h3 className="text-xl font-semibold">
+                      You're on the list!
+                    </h3>
                     <p className="text-muted-foreground">
-                      We'll notify you as soon as Adgo is ready to transform your advertising.
+                      We'll notify you as soon as Adgo is ready to transform
+                      your advertising.
                     </p>
                   </div>
                 )}
@@ -98,10 +109,13 @@ const Waitlist = () => {
             <div className="flex items-start space-x-4">
               <Zap className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
               <div>
-                <h3 className="font-semibold text-lg mb-2">Lightning-Fast Campaigns</h3>
+                <h3 className="font-semibold text-lg mb-2">
+                  Lightning-Fast Campaigns
+                </h3>
                 <p className="text-muted-foreground">
-                  Launch and optimize campaigns in minutes, not hours. Our intelligent automation 
-                  handles the heavy lifting while you focus on strategy.
+                  Launch and optimize campaigns in minutes, not hours. Our
+                  intelligent automation handles the heavy lifting while you
+                  focus on strategy.
                 </p>
               </div>
             </div>
@@ -109,10 +123,13 @@ const Waitlist = () => {
             <div className="flex items-start space-x-4">
               <Shield className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
               <div>
-                <h3 className="font-semibold text-lg mb-2">Enterprise-Grade Security</h3>
+                <h3 className="font-semibold text-lg mb-2">
+                  Enterprise-Grade Security
+                </h3>
                 <p className="text-muted-foreground">
-                  Your data is protected with bank-level security. SOC 2 compliant with 
-                  end-to-end encryption for complete peace of mind.
+                  Your data is protected with bank-level security. SOC 2
+                  compliant with end-to-end encryption for complete peace of
+                  mind.
                 </p>
               </div>
             </div>
@@ -122,8 +139,8 @@ const Waitlist = () => {
               <div>
                 <h3 className="font-semibold text-lg mb-2">Proven Results</h3>
                 <p className="text-muted-foreground">
-                  Our beta users have seen an average 40% increase in ROI and 60% reduction 
-                  in campaign management time.
+                  Our beta users have seen an average 40% increase in ROI and
+                  60% reduction in campaign management time.
                 </p>
               </div>
             </div>
@@ -135,9 +152,7 @@ const Waitlist = () => {
             Have questions? We'd love to hear from you.
           </p>
           <Button variant="outline">
-            <a href="mailto:hello@adgo.solutions">
-              Contact Us
-            </a>
+            <a href="mailto:hello@adgo.solutions">Contact Us</a>
           </Button>
         </div>
       </div>
@@ -146,3 +161,11 @@ const Waitlist = () => {
 };
 
 export default Waitlist;
+
+// Static Site Generation for waitlist
+export async function getStaticProps() {
+  return {
+    props: {},
+    revalidate: 3600, // Revalidate every hour
+  };
+}

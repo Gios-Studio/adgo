@@ -1,4 +1,8 @@
 {
   "version": 1,
-  "functions": {}
+  "functions": {
+    "/api/driver/wallet": {},
+    "/api/sdk/events": {},
+    "/api/metrics/ctr": {}
+  }
 }
