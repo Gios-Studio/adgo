@@ -1,12 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "noEmit": false,
-    "outDir": "./.tsbuild/app",
-    "tsBuildInfoFile": "./.tsbuild/app.tsbuildinfo",
+    "noEmit": true,
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "docs/policies/refund-policy-v1.0.pdf"],
-  "exclude": ["node_modules", ".next"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", ".next", "docs/**/*"]
 }

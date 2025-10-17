@@ -1,13 +1,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "noEmit": false,
-    "outDir": "./.tsbuild/node",
-    "tsBuildInfoFile": "./.tsbuild/node.tsbuildinfo",
+    "noEmit": true,
     "module": "esnext",
     "moduleResolution": "node"
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", ".next"]
+  "exclude": ["node_modules", ".next", "docs/**/*"]
 }

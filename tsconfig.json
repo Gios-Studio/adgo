@@ -16,14 +16,10 @@
     "plugins": [{ "name": "next" }],
     "allowJs": true,
     "skipLibCheck": true,
-    "incremental": true,
+    "incremental": false,
     "esModuleInterop": true,
     "strictNullChecks": true
   },
   "include": ["next-env.d.ts", ".next/types/**/*.ts", "src/**/*.ts", "src/**/*.tsx", "*.ts", "*.tsx"],
-  "exclude": ["node_modules", "docs/**/*", ".next", "out"],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "exclude": ["node_modules", "docs/**/*", ".next", "out", ".tsbuild"]
 }
