@@ -31,16 +31,21 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: 🔗 Link to Supabase project
+      - name: � Install Supabase CLI
+        run: |
+          curl -sL https://github.com/supabase/cli/releases/download/v1.154.1/supabase_1.154.1_linux_amd64.tar.gz | tar xz
+          sudo mv supabase /usr/local/bin/supabase
+
+      - name:  Link to Supabase project
         run: |
           echo "🔗 Linking to Supabase project..."
-          npx supabase link --project-ref $SUPABASE_PROJECT_ID --access-token $SUPABASE_ACCESS_TOKEN
+          supabase link --project-ref $SUPABASE_PROJECT_ID --access-token $SUPABASE_ACCESS_TOKEN
           echo "✅ Successfully linked to Supabase project"
 
       - name: 🗄️ Apply database migrations
         run: |
           echo "🚀 Applying database migrations..."
-          npx supabase db push --db-url "$SUPABASE_DB_URL"
+          supabase db push --db-url "$SUPABASE_DB_URL"
           echo "✅ Database migrations applied successfully"
 
   test:
