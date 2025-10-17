@@ -49,7 +49,11 @@ export default [
       "node_modules/**", 
       "dist/**",
       "build/**",
+      "out/**",
       "coverage/**",
+      "reports/**",
+      "docs/build/**",
+      "sdk/docs/**",
       ".tsbuild/**"
     ]
   }
