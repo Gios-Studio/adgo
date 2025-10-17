@@ -27,15 +27,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Supabase CLI
-        run: |
-          curl -sL https://github.com/supabase/cli/releases/download/v1.154.1/supabase_1.154.1_linux_amd64.tar.gz | tar xz
-          sudo mv supabase /usr/local/bin/supabase
-
       - name: Link to Supabase project
         run: |
           echo "🔗 Linking to Supabase project..."
-          supabase link --project-ref $SUPABASE_PROJECT_ID --access-token $SUPABASE_ACCESS_TOKEN
+          npx supabase@latest link --project-ref $SUPABASE_PROJECT_ID --access-token $SUPABASE_ACCESS_TOKEN
           if [ $? -ne 0 ]; then
             echo "❌ Failed to link to Supabase project"
             exit 1
@@ -55,16 +50,16 @@ jobs:
         run: |
           echo "🚀 Applying database migrations..."
           echo "📝 Listing current migrations:"
-          supabase migration list || true
+          npx supabase@latest migration list || true
           
           echo "🔄 Pushing migrations to database..."
-          supabase db push --db-url "$SUPABASE_DB_URL"
+          npx supabase@latest db push --db-url "$SUPABASE_DB_URL"
           
           if [ $? -eq 0 ]; then
             echo "✅ Database migrations applied successfully"
           else
             echo "❌ Database migration failed"
             echo "📊 Checking migration status..."
-            supabase migration list || true
+            npx supabase@latest migration list || true
             exit 1
           fi
