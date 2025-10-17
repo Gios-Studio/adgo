@@ -57,3 +57,6 @@ jobs:
           echo "✅ All database migrations applied successfully"
           echo "✅ Schema validation passed"
           echo "✅ Production database ready"
+          echo "🔗 Repository: ${{ github.repository }}"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "🚀 Deployment ready for production"
