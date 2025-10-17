@@ -45,16 +45,18 @@ export default [
   },
   {
     ignores: [
-      ".next/**",
-      "node_modules/**", 
-      "dist/**",
-      "build/**",
-      "out/**",
-      "coverage/**",
-      "reports/**",
-      "docs/build/**",
-      "sdk/docs/**",
-      ".tsbuild/**"
-    ]
+      '.next/**',
+      'out/**',
+      'dist/**',
+      'node_modules/**',
+      '.env*',
+      'public/**',
+      'coverage/**',
+      'reports/**',
+      'docs/build/**',
+      'sdk/docs/**',
+      'next-env.d.ts',
+      '**/*.tsbuildinfo'
+    ],
   }
 ];

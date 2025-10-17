@@ -1,0 +1,31 @@
+{
+  "folders": [
+    {
+      "name": "AdGo Application",
+      "path": "."
+    },
+    {
+      "name": "Documentation",
+      "path": "./docs"
+    }
+  ],
+  "settings": {
+    "typescript.preferences.includePackageJsonAutoImports": "off",
+    "typescript.suggest.autoImports": false,
+    "files.exclude": {
+      "docs/node_modules": true,
+      "docs/.docusaurus": true,
+      "docs/build": true
+    },
+    "search.exclude": {
+      "docs/node_modules": true,
+      "docs/.docusaurus": true,
+      "docs/build": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.vscode-typescript-next"
+    ]
+  }
+}

@@ -69,7 +69,7 @@ const RETRY_CONFIG = {
 function normalizeAndGenerateUUIDs(eventData: any): { normalizedData: any; rideRef: string | null } {
   const originalRideId = eventData.ride_id;
   let rideRef: string | null = null;
-  let normalizedData = { ...eventData };
+  const normalizedData = { ...eventData };
   
   // Handle ride_id: preserve partner reference, ensure UUID for database
   if (!isUUID(originalRideId)) {

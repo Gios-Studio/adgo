@@ -383,12 +383,13 @@ async function exportWorkflow(req: NextApiRequest, res: NextApiResponse, workflo
       filename = `workflow-${workflowId}.csv`;
       break;
     
-    case 'json':
+    case 'json': {
       const workflow = generator.getWorkflow(workflowId);
       exportContent = JSON.stringify(workflow, null, 2);
       contentType = 'application/json';
       filename = `workflow-${workflowId}.json`;
       break;
+    }
     
     default:
       return res.status(400).json({ error: 'Invalid export format. Supported: pdf, excel, json' });
