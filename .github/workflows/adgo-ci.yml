@@ -22,24 +22,21 @@ jobs:
       - run: npm ci
 
   migrate:
-    name: Supabase DB Migration
+    name: Supabase DB Migration (Docker)
     runs-on: ubuntu-latest
     needs: setup
     env:
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
 
-      - name: Install Supabase CLI
-        run: npm install -g supabase
-
-      - name: Run database migrations
-        run: supabase db push --db-url "${{ env.SUPABASE_DB_URL }}"
+      - name: Run migrations via Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            -e SUPABASE_DB_URL=${{ env.SUPABASE_DB_URL }} \
+            supabase/cli:latest db push --db-url "${{ env.SUPABASE_DB_URL }}"
 
   build:
     name: Build & Lint
