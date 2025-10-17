@@ -30,11 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Supabase CLI (universal)
-        run: |
-          curl -L https://github.com/supabase/cli/releases/latest/download/supabase_$(uname -s)_$(uname -m).tar.gz -o supabase.tar.gz
-          sudo tar -xzf supabase.tar.gz -C /usr/local/bin
-          supabase --version
+      - name: Install Supabase CLI
+        run: npm install -g supabase
 
       - name: Run database migrations
         run: supabase db push --db-url "${{ env.SUPABASE_DB_URL }}"
