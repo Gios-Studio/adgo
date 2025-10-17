@@ -1,0 +1,92 @@
+(self.webpackChunk_N_E = self.webpackChunk_N_E || []).push([
+  [876],
+  {
+    5600: (e, s, t) => {
+      (window.__NEXT_P = window.__NEXT_P || []).push([
+        "/dashboard/audit",
+        function () {
+          return t(90327);
+        },
+      ]);
+    },
+    90327: (e, s, t) => {
+      "use strict";
+      (t.r(s), t.d(s, { default: () => l }));
+      var n = t(37876),
+        i = t(14232);
+      let r = (0, t(46958).UU)(
+        "https://rkonwkggxaohpmxmzmfn.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrb253a2dneGFvaHBteG16bWZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0OTk0MDQsImV4cCI6MjA3MzA3NTQwNH0.F8dsonOXlKqViCP-Jz5CpxS4ObXIbWoTHGLB3udjRqo",
+      );
+      function l() {
+        let [e, s] = (0, i.useState)([]),
+          [t, l] = (0, i.useState)([]),
+          [c, a] = (0, i.useState)([]);
+        return (
+          (0, i.useEffect)(() => {
+            (r
+              .from("fraud_logs")
+              .select("*")
+              .then((e) => {
+                let { data: t } = e;
+                return t && s(t);
+              }),
+              r
+                .from("transactions")
+                .select("*")
+                .then((e) => {
+                  let { data: s } = e;
+                  return s && l(s);
+                }),
+              r
+                .from("tax_receipts")
+                .select("*")
+                .then((e) => {
+                  let { data: s } = e;
+                  return s && a(s);
+                }));
+          }, []),
+          (0, n.jsxs)("div", {
+            className: "p-6 space-y-6",
+            children: [
+              (0, n.jsx)("h1", {
+                className: "text-2xl font-bold",
+                children: "Audit Dashboard",
+              }),
+              (0, n.jsxs)("section", {
+                children: [
+                  (0, n.jsx)("h2", {
+                    className: "text-xl mb-2",
+                    children: "Fraud Logs",
+                  }),
+                  (0, n.jsx)("pre", { children: JSON.stringify(e, null, 2) }),
+                ],
+              }),
+              (0, n.jsxs)("section", {
+                children: [
+                  (0, n.jsx)("h2", {
+                    className: "text-xl mb-2",
+                    children: "Transactions",
+                  }),
+                  (0, n.jsx)("pre", { children: JSON.stringify(t, null, 2) }),
+                ],
+              }),
+              (0, n.jsxs)("section", {
+                children: [
+                  (0, n.jsx)("h2", {
+                    className: "text-xl mb-2",
+                    children: "VAT Receipts",
+                  }),
+                  (0, n.jsx)("pre", { children: JSON.stringify(c, null, 2) }),
+                ],
+              }),
+            ],
+          })
+        );
+      }
+    },
+  },
+  (e) => {
+    (e.O(0, [636, 6593, 8792], () => e((e.s = 5600))), (_N_E = e.O()));
+  },
+]);

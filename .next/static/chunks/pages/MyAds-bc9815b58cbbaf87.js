@@ -1,0 +1,123 @@
+(self.webpackChunk_N_E = self.webpackChunk_N_E || []).push([
+  [8140],
+  {
+    11771: (e, s, t) => {
+      "use strict";
+      (t.r(s), t.d(s, { default: () => l }));
+      var a = t(37876),
+        d = t(14232),
+        i = t(4613);
+      function l() {
+        let [e, s] = (0, d.useState)([]),
+          [t, l] = (0, d.useState)(null),
+          [r, n] = (0, d.useState)(!0);
+        return ((0, d.useEffect)(() => {
+          let e = !0;
+          return (
+            (async () => {
+              var t, a;
+              (n(!0), l(null));
+              try {
+                let { data: a } = await i.N.auth.getSession(),
+                  d = null == (t = a.session) ? void 0 : t.user.id;
+                if (!d) throw Error("Not signed in.");
+                let { data: l, error: r } = await i.N.from("ads")
+                  .select("id, title, status, created_at")
+                  .eq("owner_id", d)
+                  .order("created_at", { ascending: !1 })
+                  .limit(50);
+                if (r) throw r;
+                if (!e) return;
+                s(l || []);
+              } catch (s) {
+                if (!e) return;
+                l(null != (a = s.message) ? a : "Failed to load ads.");
+              } finally {
+                e && n(!1);
+              }
+            })(),
+            () => {
+              e = !1;
+            }
+          );
+        }, []),
+        r)
+          ? (0, a.jsx)("div", { className: "p-6", children: "Loading ads…" })
+          : t
+            ? (0, a.jsxs)("div", {
+                className: "p-6 text-red-600",
+                children: ["Error: ", t],
+              })
+            : (0, a.jsxs)("div", {
+                className: "p-6 space-y-4",
+                children: [
+                  (0, a.jsxs)("header", {
+                    className: "flex items-center justify-between",
+                    children: [
+                      (0, a.jsx)("h1", {
+                        className: "text-2xl font-semibold",
+                        children: "My Ads",
+                      }),
+                      (0, a.jsx)("a", {
+                        href: "/ad-upload",
+                        className: "border rounded px-3 py-2",
+                        children: "Upload Ad",
+                      }),
+                    ],
+                  }),
+                  0 === e.length
+                    ? (0, a.jsx)("div", {
+                        className: "text-neutral-600",
+                        children: "No ads yet. Click “Upload Ad”.",
+                      })
+                    : (0, a.jsx)("div", {
+                        className: "border rounded-lg divide-y",
+                        children: e.map((e) =>
+                          (0, a.jsxs)(
+                            "div",
+                            {
+                              className:
+                                "p-3 flex items-center justify-between",
+                              children: [
+                                (0, a.jsxs)("div", {
+                                  children: [
+                                    (0, a.jsx)("div", {
+                                      className: "font-medium",
+                                      children: e.title || "Untitled",
+                                    }),
+                                    (0, a.jsxs)("div", {
+                                      className: "text-xs text-neutral-500",
+                                      children: [
+                                        "Created ",
+                                        new Date(e.created_at).toLocaleString(),
+                                      ],
+                                    }),
+                                  ],
+                                }),
+                                (0, a.jsx)("div", {
+                                  className: "text-sm",
+                                  children: e.status,
+                                }),
+                              ],
+                            },
+                            e.id,
+                          ),
+                        ),
+                      }),
+                ],
+              });
+      }
+    },
+    96348: (e, s, t) => {
+      (window.__NEXT_P = window.__NEXT_P || []).push([
+        "/MyAds",
+        function () {
+          return t(11771);
+        },
+      ]);
+    },
+  },
+  (e) => {
+    (e.O(0, [636, 6593, 8792], () => e((e.s = 96348))), (_N_E = e.O()));
+  },
+]);
