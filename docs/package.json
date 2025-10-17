@@ -1,6 +1,6 @@
 {
   "name": "adgo-docs",
-  "version": "1.0.0",
+  "version": "v1.0.0",
   "private": true,
   "description": "AdGo Platform Documentation Site",
   "scripts": {
