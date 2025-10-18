@@ -23,6 +23,9 @@ fi
 # Download Supabase CLI if not already installed
 if ! command -v supabase &> /dev/null; then
     echo "📥 Downloading Supabase CLI..."
+    mkdir -p _cli_tmp
+    cd _cli_tmp
+    
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS
         curl -fsSL https://github.com/supabase/cli/releases/latest/download/supabase_darwin_amd64.tar.gz -o supabase.tar.gz
@@ -34,7 +37,8 @@ if ! command -v supabase &> /dev/null; then
     tar -xzf supabase.tar.gz
     chmod +x supabase
     sudo mv supabase /usr/local/bin/supabase
-    rm supabase.tar.gz
+    cd ..
+    rm -rf _cli_tmp
     echo "✅ Supabase CLI installed"
 fi
 
