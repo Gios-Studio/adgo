@@ -36,7 +36,7 @@ supabase/
 4. **Success Logging**: Comprehensive deployment confirmation
 
 ### Required Secrets
-- `SUPABASE_DB_URL`: Full database connection URL
+- `SUPABASE_DB_URL_PROD`: Full production database connection URL
 - `SUPABASE_SERVICE_ROLE_KEY`: Service role key for admin operations
 
 ## 🧪 Local Testing
@@ -46,6 +46,11 @@ supabase/
 export SUPABASE_DB_URL="postgresql://postgres:[password]@[host]:5432/postgres"
 export SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 ```
+
+### GitHub Secrets Setup
+Repository secrets must be configured:
+- `SUPABASE_DB_URL_PROD`: Production database connection URL
+- `SUPABASE_SERVICE_ROLE_KEY`: Service role key with admin privileges
 
 ### Run Local Test
 ```bash
