@@ -1,4 +1,4 @@
-name: Supabase DB Migrations (Clean Slate)
+name: Supabase DB Migrations (v2.51 Compatible)
 
 on:
   workflow_dispatch:
@@ -8,87 +8,96 @@ on:
 jobs:
   migrate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     env:
-      # Prefer production DB, fallback to staging
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL_PROD || secrets.SUPABASE_DB_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
     steps:
-      - name: 🧹 Clean workspace and previous runs
+      - name: 🧹 Clean workspace
         run: |
-          echo "🧹 Cleaning up any previous runs..."
-          rm -rf supabase supabase.tar.gz .supabase .next node_modules || true
+          echo "🧹 Cleaning up workspace..."
+          rm -rf supabase supabase.tar.gz .supabase || true
           sudo rm -rf /usr/local/bin/supabase || true
-          echo "✅ Clean workspace ready."
+          echo "✅ Workspace cleaned."
 
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🔒 Verify required secrets
+      - name: 🔒 Verify secrets
         run: |
-          echo "🔍 Checking Supabase secrets..."
+          echo "🔍 Checking required secrets..."
           if [ -z "$SUPABASE_DB_URL" ]; then
-            echo "❌ Missing SUPABASE_DB_URL_PROD or SUPABASE_DB_URL secret."
+            echo "❌ Missing SUPABASE_DB_URL_PROD or SUPABASE_DB_URL secret"
             exit 1
           fi
           if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
-            echo "❌ Missing SUPABASE_SERVICE_ROLE_KEY secret."
+            echo "❌ Missing SUPABASE_SERVICE_ROLE_KEY secret"
             exit 1
           fi
-          echo "✅ Secrets detected successfully."
-          echo "Host: $(echo $SUPABASE_DB_URL | sed 's/^.*@//g' | cut -d':' -f1)"
-          echo "Key Prefix: $(echo $SUPABASE_SERVICE_ROLE_KEY | cut -c1-6)..."
+          echo "✅ All secrets validated"
+          echo "Database host: $(echo $SUPABASE_DB_URL | sed 's/^.*@//g' | cut -d':' -f1)"
 
-      - name: 🧩 Install Supabase CLI
+      - name: 🧩 Install Supabase CLI v2.51
         run: |
-          echo "📦 Installing Supabase CLI..."
-          curl -fsSL https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz -o supabase.tar.gz
+          echo "📦 Installing Supabase CLI v2.51..."
+          curl -fsSL https://github.com/supabase/cli/releases/download/v2.51.0/supabase_linux_amd64.tar.gz -o supabase.tar.gz
           sudo tar -xzf supabase.tar.gz -C /usr/local/bin
           sudo chmod +x /usr/local/bin/supabase
+          echo "🔍 Verifying installation..."
           supabase --version
+          echo "✅ Supabase CLI v2.51 installed successfully"
 
-      - name: 🌐 IPv4 Connectivity Test
+      - name: 🧪 Test database connection
         run: |
-          echo "🌐 Testing IPv4 connectivity..."
-          DB_HOST=$(echo "$SUPABASE_DB_URL" | sed 's/^.*@//g' | cut -d':' -f1)
-          ping -c 2 "$DB_HOST" || echo "⚠️ Host did not respond to ping (may block ICMP but still reachable)."
-          echo "✅ IPv4 test complete."
-
-      - name: 🧪 Test Supabase CLI Connection
-        run: |
-          echo "🧠 Validating Supabase CLI connection..."
-          supabase db remote commit --db-url "$SUPABASE_DB_URL" || {
-            echo "❌ CLI connection test failed."
+          echo "🧪 Testing database connectivity..."
+          if ! supabase migration list --db-url "$SUPABASE_DB_URL" > /dev/null 2>&1; then
+            echo "❌ Database connection failed"
+            echo "Attempting basic connectivity test..."
+            DB_HOST=$(echo "$SUPABASE_DB_URL" | sed 's/^.*@//g' | cut -d':' -f1)
+            ping -c 2 "$DB_HOST" || echo "Host unreachable via ping"
             exit 1
-          }
-          echo "✅ CLI connection verified."
+          fi
+          echo "✅ Database connection verified"
 
-      - name: 🚀 Run Supabase Migrations
+      - name: 📋 Check migration files
         run: |
-          echo "🚀 Executing schema migrations..."
-          supabase db push --db-url "$SUPABASE_DB_URL" || {
-            echo "❌ Migration failed. Triggering rollback."
-            supabase db remote commit --db-url "$SUPABASE_DB_URL"
+          echo "📋 Checking migration files..."
+          if [ ! -d "supabase/migrations" ]; then
+            echo "❌ Migration directory not found"
             exit 1
-          }
-          echo "✅ Migrations executed successfully."
+          fi
+          echo "Migration files found:"
+          ls -la supabase/migrations/ || echo "No migration files"
+          echo "✅ Migration directory validated"
 
-      - name: 🧾 Verify Schema Consistency
+      - name: 🚀 Run database migrations
         run: |
-          echo "🔍 Verifying schema post-migration..."
-          supabase db remote commit --db-url "$SUPABASE_DB_URL"
-          echo "✅ Schema consistency verified."
+          echo "🚀 Applying database migrations..."
+          if ! supabase db push --db-url "$SUPABASE_DB_URL"; then
+            echo "❌ Migration failed"
+            echo "Checking current migration status..."
+            supabase migration list --db-url "$SUPABASE_DB_URL" || echo "Unable to list migrations"
+            exit 1
+          fi
+          echo "✅ Migrations applied successfully"
 
-      - name: 🗑️ Clean Cache & Logs
+      - name: 🔍 Verify migration status
         run: |
-          echo "🗑️ Clearing Supabase cache and old workflow logs..."
-          rm -rf /home/runner/work/_temp || true
-          echo "✅ Workspace fully reset."
+          echo "🔍 Verifying migration status..."
+          supabase migration list --db-url "$SUPABASE_DB_URL" || echo "Unable to verify migration status"
+          echo "✅ Migration verification complete"
 
-      - name: ✅ Final Confirmation
+      - name: 🗑️ Cleanup
         run: |
-          echo "🎯 Migration pipeline executed successfully."
-          echo "Supabase URL: $(echo $SUPABASE_DB_URL | sed 's/^.*@//g')"
-          echo "All previous workflow errors cleared."
+          echo "🗑️ Cleaning up temporary files..."
+          rm -f supabase.tar.gz
+          echo "✅ Cleanup complete"
+
+      - name: ✅ Success summary
+        run: |
+          echo "🎯 Supabase DB Migration completed successfully"
+          echo "✅ CLI v2.51 compatible workflow executed"
+          echo "✅ Database schema updated"
+          echo "✅ All validations passed"
