@@ -10,6 +10,7 @@ create table if not exists adgo.org_secrets (
   created_at timestamptz default now()
 );
 alter table adgo.org_secrets enable row level security;
+drop policy if exists org_secrets_rw on adgo.org_secrets;
 create policy org_secrets_rw on adgo.org_secrets
   for all using (false) with check (false);
 
@@ -39,6 +40,7 @@ create index if not exists idx_events_campaign_time on adgo.events_raw(campaign_
 
 -- Enable RLS for events
 alter table adgo.events_raw enable row level security;
+drop policy if exists events_raw_rw on adgo.events_raw;
 create policy events_raw_rw on adgo.events_raw for all using (false) with check (false);
 
 -- Materialized views for metrics

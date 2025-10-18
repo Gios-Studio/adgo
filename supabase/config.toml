@@ -16,7 +16,7 @@ max_rows = 1000
 [db]
 # The database major version to use. This has to be the same as your remote database's. Run `SHOW server_version;`
 # on the remote database to check.
-major_version = 15
+major_version = 17
 
 [studio]
 enabled = true
@@ -64,8 +64,7 @@ enabled = false
 
 [functions]
 # A mapping of function names to their import map location.
-[functions._cmd]
-import_map = "./supabase/functions/import_map.json"
+# Removed invalid _cmd function name
 
 [experimental]
 # Configures Postgres storage-engine extensions that are preloaded on startup.

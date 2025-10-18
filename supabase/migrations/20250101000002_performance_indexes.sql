@@ -3,6 +3,28 @@
 
 set search_path = adgo, public;
 
+-- Add missing date columns to campaigns table if they don't exist
+do $$
+begin
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_schema = 'adgo' 
+    and table_name = 'campaigns' 
+    and column_name = 'start_date'
+  ) then
+    alter table adgo.campaigns add column start_date timestamptz;
+  end if;
+  
+  if not exists (
+    select 1 from information_schema.columns 
+    where table_schema = 'adgo' 
+    and table_name = 'campaigns' 
+    and column_name = 'end_date'
+  ) then
+    alter table adgo.campaigns add column end_date timestamptz;
+  end if;
+end $$;
+
 -- Additional performance indexes
 create index if not exists idx_campaigns_dates on adgo.campaigns(start_date, end_date);
 create index if not exists idx_campaigns_pricing on adgo.campaigns(pricing_mode, status);
@@ -11,7 +33,7 @@ create index if not exists idx_events_type_time on adgo.events_raw(event_type, o
 
 -- Partial indexes for active campaigns
 create index if not exists idx_campaigns_active on adgo.campaigns(org_id, status) where status = 'active';
-create index if not exists idx_creatives_active on adgo.creatives(campaign_id, status) where status = 'active';
+create index if not exists idx_creatives_campaign_status on adgo.creatives(campaign_id, status);
 
 -- Campaign metrics view for dashboard
 create or replace view adgo.v_campaign_metrics as

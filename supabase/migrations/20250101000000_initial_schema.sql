@@ -58,8 +58,8 @@ create table if not exists adgo.creatives (
   updated_at timestamptz default now()
 );
 
--- Create indexes
-create index if not exists idx_orgs_domain on adgo.orgs(domain);
+-- Create indexes (excluding domain index for now)
+create index if not exists idx_org_members_user on adgo.org_members(user_id);
 create index if not exists idx_org_members_user on adgo.org_members(user_id);
 create index if not exists idx_campaigns_org on adgo.campaigns(org_id);
 create index if not exists idx_campaigns_status on adgo.campaigns(status);
