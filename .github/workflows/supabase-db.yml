@@ -2,77 +2,65 @@ name: Supabase DB Migrations
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   migrate:
     runs-on: ubuntu-latest
-    
+
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL_PROD }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-        
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          
-      - name: Download and install Supabase CLI
+
+      - name: Verify Environment Variables
         run: |
-          echo "Downloading Supabase CLI binary..."
-          mkdir -p _cli_tmp
-          cd _cli_tmp
+          echo "🔍 Checking Supabase environment variables..."
+          if [ -z "$SUPABASE_DB_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "❌ ERROR: Missing Supabase secrets. Please set SUPABASE_DB_URL_PROD and SUPABASE_SERVICE_ROLE_KEY in repository secrets."
+            exit 1
+          fi
+          echo "✅ Secrets detected successfully."
+          echo "Project Host: $(echo $SUPABASE_DB_URL | sed 's/^.*@//g' | cut -d':' -f1)"
+          echo "Key Prefix: $(echo $SUPABASE_SERVICE_ROLE_KEY | cut -c1-6)..."
+
+      - name: Install Supabase CLI
+        run: |
+          echo "📦 Installing Supabase CLI..."
           curl -fsSL https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz -o supabase.tar.gz
-          tar -xzf supabase.tar.gz
-          sudo mv supabase /usr/local/bin/supabase
-          cd ..
-          rm -rf _cli_tmp
-          echo "Verifying Supabase CLI installation..."
+          tar -xzf supabase.tar.gz -C /usr/local/bin
+          chmod +x /usr/local/bin/supabase
           supabase --version
           
-      - name: Run Supabase Migration
-        env:
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      - name: Test Supabase CLI Connection
         run: |
-          echo "Running Supabase DB Migrations..."
-          echo "Database URL configured: ${SUPABASE_DB_URL:0:30}..."
-          
-          # Check if migration directory exists
-          if [ ! -d "supabase/migrations" ]; then
-            echo "❌ Migration directory not found"
+          echo "🧪 Testing Supabase CLI connection..."
+          supabase db remote commit --db-url "$SUPABASE_DB_URL" || {
+            echo "❌ Connection test failed. Check DB URL or network access."
             exit 1
-          fi
-          
-          echo "📁 Migration files found:"
-          ls -la supabase/migrations/
-          
-          # Run migration with enhanced error handling
-          if ! supabase db push --db-url "${SUPABASE_DB_URL}"; then
-            echo "❌ Migration failed, printing schema diff:"
-            supabase db remote commit --db-url "${SUPABASE_DB_URL}" || echo "Unable to fetch remote commit logs"
-            echo "❌ Migration push failed - check database connectivity and permissions"
+          }
+          echo "✅ Connection verified."
+
+      - name: Run Database Migrations
+        run: |
+          echo "🚀 Running Supabase migrations on production database..."
+          supabase db push --db-url "$SUPABASE_DB_URL" || {
+            echo "❌ Migration failed. Check schema or permissions."
             exit 1
-          fi
-          
-          echo "✅ Database migration push completed successfully"
-          
-      - name: Verify DB Schema Status
-        env:
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          }
+          echo "✅ Migration completed successfully."
+
+      - name: Verify Database Schema
         run: |
-          echo "Verifying schema..."
-          supabase db remote commit --db-url "${SUPABASE_DB_URL}" || echo "Schema verification skipped"
-          echo "✅ Migration and schema verification complete."
-          
-      - name: Migration Success
+          echo "📋 Verifying schema consistency..."
+          supabase db remote commit --db-url "$SUPABASE_DB_URL"
+          echo "✅ Schema verification complete."
+
+      - name: Cleanup
         run: |
-          echo "🎉 AdGo v1.0.0 Supabase DB Migration Workflow Complete!"
-          echo "✅ All database migrations applied successfully"
-          echo "✅ Schema validation passed"
-          echo "✅ Production database ready"
-          echo "🔗 Repository: ${{ github.repository }}"
-          echo "📝 Commit: ${{ github.sha }}"
-          echo "🚀 Deployment ready for production"
+          rm -f supabase.tar.gz
+          echo "🧹 Cleanup complete."
