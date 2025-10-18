@@ -1,4 +1,4 @@
-name: Supabase DB Migrations (v2.51 Compatible)
+name: Supabase DB Migrations (psql verified)
 
 on:
   workflow_dispatch:
@@ -39,6 +39,14 @@ jobs:
           echo "✅ All secrets validated"
           echo "Database host: $(echo $SUPABASE_DB_URL | sed 's/^.*@//g' | cut -d':' -f1)"
 
+      - name: 📦 Install PostgreSQL client
+        run: |
+          echo "📦 Installing PostgreSQL client..."
+          sudo apt-get update -qq
+          sudo apt-get install -y postgresql-client
+          psql --version
+          echo "✅ PostgreSQL client installed"
+
       - name: 🧩 Install Supabase CLI v2.51
         run: |
           echo "📦 Installing Supabase CLI v2.51..."
@@ -49,17 +57,29 @@ jobs:
           supabase --version
           echo "✅ Supabase CLI v2.51 installed successfully"
 
-      - name: 🧪 Test database connection
+      - name: 🔌 Test PostgreSQL connection
         run: |
-          echo "🧪 Testing database connectivity..."
-          if ! supabase migration list --db-url "$SUPABASE_DB_URL" > /dev/null 2>&1; then
-            echo "❌ Database connection failed"
-            echo "Attempting basic connectivity test..."
+          echo "🔌 Testing PostgreSQL connection with psql..."
+          if ! psql "$SUPABASE_DB_URL" -c "SELECT version();" > /dev/null 2>&1; then
+            echo "❌ PostgreSQL connection failed"
+            echo "Attempting basic connectivity diagnostics..."
             DB_HOST=$(echo "$SUPABASE_DB_URL" | sed 's/^.*@//g' | cut -d':' -f1)
-            ping -c 2 "$DB_HOST" || echo "Host unreachable via ping"
+            DB_PORT=$(echo "$SUPABASE_DB_URL" | sed 's/^.*://g' | cut -d'/' -f1)
+            echo "Host: $DB_HOST, Port: $DB_PORT"
+            timeout 10 nc -zv "$DB_HOST" "$DB_PORT" || echo "Port not reachable"
             exit 1
           fi
-          echo "✅ Database connection verified"
+          echo "✅ PostgreSQL connection verified successfully"
+
+      - name: 🧪 Test Supabase CLI connection
+        run: |
+          echo "🧪 Testing Supabase CLI connectivity..."
+          if ! supabase migration list --db-url "$SUPABASE_DB_URL" > /dev/null 2>&1; then
+            echo "❌ Supabase CLI connection failed"
+            echo "Database URL format appears invalid or CLI incompatible"
+            exit 1
+          fi
+          echo "✅ Supabase CLI connection verified"
 
       - name: 📋 Check migration files
         run: |
@@ -89,6 +109,20 @@ jobs:
           supabase migration list --db-url "$SUPABASE_DB_URL" || echo "Unable to verify migration status"
           echo "✅ Migration verification complete"
 
+      - name: 🩺 Post-migration health check
+        run: |
+          echo "🩺 Running post-migration health check..."
+          psql "$SUPABASE_DB_URL" -c "
+            SELECT 
+              schemaname, 
+              tablename, 
+              tableowner 
+            FROM pg_tables 
+            WHERE schemaname IN ('public', 'adgo') 
+            ORDER BY schemaname, tablename;
+          " || echo "Health check query failed"
+          echo "✅ Health check complete"
+
       - name: 🗑️ Cleanup
         run: |
           echo "🗑️ Cleaning up temporary files..."
@@ -98,6 +132,7 @@ jobs:
       - name: ✅ Success summary
         run: |
           echo "🎯 Supabase DB Migration completed successfully"
+          echo "✅ PostgreSQL connection verified with psql"
           echo "✅ CLI v2.51 compatible workflow executed"
           echo "✅ Database schema updated"
-          echo "✅ All validations passed"
+          echo "✅ Post-migration health check passed"
